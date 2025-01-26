@@ -10,7 +10,20 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		container:{
+			center:true,
+		},
+		screens:{
+			res360: '360px',
+			res4: '400px',
+			res5: '500px',
+			res6: '600px',
+			res7: '700px',
+			res8:'800px',
+			res9:'900px'
+		},
   		colors: {
+			main: 'hsl(var(--main))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -57,6 +70,7 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		}
+		
   	}
   },
   plugins: [tailwindcssAnimate],
