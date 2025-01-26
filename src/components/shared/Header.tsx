@@ -4,11 +4,12 @@ import {
   Phone,
   Search,
   ShoppingBagIcon,
-  ShoppingCart,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import CartSheets from "../sheets/CartSheets";
+import MobileMenuSheet from "../sheets/MobileMenuSheet";
 
 const Header = () => {
   return (
@@ -18,7 +19,8 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="md:hidden">
-              <Menu size={20} />
+              {/* Mobile menu Sheet */}
+              <MobileMenuSheet />
             </div>
             <Link href={"/"} className="inline-flex items-center">
               <span className="w-9 h-9 rounded bg-main flex items-center justify-center">
@@ -86,14 +88,8 @@ const Header = () => {
                   </span>
                 </div>
               </li>
-              <li className="rounded-full h-10 w-10 inline-flex items-center justify-center relative">
-                <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
-                  <ShoppingCart size={24} />
-                  <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
-                    9+
-                  </span>
-                </div>
-              </li>
+              {/* Shopping Cart Sheet */}
+              <CartSheets />
             </ul>
           </div>
         </div>
