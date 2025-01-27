@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <header>
       <div className="border-b border-border">
-        <div className="container justify-between h-[60px]  md:h-[80px] flex items-center ">
+        <div className="px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="md:hidden">

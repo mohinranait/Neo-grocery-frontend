@@ -6,10 +6,10 @@ const ProductSection = () => {
   return (
     <section className="py-10">
       <div>
-        <div className="container">
-          <div className="flex justify-between items-center mb-3">
+        <div className="px-2 md:px-0 container">
+          <div className="flex justify-between items-center mb-2">
             <div>
-              <p className="text-primary font-semibold text-lg">
+              <p className="text-primary leading-[20px] font-semibold text-lg">
                 Best selling{" "}
               </p>
               <p className="text-gray-600 text-sm">

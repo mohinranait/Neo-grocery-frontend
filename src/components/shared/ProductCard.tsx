@@ -7,13 +7,16 @@ const ProductCard = () => {
   return (
     <article className="border group hover:border-main border-border rounded">
       <div className="px-8 flex items-center justify-center h-[130px]">
-        <Link href={"/"} className="h-full">
+        <Link
+          href={"/"}
+          className="h-full inline-flex items-center justify-center pt-1"
+        >
           <Image
             src={"/product-image-45-346x310.jpg"}
             width={200}
             height={150}
             alt="Image"
-            className="w-full"
+            className="h-full w-auto mx-auto"
           />
         </Link>
       </div>

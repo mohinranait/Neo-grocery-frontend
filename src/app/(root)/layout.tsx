@@ -9,7 +9,7 @@ const MainLayout: FC<Props> = ({ children }) => {
   return (
     <React.Fragment>
       <Header />
-      {children}
+      <main className="overflow-x-hidden">{children}</main>
       <Footer />
     </React.Fragment>
   );

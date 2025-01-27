@@ -10,18 +10,10 @@ import ProductCard from "../shared/ProductCard";
 const ProductsSlider = () => {
   return (
     <Swiper
-      slidesPerView={1}
-      spaceBetween={12}
+      slidesPerView={2}
+      spaceBetween={4}
       modules={[Navigation]}
       breakpoints={{
-        360: {
-          slidesPerView: 1,
-          spaceBetween: 12,
-        },
-        380: {
-          slidesPerView: 2,
-          spaceBetween: 12,
-        },
         640: {
           slidesPerView: 3,
           spaceBetween: 12,

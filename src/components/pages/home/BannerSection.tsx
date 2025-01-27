@@ -6,7 +6,7 @@ import React from "react";
 const BannerSection = () => {
   return (
     <section className="">
-      <div className="container  md:h-[400px] flex gap-4">
+      <div className="px-2 md:px-0 container  md:h-[400px] flex gap-4">
         <div className="hidden md:block">
           <div className="w-[280px] ">
             <div className="border border-border border-t-0  rounded rounded-t-none ">
