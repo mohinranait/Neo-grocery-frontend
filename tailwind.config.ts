@@ -10,20 +10,20 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-		container:{
-			center:true,
-		},
-		screens:{
-			res360: '360px',
-			res4: '400px',
-			res5: '500px',
-			res6: '600px',
-			res7: '700px',
-			res8:'800px',
-			res9:'900px'
-		},
+  		container: {
+  			center: true
+  		},
+  		screens: {
+  			res360: '360px',
+  			res4: '400px',
+  			res5: '500px',
+  			res6: '600px',
+  			res7: '700px',
+  			res8: '800px',
+  			res9: '900px'
+  		},
   		colors: {
-			main: 'hsl(var(--main))',
+  			main: 'hsl(var(--main))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -69,8 +69,29 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
-		
   	}
   },
   plugins: [tailwindcssAnimate],

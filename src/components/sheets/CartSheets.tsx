@@ -30,7 +30,7 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
           </div>
         </li>
       </SheetTrigger>
-      <SheetContent className="w-full px-0 py-0 res5:w-[400px]">
+      <SheetContent className="w-full px-0 py-0 res4:w-[400px]">
         <div className="flex flex-col h-full">
           <div>
             <div className="h-[50px]  px-3 flex gap-1 items-center bg-gray-200">

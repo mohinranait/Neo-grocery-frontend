@@ -1,15 +1,9 @@
-import {
-  Heart,
-  Menu,
-  Phone,
-  Search,
-  ShoppingBagIcon,
-  UserRound,
-} from "lucide-react";
+import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import CartSheets from "../sheets/CartSheets";
 import MobileMenuSheet from "../sheets/MobileMenuSheet";
+import Logo from "./Logo";
 
 const Header = () => {
   return (
@@ -22,12 +16,7 @@ const Header = () => {
               {/* Mobile menu Sheet */}
               <MobileMenuSheet />
             </div>
-            <Link href={"/"} className="inline-flex items-center">
-              <span className="w-9 h-9 rounded bg-main flex items-center justify-center">
-                <ShoppingBagIcon className="text-white" size={20} />
-              </span>
-              <span className="text-4xl font-bold text-primary">Shop</span>
-            </Link>
+            <Logo />
           </div>
 
           {/* Middle column */}
