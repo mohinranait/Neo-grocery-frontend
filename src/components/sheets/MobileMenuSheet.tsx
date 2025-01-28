@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Logs } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Accordion,
@@ -23,7 +23,10 @@ const MobileMenuSheet: FC<Props> = ({ open, setOpen }) => {
   return (
     <Sheet onOpenChange={setOpen} open={open} key={"left"}>
       <SheetTrigger>
-        <Menu size={20} />
+        <li className="py-3 inline-flex items-center justify-center flex-col px-2">
+          <Logs size={16} className="text-gray-500" />
+          <p className="text-xs text-gray-500">Menu</p>
+        </li>
       </SheetTrigger>
       <SheetContent className="w-full  px-0 py-0 res4:w-[400px]" side={"left"}>
         <div className="flex flex-col h-full">

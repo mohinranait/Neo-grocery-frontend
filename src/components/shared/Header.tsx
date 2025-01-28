@@ -2,7 +2,6 @@ import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import CartSheets from "../sheets/CartSheets";
-import MobileMenuSheet from "../sheets/MobileMenuSheet";
 import Logo from "./Logo";
 
 const Header = () => {
@@ -12,16 +11,12 @@ const Header = () => {
         <div className="px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="md:hidden">
-              {/* Mobile menu Sheet */}
-              <MobileMenuSheet />
-            </div>
             <Logo />
           </div>
 
           {/* Middle column */}
           <div className="hidden flex-grow md:flex justify-center  ">
-            <div className="bg-slate-200 min-w-[450px] lg:min-w-[600px] rounded-md flex items-center p-1 ">
+            <div className="border-slate-200 border min-w-[450px] lg:min-w-[600px] rounded-md flex items-center p-1 ">
               <div>
                 <div className="px-2 text-nowrap text-sm text-text border-r border-slate-300 ">
                   Select Categorys
@@ -64,12 +59,12 @@ const Header = () => {
                   <Search size={24} />
                 </div>
               </li>
-              <li className="rounded-full h-10 w-10 inline-flex items-center justify-center relative">
+              <li className=" hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
                 <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
                   <UserRound size={24} />
                 </div>
               </li>
-              <li className="rounded-full h-10 w-10 inline-flex items-center justify-center relative">
+              <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
                 <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
                   <Heart size={24} />
                   <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
@@ -78,7 +73,9 @@ const Header = () => {
                 </div>
               </li>
               {/* Shopping Cart Sheet */}
-              <CartSheets />
+              <div className="hidden md:block">
+                <CartSheets />
+              </div>
             </ul>
           </div>
         </div>

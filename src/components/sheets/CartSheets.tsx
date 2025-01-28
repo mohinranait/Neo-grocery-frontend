@@ -21,14 +21,27 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
   return (
     <Sheet onOpenChange={setOpen} open={open} key={"right"}>
       <SheetTrigger>
-        <li className="rounded-full h-10 w-10 inline-flex items-center justify-center relative">
+        <li className=" py-3 inline-flex md:h-10 md:w-10 items-center justify-center flex-col px-2 relative">
+          <div className="flex items-center flex-col">
+            <span className="px-1 text-[10px] md:text-xs font-semibold text-white rounded-full bg-main absolute top-[2px] right-0 md:-top-1 md:-right-1">
+              9+
+            </span>
+
+            <ShoppingCart className="md:hidden text-gray-500" size={16} />
+
+            <ShoppingCart className="hidden md:block" size={24} />
+
+            <p className=" md:hidden text-xs text-gray-500">Cart</p>
+          </div>
+        </li>
+        {/* <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
           <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
             <ShoppingCart size={24} />
             <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
               9+
             </span>
           </div>
-        </li>
+        </li> */}
       </SheetTrigger>
       <SheetContent className="w-full px-0 py-0 res4:w-[400px]">
         <div className="flex flex-col h-full">
