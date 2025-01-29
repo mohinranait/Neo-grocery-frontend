@@ -1,10 +1,23 @@
+"use client";
 import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CartSheets from "../sheets/CartSheets";
 import Logo from "./Logo";
+import { categorysLists } from "@/constans/categorysLists";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const [openCategory, setOpenCategory] = useState<boolean>(false);
+  const pathName = usePathname();
+
+  useEffect(() => {
+    if (pathName === "/") {
+      setOpenCategory(true);
+    } else {
+      setOpenCategory(false);
+    }
+  }, [pathName]);
   return (
     <header>
       <div className="border-b border-border">
@@ -82,11 +95,72 @@ const Header = () => {
       </div>
       <div className="hidden md:block border-b border-border">
         <div className="container flex ">
-          <div className="w-[280px]  border-r border-border flex items-center gap-3">
-            <Menu size={20} />
-            <p className="uppercase text-sm text-gray-700 font-semibold">
-              Categories
-            </p>
+          <div className="w-[280px] relative flex items-center  border-r border-border  gap-3">
+            <div
+              onClick={() => {
+                if (pathName === "/") {
+                  setOpenCategory(true);
+                } else {
+                  setOpenCategory(!openCategory);
+                }
+              }}
+              className="flex gap-3 cursor-pointer w-full h-full items-center"
+            >
+              <Menu size={20} />
+              <p className="uppercase text-sm text-gray-700 font-semibold">
+                Categories
+              </p>
+            </div>
+            {openCategory && (
+              <div className="w-[280px] bg-white absolute top-[calc(100%+1px)] left-0  ">
+                <div className="border border-border border-t-0  rounded rounded-t-none ">
+                  <ul className="relative">
+                    {categorysLists?.map((category, index) => (
+                      <li key={index} className="group">
+                        <a
+                          href="#"
+                          className="inline-flex group text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
+                        >
+                          <span className="inline-flex gap-1 items-center">
+                            {/* <Cookie size={14} /> */}
+                            {category?.icon}
+                            <span className="text-sm">{category?.name}</span>
+                          </span>
+                          {/* <span className="text-gray-500 group-hover:text-main text-sm">
+                                {category?.totalItem}
+                              </span> */}{" "}
+                          Arr
+                        </a>
+                        {index == 1 && (
+                          <ul className="w-[250px] border border-border border-l-0 border-t-0 group-hover:block hidden absolute top-0 z-10 bg-white left-[279px]">
+                            {categorysLists?.map((category, index) => (
+                              <li key={index}>
+                                <a
+                                  href="#"
+                                  className="inline-flex group text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
+                                >
+                                  <span className="inline-flex gap-1 items-center">
+                                    {/* <Cookie size={14} /> */}
+                                    {category?.icon}
+                                    <span className="text-sm">
+                                      {category?.name}
+                                    </span>
+                                  </span>
+                                  {/* <span className="text-gray-500 group-hover:text-main text-sm">
+                                {category?.totalItem}
+                              </span> */}{" "}
+                                  Arr
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex-grow pl-2 flex justify-between items-center">
             <ul className="flex gap-5 items-center">
