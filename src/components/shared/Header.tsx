@@ -1,11 +1,19 @@
 "use client";
-import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
+import {
+  ChevronRight,
+  Heart,
+  Menu,
+  Phone,
+  Search,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CartSheets from "../sheets/CartSheets";
 import Logo from "./Logo";
 import { categorysLists } from "@/constans/categorysLists";
 import { usePathname } from "next/navigation";
+import MobileSearchSeet from "../sheets/MobileSearchSeet";
 
 const Header = () => {
   const [openCategory, setOpenCategory] = useState<boolean>(false);
@@ -20,7 +28,7 @@ const Header = () => {
   }, [pathName]);
   return (
     <header>
-      <div className="border-b border-border">
+      <div className="border-b  border-border">
         <div className="px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ">
           {/* Logo */}
           <div className="flex items-center gap-2">
@@ -67,11 +75,7 @@ const Header = () => {
                   </div>
                 </Link>
               </li>
-              <li className=" md:hidden rounded-full h-10 w-10 inline-flex items-center justify-center relative">
-                <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
-                  <Search size={24} />
-                </div>
-              </li>
+              <MobileSearchSeet />
               <li className=" hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
                 <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
                   <UserRound size={24} />
@@ -129,7 +133,9 @@ const Header = () => {
                           {/* <span className="text-gray-500 group-hover:text-main text-sm">
                                 {category?.totalItem}
                               </span> */}{" "}
-                          Arr
+                          {index === 1 && (
+                            <ChevronRight size={16} className="text-gray-600" />
+                          )}
                         </a>
                         {index == 1 && (
                           <ul className="w-[250px] border border-border border-l-0 border-t-0 group-hover:block hidden absolute top-0 z-10 bg-white left-[279px]">
