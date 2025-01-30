@@ -1,15 +1,69 @@
 "use client";
 import { Eye, EyeOff, ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { userLogin } from "@/actions/authApi";
+import toast from "react-hot-toast";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { setAuthUser } from "@/redux/features/authSlice";
+import { useRouter } from "next/navigation";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
+
+const loginSchema = z.object({
+  email: z
+    .string({ message: "Email field is required" })
+    .nonempty({ message: "Email field is required" })
+    .email({ message: "Invalid email address" })
+    .min(5, { message: "Charecter must be at lest 5 charecter" }),
+  password: z
+    .string({ message: "Passowd field is required" })
+    .nonempty({ message: "Password field is required" })
+    .min(6, { message: "Password at lest 6 charecters" }),
+});
+
 const LoginForm = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(loginSchema),
+  });
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      const res = await userLogin(data);
+      if (res?.success) {
+        dispatch(setAuthUser(res?.payload));
+        reset();
+        toast.success("Login successfull");
+        router.push("/");
+      } else {
+        toast.error("Somthing wrong");
+      }
+    } catch (error) {
+      toast.error("Somthing wrong");
+      console.log(error);
+    }
+  };
+
   return (
-    <React.Fragment>
-      <form action="" className="max-w-[350px] mx-auto">
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-[350px] mx-auto">
         <div>
           <div className="flex mb-3 justify-center">
             <Link href={"/"} className="inline-flex items-center">
@@ -28,7 +82,17 @@ const LoginForm = () => {
         </div>
         <div className="mt-4 mb-6  space-y-5">
           <div className="">
-            <Input type="text" placeholder="Email address" />
+            <Input
+              type="text"
+              {...register("email")}
+              placeholder="Email address"
+              className="focus-visible:outline-offset-0 focus-visible:ring-offset-0"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div>
             <div className="relative">
@@ -43,11 +107,16 @@ const LoginForm = () => {
                 )}
               </span>
               <Input
+                {...register("password")}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
+                className="focus-visible:outline-offset-0 focus-visible:ring-offset-0"
               />
             </div>
-            <div className="text-right">
+            <div className="flex items-center  justify-between">
+              <p className="text-red-500 text-xs pt-1">
+                {errors.password && errors.password.message}
+              </p>
               <Link
                 className="text-gray-500 text-xs font-normal"
                 href={"/forgot-passowrd"}
@@ -69,7 +138,7 @@ const LoginForm = () => {
           </Link>{" "}
         </p>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

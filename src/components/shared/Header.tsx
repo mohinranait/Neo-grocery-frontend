@@ -14,10 +14,31 @@ import Logo from "./Logo";
 import { categorysLists } from "@/constans/categorysLists";
 import { usePathname } from "next/navigation";
 import MobileSearchSeet from "../sheets/MobileSearchSeet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { logoutUser } from "@/redux/features/authSlice";
+import { userLogout } from "@/actions/authApi";
 
 const Header = () => {
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const pathName = usePathname();
+  const dispatch = useAppDispatch();
+
+  // handle logout
+  const handleLogout = async () => {
+    try {
+      const res = await userLogout();
+      console.log({ res });
+      dispatch(logoutUser());
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   useEffect(() => {
     if (pathName === "/") {
@@ -76,11 +97,21 @@ const Header = () => {
                 </Link>
               </li>
               <MobileSearchSeet />
-              <li className=" hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
-                <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
-                  <UserRound size={24} />
-                </div>
-              </li>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <li className=" hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
+                    <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
+                      <UserRound size={24} />
+                    </div>
+                  </li>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => handleLogout()}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
                 <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
                   <Heart size={24} />

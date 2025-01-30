@@ -3,6 +3,7 @@ import { TUserType } from '@/types/user.type'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+
 type TInitialStateType = {
   isLoading:boolean;
     isAuthenticated: boolean;
@@ -23,10 +24,8 @@ export const authSlice = createSlice({
         state.user = action.payload;
         state.isAuthenticated = true;
     },
-    logoutUser:(state) => {
-        state.user = null;
-        state.isAuthenticated = false;
-    },
+    logoutUser:() =>  initialState,
+ 
     setLoading:(state , action: PayloadAction<boolean>) => {
       state.isLoading = action?.payload
       console.log("pay",action?.payload);
