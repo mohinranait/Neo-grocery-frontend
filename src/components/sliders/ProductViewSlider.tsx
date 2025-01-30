@@ -39,7 +39,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-2.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -48,7 +48,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-3.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -57,7 +57,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-4.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -66,7 +66,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-5.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -75,7 +75,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-6.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -84,7 +84,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-7.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -93,7 +93,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-8.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -102,7 +102,7 @@ const ProductViewSlider = () => {
             width={400}
             height={400}
             src="https://swiperjs.com/demos/images/nature-9.jpg"
-            className="w-[400px] mx-auto max-h-[400px]"
+            className="w-auto mx-auto max-h-[400px]"
           />
         </SwiperSlide>
         <SwiperSlide>

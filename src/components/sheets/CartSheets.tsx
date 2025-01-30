@@ -2,16 +2,11 @@
 import React, { FC } from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Minus,
-  Plus,
-  ShoppingBagIcon,
-  ShoppingCart,
-  Trash2,
-} from "lucide-react";
+import { ShoppingBagIcon, ShoppingCart, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import CartCounter from "../utils/CartCounter";
 
 type Props = {
   open?: boolean;
@@ -55,11 +50,11 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
             </div>
           </div>
           <div className="flex-grow h-[calc(100vh-170px)] overflow-y-auto">
-            <ul className="">
-              <li className="flex hover:bg-gray-50 py-3  px-3 items-center">
+            <ul className="divide-y divide-slate-200">
+              <li className="flex  hover:bg-gray-50 py-3  px-3 items-center">
                 <div>
                   <div className="relative w-[100px]">
-                    <span className="absolute cursor-pointer flex items-center justify-center -top-1 -left-1 h-6 w-6 bg-white rounded-full shadow">
+                    <span className="absolute cursor-pointer flex items-center justify-center -top-1 -left-1 h-7 w-7 bg-white rounded-full shadow">
                       <Trash2 className="text-red-500" size={14} />
                     </span>
                     <Image
@@ -82,6 +77,10 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
                     Product Price: 100$
                   </p>
                   <div className="flex justify-between">
+                    <CartCounter />
+                    <span className="text-sm text-black">45$</span>
+                  </div>
+                  {/* <div className="flex justify-between">
                     <div className="border border-border items-center rounded flex">
                       <span className="px-[6px] py-[3px] cursor-pointer">
                         <Minus size={15} />
@@ -92,7 +91,7 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
                       </span>
                     </div>
                     <span className="text-sm text-black">45$</span>
-                  </div>
+                  </div> */}
                 </div>
               </li>
               <li className="flex hover:bg-gray-50 py-3  px-3 items-center">
@@ -121,15 +120,7 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
                     Product Price: 100$
                   </p>
                   <div className="flex justify-between">
-                    <div className="border border-border items-center rounded flex">
-                      <span className="px-[6px] py-[3px] cursor-pointer">
-                        <Minus size={15} />
-                      </span>
-                      <span className="px-[6px] py-[3px] text-sm">2</span>
-                      <span className="px-[6px] py-[3px] cursor-pointer">
-                        <Plus size={15} />
-                      </span>
-                    </div>
+                    <CartCounter />
                     <span className="text-sm text-black">45$</span>
                   </div>
                 </div>

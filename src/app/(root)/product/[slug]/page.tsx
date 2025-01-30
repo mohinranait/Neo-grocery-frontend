@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProductViewSlider from "@/components/sliders/ProductViewSlider";
-import CardCounter from "@/components/pages/product/CardCounter";
+import ProductCartCounter from "@/components/pages/product/ProductCartCounter";
 
 const ProductPage = () => {
   return (
@@ -138,7 +138,7 @@ const ProductPage = () => {
               <del className="text-xl font-semibold text-gray-400">$40.00</del>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <CardCounter />
+              <ProductCartCounter />
               <Button>Add to cart</Button>
               <Button
                 variant={"outline"}
