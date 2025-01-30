@@ -12,7 +12,7 @@ import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Image from "next/image";
 import { Swiper as SwiperClass } from "swiper/types";
-
+import "./productViewSlider.css";
 const ProductViewSlider = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   return (
@@ -117,7 +117,7 @@ const ProductViewSlider = () => {
       </Swiper>
       <Swiper
         onSwiper={setThumbsSwiper}
-        spaceBetween={10}
+        spaceBetween={0}
         slidesPerView={4}
         freeMode={true}
         watchSlidesProgress={true}

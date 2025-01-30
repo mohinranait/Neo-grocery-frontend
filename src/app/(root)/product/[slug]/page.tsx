@@ -11,8 +11,6 @@ import {
 import {
   BadgeDollarSign,
   Heart,
-  Minus,
-  Plus,
   Share2,
   ShieldCheck,
   Shuffle,
@@ -21,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProductViewSlider from "@/components/sliders/ProductViewSlider";
+import CardCounter from "@/components/pages/product/CardCounter";
 
 const ProductPage = () => {
   return (
@@ -139,17 +138,7 @@ const ProductPage = () => {
               <del className="text-xl font-semibold text-gray-400">$40.00</del>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <div className="rounded gap-1 inline-flex items-center ">
-                <span className="w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer">
-                  <Minus className="" size={16} />
-                </span>
-
-                <span className=" w-8 text-center block">12</span>
-
-                <span className="w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer">
-                  <Plus className="" size={16} />
-                </span>
-              </div>
+              <CardCounter />
               <Button>Add to cart</Button>
               <Button
                 variant={"outline"}
