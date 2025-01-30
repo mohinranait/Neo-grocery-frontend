@@ -7,7 +7,7 @@ type TAuthLayout = {
 const AuthLayout: FC<TAuthLayout> = ({ children }) => {
   return (
     <section>
-      <div className="max-w-[900px] mx-auto mt-3 grid grid-cols-1 lg:grid-cols-2 ">
+      <div className="max-w-[900px] items-center mx-auto mt-3 grid grid-cols-1 lg:grid-cols-2 ">
         <div className=" order-2 ">
           <div className=" max-w-[350px] lg:max-w-max mx-auto lg:order-1 p-10 pb-0 bg-main  rounded ">
             <p className="text-4xl font-bold text-white">
