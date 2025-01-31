@@ -6,8 +6,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Navigation } from "swiper/modules";
 import ProductCard from "../shared/ProductCard";
+import { useAppSelector } from "@/hooks/useRedux";
 
 const ProductsSlider = () => {
+  const { products } = useAppSelector((state) => state.product);
   return (
     <Swiper
       slidesPerView={2}
@@ -33,27 +35,11 @@ const ProductsSlider = () => {
       }}
       className="mySwiper"
     >
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ProductCard />
-      </SwiperSlide>
+      {products?.map((product, index) => (
+        <SwiperSlide key={index}>
+          <ProductCard product={product} />
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 };

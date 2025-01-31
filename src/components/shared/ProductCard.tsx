@@ -2,8 +2,13 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { TProduct } from "@/types/product.type";
 
-const ProductCard = () => {
+type Props = {
+  product: TProduct;
+};
+const ProductCard = ({ product }: Props) => {
+  const { name, featureImage } = product || {};
   return (
     <article className="border group hover:border-main border-border rounded">
       <div className="px-8 flex items-center justify-center h-[130px]">
@@ -12,7 +17,7 @@ const ProductCard = () => {
           className="h-full inline-flex items-center justify-center pt-1"
         >
           <Image
-            src={"/product-image-45-346x310.jpg"}
+            src={featureImage?.image}
             width={200}
             height={150}
             alt="Image"
@@ -26,7 +31,7 @@ const ProductCard = () => {
           href={"/"}
           className="text-primary hover:text-main transition-all text-sm inline-block leading-[17px] font-semibold"
         >
-          All Natural Italian-Style Chicken Meatballs
+          {name}
         </Link>
         <p className="flex items-center gap-2">
           <span className="text-main text-lg font-semibold">$40</span>

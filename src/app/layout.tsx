@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { Toaster } from "react-hot-toast";
+import { getAllCategorys } from "@/actions/categoriesApi";
+import { getAllBrands } from "@/actions/brandApi";
+import { getAllProducts } from "@/actions/productApi";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,17 +23,29 @@ export const metadata: Metadata = {
   description: "Neo grocery super shop frontend",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const catRes = await getAllCategorys();
+  const brandRes = await getAllBrands();
+  const productRes = await getAllProducts();
+  const categories = catRes?.success ? catRes?.payload : [];
+  const brands = brandRes?.success ? brandRes?.payload : [];
+  const products = productRes?.success ? productRes?.payload?.products : [];
+  console.log({ products });
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProvider>
+        <ReduxProvider
+          brands={brands}
+          categories={categories}
+          products={products}
+        >
           {children}
           <Toaster />
         </ReduxProvider>

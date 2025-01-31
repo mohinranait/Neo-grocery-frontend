@@ -2,9 +2,8 @@
 const nextConfig = {
     images:{
         remotePatterns:[
-            {
-                hostname: 'swiperjs.com'
-            }
+            {hostname: 'swiperjs.com'},
+            {hostname: 'res.cloudinary.com'}
         ]
     }
 };

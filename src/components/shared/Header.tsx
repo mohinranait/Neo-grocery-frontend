@@ -1,17 +1,9 @@
 "use client";
-import {
-  ChevronRight,
-  Heart,
-  Menu,
-  Phone,
-  Search,
-  UserRound,
-} from "lucide-react";
+import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CartSheets from "../sheets/CartSheets";
 import Logo from "./Logo";
-import { categorysLists } from "@/constans/categorysLists";
 import { usePathname } from "next/navigation";
 import MobileSearchSeet from "../sheets/MobileSearchSeet";
 import {
@@ -23,8 +15,10 @@ import {
 import { useAppDispatch } from "@/hooks/useRedux";
 import { logoutUser } from "@/redux/features/authSlice";
 import { userLogout } from "@/actions/authApi";
+import HeaderBrowsCategory from "../utils/HeaderBrowsCategory";
 
 const Header = () => {
+  // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const pathName = usePathname();
   const dispatch = useAppDispatch();
@@ -148,53 +142,8 @@ const Header = () => {
             </div>
             {openCategory && (
               <div className="w-[280px] bg-white absolute top-[calc(100%+1px)] left-0  ">
-                <div className="border border-border border-t-0  rounded rounded-t-none ">
-                  <ul className="relative">
-                    {categorysLists?.map((category, index) => (
-                      <li key={index} className="group">
-                        <a
-                          href="#"
-                          className="inline-flex group text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
-                        >
-                          <span className="inline-flex gap-1 items-center">
-                            {/* <Cookie size={14} /> */}
-                            {category?.icon}
-                            <span className="text-sm">{category?.name}</span>
-                          </span>
-                          {/* <span className="text-gray-500 group-hover:text-main text-sm">
-                                {category?.totalItem}
-                              </span> */}{" "}
-                          {index === 1 && (
-                            <ChevronRight size={16} className="text-gray-600" />
-                          )}
-                        </a>
-                        {index == 1 && (
-                          <ul className="w-[250px] border border-border border-l-0 border-t-0 group-hover:block hidden absolute top-0 z-10 bg-white left-[279px]">
-                            {categorysLists?.map((category, index) => (
-                              <li key={index}>
-                                <a
-                                  href="#"
-                                  className="inline-flex group text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
-                                >
-                                  <span className="inline-flex gap-1 items-center">
-                                    {/* <Cookie size={14} /> */}
-                                    {category?.icon}
-                                    <span className="text-sm">
-                                      {category?.name}
-                                    </span>
-                                  </span>
-                                  {/* <span className="text-gray-500 group-hover:text-main text-sm">
-                                {category?.totalItem}
-                              </span> */}{" "}
-                                  Arr
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="border border-border border-t-0 max-h-[400px]  rounded rounded-t-none ">
+                  <HeaderBrowsCategory />
                 </div>
               </div>
             )}
