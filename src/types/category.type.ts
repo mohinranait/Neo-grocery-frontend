@@ -1,7 +1,7 @@
 
 // This type for categories
 export type TCategoryType = {
-    _id?: string;
+    _id: string;
     name: string; 
     slug: string; 
     parent?: string | null; 

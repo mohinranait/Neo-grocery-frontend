@@ -1,5 +1,5 @@
 export type TBrandType = {
-    _id?: string;
+    _id: string;
     name: string;
     slug: string;
     brandBanner?: string;

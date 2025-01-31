@@ -12,15 +12,27 @@ import storage from 'redux-persist/lib/storage'
 const persistAuth = {
     key: 'auth',
     storage,
-  }
+}
+
+const persistBrand = {
+    key: 'brand',
+    storage,
+}
+
+const persistCategory = {
+    key: 'category',
+    storage,
+}
 
 const persistedAuthReducer = persistReducer(persistAuth, authReducer)
+const persistedCategoryReducer = persistReducer(persistCategory, categoryReducer)
+const persistedBrandReducer = persistReducer(persistBrand, brandReducer)
 
 const rootReducer = combineReducers({
     product: productReducer,
     auth: persistedAuthReducer,
-    category: categoryReducer,
-    brand: brandReducer,
+    category: persistedCategoryReducer,
+    brand: persistedBrandReducer,
     media: mediaReducer,
     attribute: attributeReducer,
     attributeConfig: attributeConfigReducer,

@@ -34,7 +34,7 @@ export default async function RootLayout({
   const categories = catRes?.success ? catRes?.payload : [];
   const brands = brandRes?.success ? brandRes?.payload : [];
   const products = productRes?.success ? productRes?.payload?.products : [];
-  console.log({ products });
+  // console.log({ products });
 
   return (
     <html lang="en">

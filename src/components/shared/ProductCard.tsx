@@ -8,12 +8,12 @@ type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
-  const { name, featureImage } = product || {};
+  const { name, slug, featureImage, price } = product || {};
   return (
     <article className="border group hover:border-main border-border rounded">
       <div className="px-8 flex items-center justify-center h-[130px]">
         <Link
-          href={"/"}
+          href={`/product/${slug}`}
           className="h-full inline-flex items-center justify-center pt-1"
         >
           <Image
@@ -28,14 +28,20 @@ const ProductCard = ({ product }: Props) => {
       <div className="px-3 space-y-2">
         <p className="text-xs text-gray-400 uppercase">In Stock</p>
         <Link
-          href={"/"}
+          href={`/product/${slug}`}
           className="text-primary hover:text-main transition-all text-sm inline-block leading-[17px] font-semibold"
         >
           {name}
         </Link>
         <p className="flex items-center gap-2">
-          <span className="text-main text-lg font-semibold">$40</span>
-          <del className="text-gray-400 text-sm font-semibold">$50</del>
+          <span className="text-main text-lg font-semibold">
+            ${price?.sellPrice ? price?.sellPrice : price?.productPrice}
+          </span>
+          {price?.sellPrice > 0 && (
+            <del className="text-gray-400 text-sm font-semibold">
+              ${price?.productPrice}
+            </del>
+          )}
         </p>
       </div>
       <div className="px-3 pt-2 gap-2 flex items-center pb-3">

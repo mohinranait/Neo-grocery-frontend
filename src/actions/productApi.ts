@@ -18,12 +18,12 @@ export const getAllProducts = async () => {
       });
   
       if (!response.ok) {
-        throw new Error("Failed to fetch categories");
+        throw new Error("Failed to fetch products");
       }
   
       return await response.json();
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching products:", error);
       return { success: false, payload: [] };
     }
   };
@@ -31,9 +31,22 @@ export const getAllProducts = async () => {
 /**
  * @api {get}  Get Single product by Slug method
 */
-export const getSingleProductBySlug = async (slug:string) => {
-    const {data} = await instance.get(`/view-product/${slug}`);
-    return data;
+export const getSingleProductBySlug = async (slug:string)=>{
+    try {
+        const response = await fetch(`${SERVER_URL}/view-product/${slug}`,{
+            method:"GET",
+            headers:{
+                "Content-type":"Application/json",
+            },
+        })
+        if (!response.ok) {
+            throw new Error("Failed to fetch product");
+        }
+        return await  response?.json()
+    } catch (error) {
+        console.error("Error fetching product:", error);
+        return { success: false, payload: [] };
+    }
 }
 
 /**

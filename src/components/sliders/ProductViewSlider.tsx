@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -13,8 +13,20 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Image from "next/image";
 import { Swiper as SwiperClass } from "swiper/types";
 import "./productViewSlider.css";
-const ProductViewSlider = () => {
+import { TProduct } from "@/types/product.type";
+type Props = {
+  product: TProduct;
+};
+const ProductViewSlider = ({ product }: Props) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const { featureImage, imageGallary } = product || {};
+    const pImgs = [featureImage?.image, ...(imageGallary as string[])];
+    setImages(pImgs);
+  }, [product]);
+
   return (
     <React.Fragment>
       <Swiper
@@ -24,96 +36,21 @@ const ProductViewSlider = () => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={420}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-2.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-3.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-4.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-5.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-6.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-7.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-8.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-9.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-10.jpg"
-            className="w-auto mx-auto max-h-[400px]"
-          />
-        </SwiperSlide>
+        {images?.map((img, i) => (
+          <SwiperSlide
+            key={i}
+            className="min-h-[400px] flex items-center"
+            style={{ display: "flex" }}
+          >
+            <Image
+              alt="image"
+              width={400}
+              height={400}
+              src={img}
+              className="w-auto mx-auto max-h-[400px]"
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
       <Swiper
         onSwiper={setThumbsSwiper}
@@ -124,86 +61,11 @@ const ProductViewSlider = () => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-2.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-3.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-4.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-5.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-6.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-7.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-8.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-9.jpg"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Image
-            alt="image"
-            width={400}
-            height={400}
-            src="https://swiperjs.com/demos/images/nature-10.jpg"
-          />
-        </SwiperSlide>
+        {images?.map((img, i) => (
+          <SwiperSlide key={i}>
+            <Image alt="image" width={400} height={400} src={img} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </React.Fragment>
   );

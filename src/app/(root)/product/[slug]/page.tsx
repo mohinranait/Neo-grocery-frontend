@@ -20,8 +20,32 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProductViewSlider from "@/components/sliders/ProductViewSlider";
 import ProductCartCounter from "@/components/pages/product/ProductCartCounter";
+import { getSingleProductBySlug } from "@/actions/productApi";
+import { TProduct } from "@/types/product.type";
+import { getAllCategorys } from "@/actions/categoriesApi";
+import { getAllBrands } from "@/actions/brandApi";
+import { TBrandType } from "@/types/brand.type";
+import { TCategoryType } from "@/types/category.type";
 
-const ProductPage = () => {
+const ProductPage = async ({ params }: { params: { slug: string } }) => {
+  const { payload } = await getSingleProductBySlug(params?.slug);
+  const product: TProduct = payload;
+  const productBrandIds = product?.brand;
+  const productCategoryIds = product?.category;
+
+  const catRes = await getAllCategorys();
+  const brandRes = await getAllBrands();
+
+  const brands: TBrandType[] =
+    brandRes?.payload?.filter((brand: TBrandType) =>
+      productBrandIds?.includes(brand?._id)
+    ) || [];
+
+  const categories =
+    catRes?.payload?.filter((cat: TCategoryType) =>
+      productCategoryIds?.includes(cat?._id)
+    ) || [];
+
   return (
     <section>
       <div className="container px-2 md:px-0">
@@ -45,13 +69,13 @@ const ProductPage = () => {
       <div className="container">
         <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row gap-4">
           <div className="w-full">
-            <div className="  md:w-[420px] bg-red-500 ">
-              <ProductViewSlider />
+            <div className="  md:w-[400px] ">
+              <ProductViewSlider product={product} />
             </div>
           </div>
           <div className="space-y-5 flex-grow">
             <div>
-              <h1 className="text-3xl font-semibold ">Wine bottle lantern</h1>
+              <h1 className="text-3xl font-semibold ">{product?.name}</h1>
               <div className="flex items-center">
                 <svg
                   className="w-4 h-4 text-yellow-300 me-1"
@@ -120,12 +144,18 @@ const ProductPage = () => {
             </p>
 
             <div>
-              <p className="text-sm text-gray-600">
-                SKU: <span>SDF-454</span>
-              </p>
+              {product?.skuCode && (
+                <p className="text-sm text-gray-600">
+                  SKU: <span>{product?.skuCode}</span>
+                </p>
+              )}
               <p className="text-sm text-gray-600">
                 Stock:{" "}
-                <span className="text-green-600 font-semibold">In-stock</span>
+                {product?.isStock > 0 ? (
+                  <span className="text-green-600 font-semibold">In-stock</span>
+                ) : (
+                  <span className="text-red-600 font-semibold"> Out-stock</span>
+                )}
               </p>
               <p className="text-sm text-gray-600">
                 Type: <span className=" ">Organic</span>
@@ -159,30 +189,32 @@ const ProductPage = () => {
               </Button>
             </div>
             <div>
-              <p className="text-gray-500 text-sm">
-                Brand:
-                <Link
-                  href={"/"}
-                  className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
-                >
-                  Olempic
-                </Link>
-              </p>
+              {brands?.length > 0 && (
+                <p className="text-gray-500 text-sm">
+                  Brand:
+                  {brands?.map((brand, index) => (
+                    <Link
+                      key={index}
+                      href={`/brand/${brand?.slug}`}
+                      className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
+                    >
+                      {brand?.name},
+                    </Link>
+                  ))}
+                </p>
+              )}
+
               <p className="text-gray-500 text-sm">
                 Category:
-                <Link
-                  href={"/"}
-                  className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
-                >
-                  Sniccks
-                </Link>
-                ,
-                <Link
-                  href={"/"}
-                  className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
-                >
-                  Sock
-                </Link>{" "}
+                {categories?.map((cat: TCategoryType, index: number) => (
+                  <Link
+                    key={index}
+                    href={`/brand/${cat?.slug}`}
+                    className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
+                  >
+                    {cat?.name},
+                  </Link>
+                ))}
               </p>
             </div>
           </div>
