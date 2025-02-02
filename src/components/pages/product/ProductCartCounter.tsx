@@ -11,21 +11,31 @@ const ProductCartCounter: FC<WithCounterProps> = ({
   return (
     <React.Fragment>
       <div className="rounded gap-1 inline-flex items-center ">
-        <span
+        <button
+          disabled={counter === 1 ? true : false}
           onClick={decrement}
-          className="w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer"
+          className={`${
+            counter === 1
+              ? " text-slate-400 hover:bg-slate-200 hover:text-slate-400"
+              : ""
+          } w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer`}
         >
           <Minus className="" size={16} />
-        </span>
+        </button>
 
         <span className=" w-8 text-center block">{counter}</span>
 
-        <span
+        <button
+          disabled={counter === 20 ? true : false}
           onClick={increment}
-          className="w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer"
+          className={` ${
+            counter === 20
+              ? " text-slate-400 hover:bg-slate-200 hover:text-slate-400"
+              : ""
+          } w-10 h-10 rounded-full flex items-center justify-center border bg-slate-200 hover:bg-main   text-gray-900 hover:text-white cursor-pointer`}
         >
           <Plus className="" size={16} />
-        </span>
+        </button>
       </div>
     </React.Fragment>
   );
