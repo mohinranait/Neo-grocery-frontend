@@ -10,9 +10,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { userLogin } from "@/actions/authApi";
 import toast from "react-hot-toast";
-import { useAppDispatch } from "@/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setAuthUser } from "@/redux/features/authSlice";
 import { useRouter } from "next/navigation";
+import { setAllCarts } from "@/redux/features/shoppingCartSlice";
 
 type Inputs = {
   email: string;
@@ -32,6 +33,7 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const { carts } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {
@@ -51,6 +53,17 @@ const LoginForm = () => {
         dispatch(setAuthUser(res?.payload));
         reset();
         toast.success("Login successfull");
+        console.log({ user: res?.payload });
+
+        // Update Shopping cart only user
+        if (carts?.length > 0) {
+          const allCarts = carts?.map((cart) => ({
+            ...cart,
+            user: res?.payload?._id,
+          }));
+          dispatch(setAllCarts(allCarts));
+        }
+
         router.push("/");
       } else {
         toast.error("Somthing wrong");

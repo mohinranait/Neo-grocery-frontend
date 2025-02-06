@@ -8,24 +8,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  BadgeDollarSign,
-  Heart,
-  Share2,
-  ShieldCheck,
-  Shuffle,
-  Truck,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BadgeDollarSign, ShieldCheck, Truck } from "lucide-react";
 import Link from "next/link";
 import ProductViewSlider from "@/components/sliders/ProductViewSlider";
-import ProductCartCounter from "@/components/pages/product/ProductCartCounter";
 import { getSingleProductBySlug } from "@/actions/productApi";
 import { TProduct } from "@/types/product.type";
 import { getAllCategorys } from "@/actions/categoriesApi";
 import { getAllBrands } from "@/actions/brandApi";
 import { TBrandType } from "@/types/brand.type";
 import { TCategoryType } from "@/types/category.type";
+import ActionsButton from "@/components/pages/product/ActionsButton";
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProductBySlug(params?.slug);
@@ -161,33 +153,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                 Type: <span className=" ">Organic</span>
               </p>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="text-2xl font-semibold text-gray-900">
-                $24.00 –
-              </span>
-              <del className="text-xl font-semibold text-gray-400">$40.00</del>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <ProductCartCounter />
-              <Button>Add to cart</Button>
-              <Button
-                variant={"outline"}
-                className="bg-main text-white hover:bg-main hover:text-white te"
-              >
-                Buy Now
-              </Button>
-            </div>
-            <div className="flex items-center xl:gap-3">
-              <Button variant={"link"}>
-                <Heart /> Add wishlist
-              </Button>
-              <Button variant={"link"}>
-                <Shuffle /> Add Compare
-              </Button>
-              <Button variant={"link"} className="ml-auto">
-                <Share2 />
-              </Button>
-            </div>
+            <ActionsButton product={product} />
             <div>
               {brands?.length > 0 && (
                 <p className="text-gray-500 text-sm">
@@ -204,18 +170,20 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                 </p>
               )}
 
-              <p className="text-gray-500 text-sm">
-                Category:
-                {categories?.map((cat: TCategoryType, index: number) => (
-                  <Link
-                    key={index}
-                    href={`/brand/${cat?.slug}`}
-                    className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
-                  >
-                    {cat?.name},
-                  </Link>
-                ))}
-              </p>
+              {categories?.length > 0 && (
+                <p className="text-gray-500 text-sm">
+                  Category:
+                  {categories?.map((cat: TCategoryType, index: number) => (
+                    <Link
+                      key={index}
+                      href={`/brand/${cat?.slug}`}
+                      className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
+                    >
+                      {cat?.name},
+                    </Link>
+                  ))}
+                </p>
+              )}
             </div>
           </div>
           <div className="md:col-span-2 w-full">

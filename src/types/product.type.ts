@@ -30,7 +30,7 @@ type ExtraFeature= {
 }
 
 export type TProduct = {
-  _id?:string;
+  _id:string;
   author: string;
   brand?: string[];
   category?: string[];

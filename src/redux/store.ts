@@ -6,6 +6,7 @@ import  brandReducer  from "./features/brandSlice";
 import  mediaReducer  from "./features/mediaSlice";
 import  attributeReducer  from "./features/attributeSlice";
 import  attributeConfigReducer  from "./features/attributeConfigSlice";
+import  shoppingCartReducer  from "./features/shoppingCartSlice";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
 
@@ -24,14 +25,21 @@ const persistCategory = {
     storage,
 }
 
+const persistCarts = {
+    key: 'cart',
+    storage,
+}
+
 const persistedAuthReducer = persistReducer(persistAuth, authReducer)
 const persistedCategoryReducer = persistReducer(persistCategory, categoryReducer)
 const persistedBrandReducer = persistReducer(persistBrand, brandReducer)
+const persistedCartReducer = persistReducer(persistCarts, shoppingCartReducer)
 
 const rootReducer = combineReducers({
     product: productReducer,
     auth: persistedAuthReducer,
     category: persistedCategoryReducer,
+    cart: persistedCartReducer,
     brand: persistedBrandReducer,
     media: mediaReducer,
     attribute: attributeReducer,
