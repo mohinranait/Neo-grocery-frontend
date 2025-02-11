@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import React, { useEffect } from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingBagIcon, ShoppingCart, Trash2 } from "lucide-react";
@@ -9,14 +9,15 @@ import Link from "next/link";
 import CartCounter from "../utils/CartCounter";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { removeCart } from "@/redux/features/shoppingCartSlice";
+import { setCartSidebarOpen } from "@/redux/features/uiSlice";
+import { usePathname } from "next/navigation";
 
-type Props = {
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-};
-const CartSheets: FC<Props> = ({ open, setOpen }) => {
+const CartSheets = () => {
+  const pathName = usePathname();
   // Redux state
   const { carts } = useAppSelector((state) => state.cart);
+  const { cartSidebarOpen } = useAppSelector((state) => state.ui);
+
   const { products } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
   // Count total cart items
@@ -24,9 +25,18 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
     (total, current) => total + current?.quantity,
     0
   );
+
+  useEffect(() => {
+    dispatch(setCartSidebarOpen(false));
+  }, [pathName]);
+
   return (
-    <Sheet onOpenChange={setOpen} open={open} key={"right"}>
-      <SheetTrigger>
+    <Sheet
+      onOpenChange={() => dispatch(setCartSidebarOpen(!cartSidebarOpen))}
+      open={cartSidebarOpen}
+      key={"right"}
+    >
+      <SheetTrigger onClick={() => dispatch(setCartSidebarOpen(true))}>
         <li className=" py-3 inline-flex md:h-10 md:w-10 items-center justify-center flex-col px-2 relative">
           <div className="flex items-center flex-col">
             <span className="px-1 text-[10px] md:text-xs font-semibold text-white rounded-full bg-main absolute top-[2px] right-0 md:-top-1 md:-right-1">
@@ -40,21 +50,16 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
             <p className=" md:hidden text-xs text-gray-500">Cart</p>
           </div>
         </li>
-        {/* <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
-          <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
-            <ShoppingCart size={24} />
-            <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
-              9+
-            </span>
-          </div>
-        </li> */}
       </SheetTrigger>
       <SheetContent className="w-full px-0 py-0 res4:w-[400px]">
         <div className="flex flex-col h-full">
           <div>
             <div className="h-[50px]  px-3 flex gap-1 items-center bg-gray-200">
               <ShoppingBagIcon size={18} />
-              <p className="text-sm">
+              <p
+                onClick={() => dispatch(setCartSidebarOpen(false))}
+                className="text-sm"
+              >
                 Shipping Cart{" "}
                 <span className="text-xs text-gray-500">
                   ({totalItems || 0} Items)
@@ -117,7 +122,9 @@ const CartSheets: FC<Props> = ({ open, setOpen }) => {
                 <p className="text-primary">100$</p>
               </div>
               <div className="flex gap-2 mt-3">
-                <Button className="w-full">Cart </Button>
+                <Link href={"/cart"} className="w-full">
+                  <Button className="w-full">Cart </Button>
+                </Link>
                 <Button className="w-full">Checkout</Button>
               </div>
             </div>

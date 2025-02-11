@@ -17,7 +17,6 @@ import ShopFilterSheet from "../sheets/ShopFilterSheet";
 
 const MobileBottomBar = () => {
   const pathName = usePathname();
-  console.log(pathName);
 
   return (
     <div className=" md:hidden bottom-0 sticky  left-0 right-0 z-50">
