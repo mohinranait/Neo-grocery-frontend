@@ -10,7 +10,7 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const { name, slug, featureImage, price } = product || {};
   return (
-    <article className="border group bg-white hover:border-main border-border rounded">
+    <article className="border min-h-[280px] flex flex-col group bg-white hover:border-main border-border rounded">
       <div className="px-8 flex items-center justify-center h-[130px]">
         <Link
           href={`/product/${slug}`}
@@ -25,7 +25,7 @@ const ProductCard = ({ product }: Props) => {
           />
         </Link>
       </div>
-      <div className="px-3 space-y-2">
+      <div className="px-3 flex-grow space-y-2">
         <p className="text-xs text-gray-400 uppercase">In Stock</p>
         <Link
           href={`/product/${slug}`}
