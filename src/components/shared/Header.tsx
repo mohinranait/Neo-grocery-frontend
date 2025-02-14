@@ -43,7 +43,7 @@ const Header = () => {
   }, [pathName]);
   return (
     <header>
-      <div className="border-b  border-border">
+      <div className="border-b bg-white border-border">
         <div className="px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ">
           {/* Logo */}
           <div className="flex items-center gap-2">
@@ -122,9 +122,9 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:block border-b border-border">
+      <div className="hidden bg-white md:block border-b border-border">
         <div className="container flex ">
-          <div className="w-[280px] relative flex items-center  border-r border-border  gap-3">
+          <div className="w-[280px] bg-main relative flex items-center  border-r border-border  gap-3">
             <div
               onClick={() => {
                 if (pathName === "/") {
@@ -133,10 +133,10 @@ const Header = () => {
                   setOpenCategory(!openCategory);
                 }
               }}
-              className="flex gap-3 cursor-pointer w-full h-full items-center"
+              className="flex gap-3 px-4 cursor-pointer w-full h-full items-center"
             >
-              <Menu size={20} />
-              <p className="uppercase text-sm text-gray-700 font-semibold">
+              <Menu size={20} className="text-white" />
+              <p className="uppercase text-sm text-white font-semibold">
                 Categories
               </p>
             </div>

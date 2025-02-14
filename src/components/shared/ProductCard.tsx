@@ -10,7 +10,7 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const { name, slug, featureImage, price } = product || {};
   return (
-    <article className="border group hover:border-main border-border rounded">
+    <article className="border group bg-white hover:border-main border-border rounded">
       <div className="px-8 flex items-center justify-center h-[130px]">
         <Link
           href={`/product/${slug}`}
