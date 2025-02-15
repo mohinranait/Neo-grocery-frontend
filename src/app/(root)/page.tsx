@@ -11,7 +11,7 @@ const HomePage = () => {
       <BannerSection />
 
       <section className="py-10">
-        <div className="xl:w-[1000px] grid grid-cols-4 gap-3 mx-auto">
+        <div className="xl:w-[1000px]  grid grid-cols-1 res5:grid-cols-2  md:grid-cols-4 gap-3 mx-auto">
           <div className="flex flex-col gap-2 justify-center items-center">
             <CarTaxiFront size={36} className="text-main" />
             <p className="text-center font-semibold text-gray-800 ">
