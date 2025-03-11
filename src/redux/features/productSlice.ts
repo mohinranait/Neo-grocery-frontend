@@ -1,4 +1,4 @@
-import { TProduct } from '@/types/product.type'
+import { TProduct, TVariation } from '@/types/product.type'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
@@ -7,13 +7,15 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 type TInitialStateType = {
     product: TProduct,
     products: TProduct[],
-    selectedProduct: TProduct | null
+    selectedProduct: TProduct | null,
+    variant: TVariation | null;
 }
 
 const initialState:TInitialStateType  = {
   product: {} as TProduct,
   products: [],
   selectedProduct: null,
+  variant: null,
 }
 
 export const productSlice = createSlice({
@@ -41,11 +43,14 @@ export const productSlice = createSlice({
       // Update selected product state
       state.selectedProduct = action?.payload;
     },
+    updateVariant: (state, action: PayloadAction<TVariation>) => {
+      state.variant = action?.payload
+    }
    
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {  setProduct,setProducts,updateProducts,updateSingleProduct,setSelectedProduct } = productSlice.actions
+export const {  setProduct,setProducts,updateProducts,updateSingleProduct,setSelectedProduct,updateVariant } = productSlice.actions
 
 export default productSlice.reducer

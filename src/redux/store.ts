@@ -43,8 +43,8 @@ const rootReducer = combineReducers({
     cart: persistedCartReducer,
     brand: persistedBrandReducer,
     media: mediaReducer,
-    attribute: attributeReducer,
-    attributeConfig: attributeConfigReducer,
+    attributes: attributeReducer,
+    attributeConfigs: attributeConfigReducer,
     ui: uiReducer,
 })
 

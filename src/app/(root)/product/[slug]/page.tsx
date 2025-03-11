@@ -58,8 +58,8 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
         </Breadcrumb>
       </div>
 
-      <div className="container">
-        <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row gap-4">
+      <div className="container px-2 md:px-0">
+        <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[420px_auto_300px] gap-4">
           <div className="w-full">
             <div className="  md:w-[400px] ">
               <ProductViewSlider product={product} />
@@ -129,10 +129,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
 
             <p className="text-sm text-gray-600">
               Consequat a scelerisque suspendisse vel et eget eu vitae
-              adipiscing nibh scelerisque semper cum adipiscing facilisis
-              adipiscing est accumsan lorem vestibulum. Aliquet mus a aptent
-              ullam corper metus accumsan. Habitasse a purus nec ipsum a urna ac
-              ullamcorper varius metus blandit posuere.
+              adipiscing.
             </p>
 
             <div>
@@ -186,7 +183,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
               )}
             </div>
           </div>
-          <div className="md:col-span-2 w-full">
+          <div className="md:col-span-2 xl:col-span-1 w-full">
             <div className=" xl:w-[310px] ">
               <ul className="bg-gray-100 space-y-6 p-10 lg:p-4 xl:p-10 rounded">
                 <li className="items-center flex  gap-2">

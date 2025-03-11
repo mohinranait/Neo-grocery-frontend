@@ -38,6 +38,7 @@ export const getSingleProductBySlug = async (slug:string)=>{
             headers:{
                 "Content-type":"Application/json",
             },
+            cache:'no-store'
         })
         if (!response.ok) {
             throw new Error("Failed to fetch product");

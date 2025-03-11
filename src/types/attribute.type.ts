@@ -1,8 +1,8 @@
 export type TAttributeType = {
-    _id?: string;
+    _id: string;
     name: string; 
     slug: string; 
-    status?: "Active" | "Inactive"; 
-    createdAt?: Date;
-    updatedAt?: Date;
+    status: "Active" | "Inactive"; 
+    createdAt: Date;
+    updatedAt: Date;
 }

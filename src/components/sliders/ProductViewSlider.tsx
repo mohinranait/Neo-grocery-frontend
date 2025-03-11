@@ -14,18 +14,48 @@ import Image from "next/image";
 import { Swiper as SwiperClass } from "swiper/types";
 import "./productViewSlider.css";
 import { TProduct } from "@/types/product.type";
+import { useAppSelector } from "@/hooks/useRedux";
+
 type Props = {
   product: TProduct;
 };
+
 const ProductViewSlider = ({ product }: Props) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [images, setImages] = useState<string[]>([]);
+  const { variant } = useAppSelector((state) => state.product);
 
+  // Load default product images
   useEffect(() => {
+    let pImgs: string[] = [];
     const { featureImage, imageGallary } = product || {};
-    const pImgs = [featureImage?.image, ...(imageGallary as string[])];
-    setImages(pImgs);
+    if (product?.variant === "Variable Product") {
+      const imgs = product?.variations?.map((item) => item?.image);
+      pImgs = [featureImage?.image, ...imgs];
+    } else {
+      const gallarys = (imageGallary as string[]) || [];
+      pImgs = [featureImage?.image, ...gallarys];
+    }
+    setImages(pImgs || []);
   }, [product]);
+
+  // Update images when variant changes
+  useEffect(() => {
+    if (variant?.image) {
+      setImages([variant?.image]);
+    } else {
+      let pImgs: string[] = [];
+      const { featureImage, imageGallary } = product || {};
+      if (product?.variant === "Variable Product") {
+        const imgs = product?.variations?.map((item) => item?.image);
+        pImgs = [featureImage?.image, ...imgs];
+      } else {
+        const gallarys = (imageGallary as string[]) || [];
+        pImgs = [featureImage?.image, ...gallarys];
+      }
+      setImages(pImgs || []);
+    }
+  }, [variant, product]);
 
   return (
     <React.Fragment>
