@@ -13,6 +13,7 @@ import { Grid, List } from "lucide-react";
 
 import ShopFilterSection from "@/components/pages/shop/ShopFilterSection";
 import { useAppSelector } from "@/hooks/useRedux";
+import Image from "next/image";
 
 const ShopPage = () => {
   const { products } = useAppSelector((state) => state.product);
@@ -42,10 +43,16 @@ const ShopPage = () => {
           </div>
         </div>
         <div className=" flex-grow space-y-4">
-          <div className="h-[140px] bg-red-100 flex items-center justify-center">
-            Banner Part
+          <div className="res5:h-[200px] overflow-hidden bg-red-100 flex items-center justify-center">
+            <Image
+              src={"/promotion.jpg"}
+              width={800}
+              height={200}
+              alt="Promo"
+              className="w-full h-auto object-contain"
+            />
           </div>
-          <div className="py-3 px-3 flex items-center justify-between rounded shadow">
+          <div className="py-3 bg-white px-3 flex items-center justify-between rounded shadow">
             <p className="text-gray-600 text-sm">Showing all 5 results</p>
             <div className="flex">
               <select name="" className="text-sm text-gray-600" id="">

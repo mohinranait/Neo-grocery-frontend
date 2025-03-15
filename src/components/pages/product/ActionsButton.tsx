@@ -61,7 +61,6 @@ const ActionsButton = ({ product }: Props) => {
     const cartData: TCartItems = {
       user: null,
       product: product?._id,
-      price: 10,
       quantity: quantity,
     };
     if (isAuthenticated) {
