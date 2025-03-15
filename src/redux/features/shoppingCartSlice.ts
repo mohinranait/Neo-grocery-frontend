@@ -1,3 +1,4 @@
+import { areObjectEqual } from "@/helpers/equalObject";
 import { TCartItems } from "@/types/cart.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -17,14 +18,20 @@ const shoppingCartSlice = createSlice({
             state.carts = action?.payload
         },
         addToCart:(state, action:PayloadAction<TCartItems>) => {
-            const {product, quantity} = action?.payload
+            const {product, quantity,attributes} = action?.payload
             const findCart = state.carts?.find((cart) => cart?.product === product);
             if (findCart?.product) {
-                // Already exists product in shopping cart
-                state.carts = state.carts?.map(cart => cart?.product === findCart?.product ? ({
-                    ...cart,
-                    quantity,
-                }) : cart )
+                if( !areObjectEqual(findCart?.attributes || {}, attributes||{})   ){
+                    // Add new product in shopping cart
+                    state.carts = [...state.carts, action?.payload]
+                }else{
+                    // Already exists product in shopping cart
+                    state.carts = state.carts?.map(cart => cart?.product === findCart?.product ? ({
+                        ...cart,
+                        quantity,
+                    }) : cart )
+                }
+                
             }else{
                 // Add new product in shopping cart
                 state.carts = [...state.carts, action?.payload]

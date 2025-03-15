@@ -8,6 +8,7 @@ import { TCartItems } from "@/types/cart.type";
 import { useEffect, useMemo, useState } from "react";
 import { addToCart } from "@/redux/features/shoppingCartSlice";
 import { updateVariant } from "@/redux/features/productSlice";
+import toast from "react-hot-toast";
 
 type Props = {
   product: TProduct;
@@ -22,6 +23,7 @@ const ActionsButton = ({ product }: Props) => {
   const { attributeConfigs: getAttrConfigs } = useAppSelector(
     (state) => state.attributeConfigs
   );
+  const { variant } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
 
   // const cart = carts?.find(
@@ -58,14 +60,76 @@ const ActionsButton = ({ product }: Props) => {
 
   // Add product in your shopping cart
   const handleAddToCart = () => {
-    const cartData: TCartItems = {
+    let cartData: TCartItems = {
       user: null,
       product: product?._id,
       quantity: quantity,
+      price:
+        product?.price?.sellPrice && product?.price?.sellPrice > 0
+          ? product?.price?.sellPrice
+          : product?.price?.productPrice,
+      sku: product?.skuCode,
     };
+
+    if (
+      product?.attributes &&
+      product?.attributes?.length > 0 &&
+      attributeIds?.length !== product?.attributes?.length
+    ) {
+      toast.custom(
+        <div className="py-2 shadow-lg px-2 rounded-md text-sm text-[#1b1b1a] bg-[#ffffff]">
+          ⚠️ Select product attribute
+        </div>
+      );
+      return;
+    }
+
+    // If exists attributes for this product
+    if (
+      attributeIds?.length ===
+      (product?.attributes && product?.attributes?.length)
+    ) {
+      const attrConfigs = getAttrConfigs?.filter((attrCon) =>
+        attributeIds?.includes(attrCon?._id)
+      );
+
+      attrConfigs?.forEach((item) => {
+        // Store empty object for attribute
+        if (!cartData.attributes) {
+          cartData.attributes = {};
+        }
+
+        const findAttr = getAttributes?.find(
+          (attr) => attr?._id === item?.attribute
+        );
+
+        if (!findAttr) {
+          toast.error("Somthing wrong for attribute");
+          return;
+        }
+
+        cartData.attributes[findAttr?.name] = item?.name;
+      });
+    }
+
+    // For variable product
+    if (product?.variant === "Variable Product") {
+      cartData = {
+        ...cartData,
+        price: variant?.offerPirce
+          ? Number(variant?.offerPirce)
+          : Number(variant?.productPrice) || 0,
+        sku: variant?.sku || "default",
+      };
+    }
+
+    // Checked authentication user
     if (isAuthenticated) {
       cartData.user = user?._id as string;
     }
+
+    console.log({ cartData });
+
     dispatch(addToCart(cartData));
   };
 

@@ -1,10 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Grocery e-commerce app
+
+Akhany akta product k category and brand onujay post kora jay, variable product upload kora jay. payment system acy.
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
+# Download project from github
+git clone (repository-link)
+# Install all package for project
+npm install
+# Start local server
 npm run dev
 # or
 yarn dev
@@ -14,23 +21,32 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Variable product add to cart
+- Add to Cart default functionality
+- Multiple filter options
+- User Login, Register system
+- Cart product without authenticated user
+- Checkout and order
+- Track order and view order history
+- Search product
+- Show category wish product
+- Admin panel and user panel completly seperated.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Techonologys
 
-## Learn More
+- MERN (Mongodb, Express, React, Node.js)
+- Next.js
+- Tailwindcss
+- Shadcn
+- JWT Authentication
 
-To learn more about Next.js, take a look at the following resources:
+## Project Links
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Frontend [Live](https://neo-grocery-frontend.vercel.app/)
+- Admin [Live](https://neo-grocery-client.vercel.app/)
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is deploy vercel free server.
