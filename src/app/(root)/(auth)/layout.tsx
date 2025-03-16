@@ -6,10 +6,10 @@ type TAuthLayout = {
 };
 const AuthLayout: FC<TAuthLayout> = ({ children }) => {
   return (
-    <section>
-      <div className="max-w-[900px] min-h-screen items-center mx-auto mt-3 grid grid-cols-1 lg:grid-cols-2 ">
+    <section className="min-h-screen flex items-center justify-center">
+      <div className="max-w-[900px] bg-white  items-center mx-auto mt-3 grid grid-cols-1 lg:grid-cols-2 ">
         <div className=" order-2 ">
-          <div className=" max-w-[350px] lg:max-w-max mx-auto lg:order-1 p-10 pb-0 bg-main  rounded ">
+          <div className=" max-w-[350px] lg:max-w-max mx-auto lg:order-1 p-10 pb-0 bg-main  rounded-l ">
             <p className="text-4xl font-bold text-white">
               Simplify management your dashboard
             </p>
@@ -22,7 +22,7 @@ const AuthLayout: FC<TAuthLayout> = ({ children }) => {
             </div>
           </div>
         </div>
-        <div className=" order-1 lg:order-2 p-10">{children}</div>
+        <div className=" order-1 lg:order-2 px-10">{children}</div>
       </div>
     </section>
   );

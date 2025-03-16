@@ -71,14 +71,28 @@ const ActionsButton = ({ product }: Props) => {
       sku: product?.skuCode,
     };
 
+    // Show toast notification, when user don't select attribute
     if (
       product?.attributes &&
       product?.attributes?.length > 0 &&
       attributeIds?.length !== product?.attributes?.length
     ) {
+      const prodAttributes = product?.attributes?.map(
+        (item) => item?.attribute
+      );
+
+      const attrConfigs = getAttributes?.filter((attr) =>
+        prodAttributes?.includes(attr?._id)
+      );
+
       toast.custom(
         <div className="py-2 shadow-lg px-2 rounded-md text-sm text-[#1b1b1a] bg-[#ffffff]">
-          ⚠️ Select product attribute
+          ⚠️ Select{" "}
+          {attrConfigs?.map((attr, i) => (
+            <span key={i} className="font-semibold">
+              {attr?.name},
+            </span>
+          ))}
         </div>
       );
       return;
@@ -127,8 +141,6 @@ const ActionsButton = ({ product }: Props) => {
     if (isAuthenticated) {
       cartData.user = user?._id as string;
     }
-
-    console.log({ cartData });
 
     dispatch(addToCart(cartData));
   };

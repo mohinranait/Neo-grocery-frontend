@@ -103,11 +103,13 @@ const CartSheets = () => {
                         {findProduct?.name}
                       </Link>
                       <p className="text-xs my-[2px] text-gray-600">
-                        Product Price: 100$
+                        Product Price: {cart?.price}$
                       </p>
                       <div className="flex justify-between">
                         <CartCounter cart={cart} />
-                        <span className="text-sm text-black">45$</span>
+                        <span className="text-sm text-black">
+                          {cart?.price * cart?.quantity}$
+                        </span>
                       </div>
                     </div>
                   </li>
@@ -119,7 +121,13 @@ const CartSheets = () => {
             <div className="h-[86px]">
               <div className="flex items-center justify-between">
                 <p className="text-gray-800">Sub Total</p>
-                <p className="text-primary">100$</p>
+                <p className="text-primary">
+                  {carts?.reduce(
+                    (acc, cur) => cur.price * cur?.quantity + acc,
+                    0
+                  )}{" "}
+                  $
+                </p>
               </div>
               <div className="flex gap-2 mt-3">
                 <Link href={"/cart"} className="w-full">

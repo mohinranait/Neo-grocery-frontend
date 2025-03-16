@@ -25,6 +25,10 @@ const ProductCard = ({ product }: Props) => {
       user: null,
       product: product?._id,
       quantity: 1,
+      price: product?.price?.sellPrice
+        ? product?.price?.sellPrice
+        : product?.price?.productPrice,
+      sku: "default",
     };
     if (isAuthenticated) {
       cartData.user = user?._id as string;
@@ -35,7 +39,6 @@ const ProductCard = ({ product }: Props) => {
 
   const increment = (qty: number) => {
     if (qty < 20) {
-      // const arr = [...carts];
       const updateCarts = carts?.map((cart) =>
         cart?.product === product?._id
           ? { ...cart, quantity: cart?.quantity + 1 }
