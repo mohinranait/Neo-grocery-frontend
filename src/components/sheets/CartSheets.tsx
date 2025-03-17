@@ -76,7 +76,7 @@ const CartSheets = () => {
                 return (
                   <li
                     key={index}
-                    className="flex  hover:bg-gray-50 py-3  px-3 items-center"
+                    className="flex  hover:bg-gray-50 py-3 gap-3 px-3 items-center"
                   >
                     <div>
                       <div className="relative w-[100px]">
