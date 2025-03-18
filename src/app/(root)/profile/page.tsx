@@ -97,7 +97,7 @@ const UserProfilePage = () => {
         </div>
       </div>
       <div className="bg-white p-4 overflow-x-auto rounded">
-        <div className="min-w-[1000px]">
+        <div className="min-w-[600px]">
           <Table className="border ">
             <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>

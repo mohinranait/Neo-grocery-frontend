@@ -24,7 +24,7 @@ bun dev
 ## Features
 
 - Variable product add to cart
-- Add to Cart default functionality
+- Add to Cart default functionality and All cart automatically remove after 12 hours
 - Multiple filter options
 - User Login, Register system
 - Cart product without authenticated user

@@ -6,33 +6,26 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useAppSelector } from "@/hooks/useRedux";
-import { currency } from "@/helpers/utils";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { currency, generateRandomId } from "@/helpers/utils";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
-
-type TOrderForm = {
-  userId?: string;
-  shippingAddress?: {
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    postalCode: string;
-  };
-  shippingAddressId?: string;
-  items: never[];
-  totalAmount: number;
-  uid: string;
-  email?: string;
-  phone: string;
-};
+import { setAllCarts } from "@/redux/features/shoppingCartSlice";
+import { TOrderForm } from "@/types/order.type";
+import { placeNewOrder } from "@/actions/orderApi";
+import { useRouter } from "next/navigation";
 
 const CheckoutComponent = () => {
   // Redux state
   const { carts } = useAppSelector((state) => state.cart);
   const { products } = useAppSelector((state) => state.product);
   const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  // Local State
+  const router = useRouter();
   const [forms, setForms] = useState({
+    userId: "",
+    addressId: "",
     firstName: "",
     lastName: "",
     phone: "",
@@ -41,18 +34,93 @@ const CheckoutComponent = () => {
     postalCode: "",
     city: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>();
 
-  // Local state
+  // Validation function
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // If user not login
+    if (!user || !user?._id) {
+      // Check if firstName is not empty
+      if (!forms.firstName) {
+        newErrors.firstName = "First name is required";
+      }
+
+      // Check if lastName is not empty
+      if (!forms.lastName) {
+        newErrors.lastName = "Last name is required";
+      }
+
+      // Check if address is not empty
+      if (!forms.address) {
+        newErrors.address = "Address is required";
+      }
+
+      // Validate postal code (example: 5 digits)
+      if (!forms.postalCode) {
+        newErrors.postalCode = "Postal code is required";
+      }
+
+      // Check if city is not empty
+      if (!forms.city) {
+        newErrors.city = "City is required.";
+      }
+    }
+
+    // Validate phone number (basic validation for length)
+    if (!forms.phone || forms.phone.length < 10) {
+      newErrors.phone = "Phone number must be at least 10 digits.";
+    }
+
+    // Validate email (simple regex)
+    // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    // if (!forms.email || !emailRegex.test(forms.email)) {
+    //   newErrors.email = "Please enter a valid email address.";
+    // }
+
+    // Update errors state
+    setErrors(newErrors);
+
+    // Return true if no errors
+    return Object.keys(newErrors).length === 0;
+  };
 
   // handle order data
   const handleOrder = async () => {
+    if (!validateForm()) return;
+
     let data: TOrderForm = {
       items: [],
       totalAmount: 0,
-      uid: "",
+      uid: generateRandomId(8),
       email: forms?.email,
       phone: forms?.phone,
     };
+
+    carts?.forEach((cart) => {
+      const findProduct = products.find(
+        (product) => product?._id === cart?.product
+      );
+      if (!findProduct) return;
+      if (findProduct?.variant === "Single Product") {
+        const pPrice = findProduct?.price?.sellPrice
+          ? findProduct?.price?.sellPrice
+          : findProduct?.price?.productPrice;
+        if (pPrice !== cart?.price) {
+          dispatch(setAllCarts([]));
+          return;
+        }
+      }
+
+      // Update form data
+      data.totalAmount += cart?.price * cart?.quantity;
+      data.items.push({
+        ...cart,
+        image: findProduct?.featureImage?.image,
+        name: findProduct?.name,
+      });
+    });
 
     if (user?._id) {
       data.userId = user?._id;
@@ -70,10 +138,29 @@ const CheckoutComponent = () => {
       };
     }
 
-    console.log(data);
+    try {
+      const getResponse = await placeNewOrder(data);
+      if (getResponse?.success) {
+        dispatch(setAllCarts([]));
+        if (!user) {
+          setForms({
+            userId: "",
+            addressId: "",
+            firstName: "",
+            lastName: "",
+            phone: "",
+            email: "",
+            address: "",
+            postalCode: "",
+            city: "",
+          });
+        }
+        router.push(`/order-success?code=${getResponse?.payload?.uid}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  console.log({ forms });
 
   return (
     <div className="py-10">
@@ -102,6 +189,11 @@ const CheckoutComponent = () => {
                     "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                   )}
                 />
+                {errors?.phone && (
+                  <p className="text-xs text-red-500 mt-[3px]">
+                    {errors?.phone}
+                  </p>
+                )}
                 <div className="flex items-center mt-2 space-x-2">
                   <Checkbox id="give_me_email" />
                   <label
@@ -132,6 +224,11 @@ const CheckoutComponent = () => {
                         }))
                       }
                     />
+                    {errors?.firstName && (
+                      <p className="text-xs text-red-500 mt-[3px]">
+                        {errors?.firstName}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Input
@@ -148,6 +245,11 @@ const CheckoutComponent = () => {
                         }))
                       }
                     />
+                    {errors?.lastName && (
+                      <p className="text-xs text-red-500 mt-[3px]">
+                        {errors?.lastName}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -162,6 +264,11 @@ const CheckoutComponent = () => {
                       setForms((prev) => ({ ...prev, address: e.target.value }))
                     }
                   />
+                  {errors?.address && (
+                    <p className="text-xs text-red-500 mt-[3px]">
+                      {errors?.address}
+                    </p>
+                  )}
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -176,6 +283,11 @@ const CheckoutComponent = () => {
                         setForms((prev) => ({ ...prev, city: e.target.value }))
                       }
                     />
+                    {errors?.city && (
+                      <p className="text-xs text-red-500 mt-[3px]">
+                        {errors?.city}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Input
@@ -192,6 +304,11 @@ const CheckoutComponent = () => {
                         }))
                       }
                     />
+                    {errors?.postalCode && (
+                      <p className="text-xs text-red-500 mt-[3px]">
+                        {errors?.postalCode}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
