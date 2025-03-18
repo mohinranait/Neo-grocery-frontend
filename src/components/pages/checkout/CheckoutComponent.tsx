@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -10,9 +10,70 @@ import { useAppSelector } from "@/hooks/useRedux";
 import { currency } from "@/helpers/utils";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
 
+type TOrderForm = {
+  userId?: string;
+  shippingAddress?: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    postalCode: string;
+  };
+  shippingAddressId?: string;
+  items: never[];
+  totalAmount: number;
+  uid: string;
+  email?: string;
+  phone: string;
+};
+
 const CheckoutComponent = () => {
+  // Redux state
   const { carts } = useAppSelector((state) => state.cart);
   const { products } = useAppSelector((state) => state.product);
+  const { user } = useAppSelector((state) => state.auth);
+  const [forms, setForms] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    address: "",
+    postalCode: "",
+    city: "",
+  });
+
+  // Local state
+
+  // handle order data
+  const handleOrder = async () => {
+    let data: TOrderForm = {
+      items: [],
+      totalAmount: 0,
+      uid: "",
+      email: forms?.email,
+      phone: forms?.phone,
+    };
+
+    if (user?._id) {
+      data.userId = user?._id;
+    } else {
+      data = {
+        ...data,
+        shippingAddress: {
+          ...data.shippingAddress,
+          firstName: forms?.firstName,
+          lastName: forms?.lastName,
+          address: forms?.address,
+          postalCode: forms?.postalCode,
+          city: forms?.city,
+        },
+      };
+    }
+
+    console.log(data);
+  };
+
+  console.log({ forms });
 
   return (
     <div className="py-10">
@@ -32,7 +93,11 @@ const CheckoutComponent = () => {
               <div>
                 <Input
                   type="text"
-                  placeholder="Email Or Phone"
+                  placeholder="Phone number"
+                  value={forms?.phone}
+                  onChange={(e) =>
+                    setForms((prev) => ({ ...prev, phone: e.target.value }))
+                  }
                   className={cn(
                     "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                   )}
@@ -59,6 +124,13 @@ const CheckoutComponent = () => {
                       className={cn(
                         "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                       )}
+                      value={forms?.firstName}
+                      onChange={(e) =>
+                        setForms((prev) => ({
+                          ...prev,
+                          firstName: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -68,6 +140,13 @@ const CheckoutComponent = () => {
                       className={cn(
                         "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                       )}
+                      value={forms?.lastName}
+                      onChange={(e) =>
+                        setForms((prev) => ({
+                          ...prev,
+                          lastName: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                 </div>
@@ -78,6 +157,10 @@ const CheckoutComponent = () => {
                     className={cn(
                       "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                     )}
+                    value={forms?.address}
+                    onChange={(e) =>
+                      setForms((prev) => ({ ...prev, address: e.target.value }))
+                    }
                   />
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -88,6 +171,10 @@ const CheckoutComponent = () => {
                       className={cn(
                         "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                       )}
+                      value={forms?.city}
+                      onChange={(e) =>
+                        setForms((prev) => ({ ...prev, city: e.target.value }))
+                      }
                     />
                   </div>
                   <div>
@@ -97,6 +184,13 @@ const CheckoutComponent = () => {
                       className={cn(
                         "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                       )}
+                      value={forms?.postalCode}
+                      onChange={(e) =>
+                        setForms((prev) => ({
+                          ...prev,
+                          postalCode: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                 </div>
@@ -105,7 +199,7 @@ const CheckoutComponent = () => {
                   <div>
                     <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
                       <span>Standard Shipping</span>
-                      <span>10$</span>
+                      <span>$0</span>
                     </div>
                   </div>
                 </div>
@@ -198,7 +292,11 @@ const CheckoutComponent = () => {
                 </span>
               </li>
               <li className=" py-4 space-y-4">
-                <Button className="w-full bg-main text-white " size={"lg"}>
+                <Button
+                  onClick={handleOrder}
+                  className="w-full bg-main text-white "
+                  size={"lg"}
+                >
                   Order Now
                 </Button>
 

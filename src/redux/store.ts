@@ -26,9 +26,24 @@ const persistCategory = {
     storage,
 }
 
+const timeInMillis  = 12 * 60 * 60 * 1000; 
 const persistCarts = {
     key: 'cart',
     storage,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    migrate: (state: any) => {
+        // All cart items automatically remove after 12 hours
+        const currentTimestamp = Date.now();
+
+        if (state?.timestamp && currentTimestamp - state.timestamp > timeInMillis) {
+            return Promise.resolve({
+                carts: [],
+                timestamp: null,
+            });
+        }
+
+        return Promise.resolve(state);
+    }
 }
 
 const persistedAuthReducer = persistReducer(persistAuth, authReducer)

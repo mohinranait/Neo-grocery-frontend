@@ -2,12 +2,14 @@ import { areObjectEqual } from "@/helpers/equalObject";
 import { TCartItems } from "@/types/cart.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type PropsType = {
-    carts: TCartItems[]
+export type PropsType = {
+    carts: TCartItems[],
+    timestamp: number | null,
 }
 
 const initialState:PropsType = {
     carts: [],
+    timestamp:null,
 }
 
 const shoppingCartSlice = createSlice({
@@ -36,6 +38,8 @@ const shoppingCartSlice = createSlice({
                 // Add new product in shopping cart
                 state.carts = [...state.carts, action?.payload]
             }
+
+            state.timestamp = Date.now();
         },
         removeCart:(state, action:PayloadAction<string>) => {
             state.carts = state.carts?.filter(cart => cart?.product !== action?.payload)

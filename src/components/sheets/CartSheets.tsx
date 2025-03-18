@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { removeCart } from "@/redux/features/shoppingCartSlice";
 import { setCartSidebarOpen } from "@/redux/features/uiSlice";
 import { usePathname } from "next/navigation";
+import useTotalCartPrice from "@/hooks/useTotalCartPrice";
+import { currency } from "@/helpers/utils";
 
 const CartSheets = () => {
   const pathName = usePathname();
@@ -122,11 +124,8 @@ const CartSheets = () => {
               <div className="flex items-center justify-between">
                 <p className="text-gray-800">Sub Total</p>
                 <p className="text-primary">
-                  {carts?.reduce(
-                    (acc, cur) => cur.price * cur?.quantity + acc,
-                    0
-                  )}{" "}
-                  $
+                  {currency}
+                  {useTotalCartPrice()}
                 </p>
               </div>
               <div className="flex gap-2 mt-3">
