@@ -8,6 +8,7 @@ import React from "react";
 const HomePage = () => {
   return (
     <main>
+      {/* Banner section */}
       <BannerSection />
 
       <section className="py-10">
@@ -51,7 +52,125 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="pt-10">
+      {/* Features Display section */}
+      <section>
+        <div className="container px-2 lg:px-0">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="h-[140px] lg:h-auto bg-red-300  relative lg:row-span-2">
+              <div>
+                <Image
+                  className=" h-[140px] lg:h-[300px] w-full object-cover"
+                  src={"/1.jpg"}
+                  width={400}
+                  height={200}
+                  alt="Image"
+                />
+              </div>
+              <div className="absolute top-0 z-10 left-0 w-full h-full bg-black bg-opacity-55"></div>
+              <div className="w-full h-full z-20 relative  p-5 -mt-[140px] lg:-mt-[300px] flex flex-col justify-center  ">
+                <p className="text-3xl font-semibold text-white">
+                  Fresh Choocolte
+                </p>
+                <p className="text-base font-normal text-gray-100">
+                  Frd justd jalign monntetr nested frouts
+                </p>
+                <div className="mt-3">
+                  <Link
+                    href={"/"}
+                    className="text-white  bg-main px-3 py-2 rounded inline-block text-sm font-medium"
+                  >
+                    Details new
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="h-[140px] bg-green-300 relative ">
+              <div>
+                <Image
+                  className="h-[140px] w-full object-cover"
+                  src={"/2.jpg"}
+                  width={400}
+                  height={200}
+                  alt="Image"
+                />
+              </div>
+
+              <div className="absolute top-0 z-10 left-0 w-full h-full bg-black bg-opacity-55"></div>
+              <div className="w-full z-20 relative h-full p-5 -mt-[140px] flex flex-col justify-center ">
+                <p className="text-3xl font-semibold text-white">
+                  Fresh Choocolte
+                </p>
+
+                <div className="mt-3">
+                  <Link
+                    href={"/"}
+                    className="text-white  bg-main px-3 py-2 rounded inline-block text-sm font-medium"
+                  >
+                    Details new
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="h-[140px] lg:h-auto bg-yellow-300 relative lg:row-span-2">
+              <div>
+                <Image
+                  className="h-[140px] lg:h-[300px] w-full object-cover"
+                  src={"/3.jpg"}
+                  width={400}
+                  height={200}
+                  alt="Image"
+                />
+              </div>
+              <div className="absolute top-0 z-10 left-0 w-full h-full bg-black bg-opacity-55"></div>
+              <div className="w-full  z-20 relative h-full p-5 -mt-[140px] lg:-mt-[300px] flex flex-col justify-center ">
+                <p className="text-3xl font-semibold text-white">
+                  Fresh Choocolte
+                </p>
+                <p className="text-base font-normal text-gray-100">
+                  Frd justd jalign monntetr nested frouts
+                </p>
+                <div className="mt-3">
+                  <Link
+                    href={"/"}
+                    className="text-white  bg-main px-3 py-2 rounded inline-block text-sm font-medium"
+                  >
+                    Details new
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="h-[140px] bg-blue-300 relative ">
+              <div>
+                <Image
+                  className="h-[140px] w-full object-cover"
+                  src={"/4.jpg"}
+                  width={400}
+                  height={200}
+                  alt="Image"
+                />
+              </div>
+              <div className="absolute top-0 z-10 left-0 w-full h-full bg-black bg-opacity-55"></div>
+              <div className="w-full z-20 relative h-full p-5 -mt-[140px] flex flex-col justify-center ">
+                <p className="text-3xl font-semibold text-white">
+                  Fresh Choocolte
+                </p>
+
+                <div className="mt-3">
+                  <Link
+                    href={"/"}
+                    className="text-white  bg-main px-3 py-2 rounded inline-block text-sm font-medium"
+                  >
+                    Details new
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categoriys section */}
+      {/* <section className="pt-10">
         <div className="container mx-auto bg-green-100 rounded">
           <div className="xl:w-[1000px] py-4 mx-auto">
             <p className=" text-xl font-semibold text-center">Categories</p>
@@ -119,9 +238,12 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
+      {/* Product Section */}
       <ProductSection />
+
+      {/* Features Section */}
       <section className="mb-10">
         <div className="container mt-10 lg:mt-0">
           <div className="grid lg:grid-cols-2 gap-6">
