@@ -10,6 +10,7 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
 }
 
 @layer base {
@@ -66,8 +67,33 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  .price-range-slider{
+    height: 5px !important;
+    .range-slider__range{
+      background-color: hsl(var(--main)) !important;
+    }
+    .range-slider__thumb{
+      border: 3px solid hsl(var(--main)) !important;
+      background-color: white !important;
+    }
+  }
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--main);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .range-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: var(--foreground);
+    border-radius: 5px;
+    cursor: pointer;
+  }
 }
 
-@layer base {
- 
-}
+

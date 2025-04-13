@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@/hooks/useRedux";
 import { ChevronRight, Cookie } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type TBuildTree = {
@@ -56,11 +57,11 @@ const HeaderBrowsCategory = () => {
   }, [categories]);
 
   return (
-    <ul className="relative max-h-[400px] ">
+    <ul className="relative z-[999] bg-white max-h-[400px] ">
       {showCategories?.map((category: TTreeNode, index) => (
         <li key={index} className="group/category">
-          <a
-            href="#"
+          <Link
+            href={`/shop?cat=${category?._id}`}
             className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
           >
             <span className="inline-flex gap-1 items-center">
@@ -72,13 +73,13 @@ const HeaderBrowsCategory = () => {
             {category?.children && category?.children?.length > 0 && (
               <ChevronRight size={16} className="text-gray-600" />
             )}
-          </a>
+          </Link>
           {category?.children && category?.children?.length > 0 && (
-            <ul className="w-[250px] h-full border border-border border-l-0 border-t-0 group-hover/category:block hidden absolute top-0 z-10 bg-white left-[279px]">
+            <ul className="w-[250px]  h-full border border-border border-l-0 border-t-0 group-hover/category:block hidden absolute top-0 z-10 bg-white left-[279px]">
               {category?.children?.map((subCat: TTreeNode, index) => (
                 <li key={index} className="group/subcategory">
-                  <a
-                    href="#"
+                  <Link
+                    href={`/shop?cat=${subCat?._id}`}
                     className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
                   >
                     <span className="inline-flex gap-1 items-center">
@@ -89,7 +90,7 @@ const HeaderBrowsCategory = () => {
                     {subCat?.children && subCat?.children?.length > 0 && (
                       <ChevronRight size={16} className="text-gray-600" />
                     )}
-                  </a>
+                  </Link>
 
                   {subCat?.children && subCat?.children?.length > 0 && (
                     <ul className="w-[250px] h-full border border-border border-l-0 border-t-0 group-hover/subcategory:block hidden absolute top-0 z-10 bg-white left-[250px]">

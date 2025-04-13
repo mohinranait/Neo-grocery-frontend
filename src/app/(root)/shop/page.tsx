@@ -16,7 +16,7 @@ import { useAppSelector } from "@/hooks/useRedux";
 import Image from "next/image";
 
 const ShopPage = () => {
-  const { products } = useAppSelector((state) => state.product);
+  const { filterProducts } = useAppSelector((state) => state.product);
   return (
     <section>
       <div className="container px-2 md:px-0">
@@ -71,7 +71,7 @@ const ShopPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3">
-            {products?.map((product, index) => (
+            {filterProducts?.map((product, index) => (
               <ProductCard product={product} key={index} />
             ))}
           </div>

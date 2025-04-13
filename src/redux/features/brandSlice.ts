@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TBrandType } from "@/types/brand.type";
 
 
@@ -17,11 +17,11 @@ export const brandSlice = createSlice({
   name: "brand",
   initialState,
   reducers: {
-    addBrands: (state, action: { payload: TBrandType[] }) => {
+    addBrands: (state, action: PayloadAction<TBrandType[]> ) => {
       // Set all brands
         state.brands = [ ...action?.payload ];
     },
-    setSelectedBrand: (state, action: { payload: TBrandType | null }) => {
+    setSelectedBrand: (state, action: PayloadAction<TBrandType|null> ) => {
       // Update selected brand state
       state.selectedBrand = action?.payload;
     },

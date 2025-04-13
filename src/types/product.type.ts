@@ -92,5 +92,6 @@ export type TProduct = {
   attributes?: {
     attribute?:string;
     attributeConfig?:string[];
-  }[]
+  }[],
+  freeShipping?: 'yes'|'no';
 }
