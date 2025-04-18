@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingBagIcon, ShoppingCart, Trash2 } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ShoppingBagIcon, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import { setCartSidebarOpen } from "@/redux/features/uiSlice";
 import { usePathname } from "next/navigation";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
 import { currency } from "@/helpers/utils";
+import EmptyCartComponent from "../utils/EmptyCartComponent";
 
 const CartSheets = () => {
   const pathName = usePathname();
@@ -38,21 +39,6 @@ const CartSheets = () => {
       open={cartSidebarOpen}
       key={"right"}
     >
-      <SheetTrigger onClick={() => dispatch(setCartSidebarOpen(true))}>
-        <li className=" py-3 inline-flex md:h-10 md:w-10 items-center justify-center flex-col px-2 relative">
-          <div className="flex items-center flex-col">
-            <span className="px-1 text-[10px] md:text-xs font-semibold text-white rounded-full bg-main absolute top-[2px] right-0 md:-top-1 md:-right-1">
-              {carts?.length || 0}
-            </span>
-
-            <ShoppingCart className="md:hidden text-gray-500" size={16} />
-
-            <ShoppingCart className="hidden md:block" size={24} />
-
-            <p className=" md:hidden text-xs text-gray-500">Cart</p>
-          </div>
-        </li>
-      </SheetTrigger>
       <SheetContent className="w-full px-0 py-0 res4:w-[400px]">
         <div className="flex flex-col h-full">
           <div>
@@ -70,6 +56,7 @@ const CartSheets = () => {
             </div>
           </div>
           <div className="flex-grow h-[calc(100vh-170px)] overflow-y-auto">
+            {carts?.length === 0 && <EmptyCartComponent />}
             <ul className="divide-y divide-slate-200">
               {carts?.map((cart, index) => {
                 const findProduct = products?.find(

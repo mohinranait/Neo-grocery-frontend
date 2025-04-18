@@ -1,8 +1,14 @@
 "use client";
-import { Heart, Menu, Phone, Search, UserRound } from "lucide-react";
+import {
+  Heart,
+  Menu,
+  Phone,
+  Search,
+  ShoppingCart,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import CartSheets from "../sheets/CartSheets";
 import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import MobileSearchSeet from "../sheets/MobileSearchSeet";
@@ -12,12 +18,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppDispatch } from "@/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { logoutUser } from "@/redux/features/authSlice";
 import { userLogout } from "@/actions/authApi";
 import HeaderBrowsCategory from "../utils/HeaderBrowsCategory";
+import { setCartSidebarOpen } from "@/redux/features/uiSlice";
 
 const Header = () => {
+  // Redux state
+  const { carts } = useAppSelector((state) => state.cart);
+
   // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const pathName = usePathname();
@@ -114,10 +124,17 @@ const Header = () => {
                   </span>
                 </div>
               </li>
-              {/* Shopping Cart Sheet */}
-              <div className="hidden md:block">
-                <CartSheets />
-              </div>
+              <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
+                <div
+                  onClick={() => dispatch(setCartSidebarOpen(true))}
+                  className="w-10  cursor-pointer h-10 relative flex items-center justify-center rounded-full "
+                >
+                  <ShoppingCart size={24} />
+                  <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
+                    {carts?.length || 0}
+                  </span>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -141,7 +158,7 @@ const Header = () => {
               </p>
             </div>
             {openCategory && (
-              <div className="w-[280px] bg-white absolute top-[calc(100%+1px)] left-0  ">
+              <div className="w-[280px] z-[4] bg-white absolute top-[calc(100%+1px)] left-0  ">
                 <div className="border border-border border-t-0 max-h-[400px]  rounded rounded-t-none ">
                   <HeaderBrowsCategory />
                 </div>

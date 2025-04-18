@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import CartCounter from "@/components/utils/CartCounter";
+import EmptyCartComponent from "@/components/utils/EmptyCartComponent";
 import { currency } from "@/helpers/utils";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
@@ -28,6 +29,7 @@ const CartComponent = () => {
               <div className="w-[60%] bg-main h-2 rounded-3xl"></div>
             </div>
           </div>
+          {carts?.length === 0 && <EmptyCartComponent />}
           <ul className="space-y-4">
             {carts?.map((cart, i) => {
               const findProduct = products?.find(

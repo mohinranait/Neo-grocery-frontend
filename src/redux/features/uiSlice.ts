@@ -16,7 +16,6 @@ export const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-
     setCartSidebarOpen:(state, action: PayloadAction<boolean>) => {
         state.cartSidebarOpen = action.payload ? action?.payload : false;
     },
