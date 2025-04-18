@@ -25,6 +25,10 @@ const ShopFilterSection = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const catParams = searchParams.get("cat");
+  const rangeParams = searchParams.get("priceRange");
+  const shippingParams = searchParams.get("shipping");
+  const brandParams = searchParams.get("brandIds");
+  // const statusParams = searchParams.get("status");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
   const [openItems, setOpenItems] = useState([
@@ -69,11 +73,36 @@ const ShopFilterSection = () => {
     dispatch(setFilterProducts({ [key]: value }));
   };
 
+  // clear filter
+  const handleClearFilter = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    key: string
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete(key);
+    router.push(`${pathname}?${currentParams.toString()}`);
+    dispatch(setFilterProducts({ [key]: "" }));
+  };
+
   useEffect(() => {
     if (catParams) {
       dispatch(setFilterProducts({ categoryIds: catParams?.split(",") }));
     }
   }, [catParams]);
+
+  useEffect(() => {
+    const prices = rangeParams?.split(",");
+    dispatch(
+      setFilterProducts({
+        categoryIds: catParams?.split(","),
+        brandIds: brandParams?.split(",") || [],
+        priceRange: prices && [Number(prices[0]), Number(prices[1])],
+        shipping: shippingParams as "yes" | "no",
+      })
+    );
+  }, [catParams, rangeParams, shippingParams, brandParams, dispatch]);
 
   return (
     <Accordion
@@ -88,8 +117,21 @@ const ShopFilterSection = () => {
         className="rounded px-3 py-0 border bg-white border-border"
       >
         <AccordionTrigger className="hover:no-underline">
-          <div>
-            <span className="font-semibold">Price</span> <span>Range</span>
+          <div className="flex items-center justify-between w-full">
+            <div>
+              <span className="font-semibold">Price</span> <span>Range</span>
+            </div>
+            {searchParams.get("priceRange") && (
+              <button
+                className="text-xs text-gray-500 hover:text-gray-900 mr-2"
+                type="button"
+                onClick={(e) => {
+                  handleClearFilter(e, "priceRange");
+                }}
+              >
+                Clear
+              </button>
+            )}
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -113,7 +155,6 @@ const ShopFilterSection = () => {
                 setPriceRange(e);
                 updateMultiValueQuery("priceRange", e.join(","));
               }}
-              // onInput={(e) => setPriceRange(e)}
             />
           </div>
         </AccordionContent>
@@ -125,7 +166,20 @@ const ShopFilterSection = () => {
         className="rounded px-3 py-0 border bg-white border-border"
       >
         <AccordionTrigger className="hover:no-underline">
-          Free Shipping
+          <div className="flex items-center justify-between w-full">
+            <span>Free Shipping</span>
+            {searchParams.get("shipping") && (
+              <button
+                className="text-xs text-gray-500 hover:text-gray-900 mr-2"
+                type="button"
+                onClick={(e) => {
+                  handleClearFilter(e, "shipping");
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3">
@@ -135,13 +189,19 @@ const ShopFilterSection = () => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="yes" />
-                <label htmlFor="yes" className="cursor-pointer w-full">
+                <label
+                  htmlFor="yes"
+                  className="cursor-pointer text-gray-500 hover:text-gray-900 w-full"
+                >
                   Yes
                 </label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="no" id="no" />
-                <label htmlFor="no" className="cursor-pointer w-full">
+                <label
+                  htmlFor="no"
+                  className="cursor-pointer text-gray-500 hover:text-gray-900 w-full"
+                >
                   No
                 </label>
               </div>
@@ -156,7 +216,20 @@ const ShopFilterSection = () => {
         className="rounded px-3 py-0 border bg-white border-border"
       >
         <AccordionTrigger className="hover:no-underline">
-          Brands
+          <div className="flex items-center justify-between w-full">
+            <span>Brands</span>
+            {searchParams.get("brandIds") && (
+              <button
+                className="text-xs text-gray-500 hover:text-gray-900 mr-2"
+                type="button"
+                onClick={(e) => {
+                  handleClearFilter(e, "brandIds");
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3 max-h-[200px] overflow-y-auto">
@@ -192,7 +265,20 @@ const ShopFilterSection = () => {
         className="rounded px-3 py-0 border bg-white border-border"
       >
         <AccordionTrigger className="hover:no-underline">
-          Product Status
+          <div className="flex items-center justify-between w-full">
+            <span>Product Status</span>
+            {searchParams.get("status") && (
+              <button
+                className="text-xs text-gray-500 hover:text-gray-900 mr-2"
+                type="button"
+                onClick={(e) => {
+                  handleClearFilter(e, "status");
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3 px-3 max-h-[150px] overflow-y-auto">
@@ -211,7 +297,7 @@ const ShopFilterSection = () => {
                   />
                   <label
                     htmlFor={status}
-                    className="text-sm font-medium cursor-pointer"
+                    className="text-sm text-gray-500 hover:text-gray-900 font-medium cursor-pointer"
                   >
                     {status === "inStock"
                       ? "In Stock"

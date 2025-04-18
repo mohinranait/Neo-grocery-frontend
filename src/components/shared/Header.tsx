@@ -151,12 +151,12 @@ const Header = () => {
           <div className="flex-grow pl-2 flex justify-between items-center">
             <ul className="flex gap-5 items-center">
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="py-[10px] hover:text-main text-black transition-all text-sm inline-flex"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
                 <a

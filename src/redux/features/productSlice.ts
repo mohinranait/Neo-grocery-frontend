@@ -28,6 +28,38 @@ const initialState:TInitialStateType  = {
   variant: null,
 }
 
+
+const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
+  const { categoryIds, brandIds, priceRange,  shipping } = filters;
+  
+  const filteredProducts = products.filter((product) => {
+    let isValid = true;
+    if (categoryIds && categoryIds.length > 0) {
+      isValid = isValid && categoryIds.some(catId => product.category?.includes(catId) );
+    }
+
+    if (brandIds && brandIds.length > 0) {
+      isValid = isValid && brandIds.some(brandId => product.brand?.includes(brandId) );
+    }
+
+    if (priceRange && priceRange.length === 2) {
+      if(product.price?.sellPrice && product.price?.sellPrice > 0){
+        isValid = isValid && product.price?.sellPrice >= priceRange[0] && product.price?.sellPrice <= priceRange[1];
+      } else{
+        isValid = isValid && product.price?.productPrice >= priceRange[0] && product.price?.productPrice <= priceRange[1];
+      }
+    }
+
+    if (shipping) {
+      isValid = isValid && product.freeShipping === shipping;
+    }
+
+    return isValid;
+  });
+
+  return filteredProducts;
+}
+
 export const productSlice = createSlice({
   name: 'product',
   initialState,
@@ -37,10 +69,13 @@ export const productSlice = createSlice({
       // Set Single product 
         state.product = action.payload;
     },
-    setProducts: (state, action: PayloadAction<TProduct[]>) => {
+    setProducts: (state, action: PayloadAction<{products:TProduct[], filters: TFilter  }>) => {
       // Set all products
-        state.products = action?.payload
-        state.filterProducts =action?.payload
+        state.products = action?.payload?.products
+
+        const filteredProducts = productFiltersMethod(action?.payload?.products , action?.payload?.filters);
+
+      state.filterProducts = filteredProducts;
     },
     updateSingleProduct : (state, action: PayloadAction<TProduct>) => {
       // Update single product
@@ -58,44 +93,25 @@ export const productSlice = createSlice({
       state.variant = action?.payload
     },
     setFilterProducts: (state, action: PayloadAction<TFilter>) => {
-      const { categoryIds, brandIds, priceRange,  shipping,  sortBy } = action?.payload;
-
-      
-      const filteredProducts = state.products.filter((product) => {
-        let isValid = true;
-        if (categoryIds && categoryIds.length > 0) {
-          isValid = isValid && categoryIds.some(catId => product.category?.includes(catId) );
-        }
-
-        if (brandIds && brandIds.length > 0) {
-          isValid = isValid && brandIds.some(brandId => product.brand?.includes(brandId) );
-        }
-
-        if (priceRange && priceRange.length === 2) {
-          if(product.price?.sellPrice && product.price?.sellPrice > 0){
-            isValid = isValid && product.price?.sellPrice >= priceRange[0] && product.price?.sellPrice <= priceRange[1];
-          } else{
-            isValid = isValid && product.price?.productPrice >= priceRange[0] && product.price?.productPrice <= priceRange[1];
-          }
-        }
-
-
-
-
-        if (shipping) {
-          isValid = isValid && product.freeShipping === shipping;
-        }
-    
-        return isValid;
-      });
-
+      const filteredProducts = productFiltersMethod(state.products, action?.payload);
       state.filterProducts = filteredProducts;
-      
     },
+    addSortingProducts: (state, action: PayloadAction<{filter:'phl'|'plh'|'az'|'za'}>) => {
+      const { filter } = action?.payload;
+      if(filter === 'plh'){
+        state.filterProducts = [...state.filterProducts].sort((a, b) => (a.price?.sellPrice ? a.price?.sellPrice : a?.price?.productPrice || 0) - (b.price?.sellPrice ? b.price?.sellPrice : b?.price?.productPrice || 0));
+      } else if(filter === 'phl'){
+        state.filterProducts = [...state.filterProducts].sort((a, b) => (b.price?.sellPrice ? b.price?.sellPrice : b?.price?.productPrice || 0) - (a.price?.sellPrice ? a.price?.sellPrice : a?.price?.productPrice || 0));
+      } else if(filter === 'az'){
+        state.filterProducts = [...state.filterProducts].sort((a, b) => a.name.localeCompare(b.name));
+      } else if(filter === 'za'){
+        state.filterProducts = [...state.filterProducts].sort((a, b) => b.name.localeCompare(a.name));
+      }
+    }  
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {  setProduct,setProducts,updateProducts,updateSingleProduct,setSelectedProduct,updateVariant,setFilterProducts } = productSlice.actions
+export const {  setProduct,setProducts,updateProducts,updateSingleProduct,setSelectedProduct,updateVariant,setFilterProducts,addSortingProducts } = productSlice.actions
 
 export default productSlice.reducer

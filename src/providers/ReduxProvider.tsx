@@ -12,6 +12,7 @@ import { TAttributeType } from "@/types/attribute.type";
 import { TBrandType } from "@/types/brand.type";
 import { TCategoryType } from "@/types/category.type";
 import { TProduct } from "@/types/product.type";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -54,6 +55,12 @@ const ChildWrapper = ({
   products,
   attributes,
 }: Props) => {
+  const searchParams = useSearchParams();
+  const catParams = searchParams.get("cat");
+  const rangeParams = searchParams.get("priceRange");
+  const shippingParams = searchParams.get("shipping");
+  const brandParams = searchParams.get("brandIds");
+
   const dispatch = useAppDispatch();
 
   // Get all attribute configs
@@ -69,9 +76,17 @@ const ChildWrapper = ({
   };
 
   useEffect(() => {
+    const prices = rangeParams?.split(",");
+    const filters = {
+      categoryIds: catParams?.split(",") || [],
+      brandIds: brandParams?.split(",") || [],
+      priceRange:
+        prices && ([Number(prices[0]), Number(prices[1])] as [number, number]),
+      shipping: shippingParams as "yes" | "no",
+    };
     dispatch(addBrands(brands));
     dispatch(addCategorys(categories));
-    dispatch(setProducts(products));
+    dispatch(setProducts({ products, filters }));
     dispatch(addAttribute(attributes));
     getAttributeConfig();
   }, [dispatch, brands, categories, products, attributes]);
