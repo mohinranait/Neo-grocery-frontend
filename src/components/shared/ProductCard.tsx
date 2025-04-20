@@ -13,7 +13,7 @@ type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
-  const { name, slug, featureImage, price } = product || {};
+  const { name, slug, featureImage, price, isStock } = product || {};
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
@@ -76,7 +76,10 @@ const ProductCard = ({ product }: Props) => {
         </Link>
       </div>
       <div className="px-3 flex-grow space-y-2">
-        <p className="text-xs text-gray-400 uppercase">In Stock</p>
+        <p className="text-xs text-gray-400 uppercase">
+          {" "}
+          {isStock === 0 ? "Out Stock" : "In Stock"}
+        </p>
         <Link
           href={`/product/${slug}`}
           className=" hover:text-main text-gray-700 transition-all text-sm inline-block leading-[17px] font-medium"
@@ -86,7 +89,7 @@ const ProductCard = ({ product }: Props) => {
       </div>
       <div className="px-3 pt-2 pb-3">
         <div className=" relative h-[32px] gap-2 flex items-center justify-between ">
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-1">
             <span className="text-main text-lg font-semibold">
               ${price?.sellPrice ? price?.sellPrice : price?.productPrice}
             </span>

@@ -8,8 +8,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { BadgeDollarSign, ShieldCheck, Truck } from "lucide-react";
+import {
+  BadgeDollarSign,
+  ShieldCheck,
+  Truck,
+  VerifiedIcon,
+} from "lucide-react";
 import Link from "next/link";
+
 import ProductViewSlider from "@/components/sliders/ProductViewSlider";
 import { getSingleProductBySlug } from "@/actions/productApi";
 import { TProduct } from "@/types/product.type";
@@ -18,6 +24,8 @@ import { getAllBrands } from "@/actions/brandApi";
 import { TBrandType } from "@/types/brand.type";
 import { TCategoryType } from "@/types/category.type";
 import ActionsButton from "@/components/pages/product/ActionsButton";
+
+import StarRating from "@/components/utils/StarRating";
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProductBySlug(params?.slug);
@@ -38,9 +46,17 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       productCategoryIds?.includes(cat?._id)
     ) || [];
 
+  const ratings = [
+    { _id: 1, label: 5, width: 80, reviews: 140 },
+    { _id: 2, label: 4, width: 45, reviews: 54 },
+    { _id: 3, label: 3, width: 40, reviews: 4 },
+    { _id: 4, label: 2, width: 45, reviews: 5 },
+    { _id: 5, label: 1, width: 10, reviews: 9 },
+  ];
+
   return (
-    <section>
-      <div className="container px-2 md:px-0">
+    <section className="">
+      <div className="container  px-2 md:px-0">
         <Breadcrumb className="py-2">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -58,7 +74,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
         </Breadcrumb>
       </div>
 
-      <div className="container px-2 md:px-0">
+      <div className="container mb-6 px-2 md:px-0">
         <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[420px_auto_300px] gap-4">
           <div className="w-full">
             <div className="  md:w-[400px] ">
@@ -219,6 +235,132 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
               </ul>
             </div>
           </div>
+        </div>
+      </div>
+
+      {product?.details && (
+        <div className="container mb-6 lg:grid grid-cols-3 px-2 md:px-0">
+          <div className="bg-white col-span-2 px-5 py-4">
+            <p className="font-semibold mb-2 text-gray-700">
+              Product details of {product?.name}
+            </p>
+            <div
+              className="quill-content"
+              dangerouslySetInnerHTML={{ __html: product?.details }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="container lg:grid grid-cols-3 mb-6 px-2 md:px-0">
+        <div className="col-span-2  py-4">
+          <div className="md:grid grid-cols-3 pb-5 gap-5 bg-white py-4 px-5">
+            <div className=" space-y-2 mb-6 lg:mb-0">
+              <div className="flex items-center gap-2">
+                <span className="text-3xl font-bold">
+                  {product?.rating?.toFixed(1) || 0}/
+                  <span className="text-2xl">5</span>
+                </span>{" "}
+                <span className="text-white text-nowrap bg-[#FD8C00] text-xs py-1 px-3">
+                  {" "}
+                  Top Rated
+                </span>{" "}
+              </div>
+              <div className="flex items-center gap-2">
+                {" "}
+                <StarRating value={3.5} />
+              </div>
+              <p className="text-gray500 text-xs font-medium text-gray-600">
+                {product?.reviews || 0} Ratings
+              </p>
+            </div>
+            <div className="col-span-2">
+              <ul className="space-y-1">
+                {ratings?.map((star, i) => (
+                  <li key={i} className="flex gap-5 items-center">
+                    <div className=" gap-2 w-[100px] ">
+                      <StarRating value={5 - i} />
+                    </div>
+
+                    <span className="w-[120px] sm:w-[200px] h-2  bg-[#E5E5E5] inline-block relative">
+                      <span
+                        className="bg-[#FD8C00] absolute left-0 top-0 inline-block h-2"
+                        style={{ width: `${star?.width}%` }}
+                      ></span>
+                    </span>
+                    <span className="text-sm text-gray-700">
+                      {star?.reviews}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="bg-white text-sm text-gray-700 px-5 py-3 border-y border-gray-100 ">
+            Product Reviews
+          </div>
+          <ul className="bg-white divide-y divide-gray-100">
+            <li className="py-3 px-5">
+              <div className="mb-2">
+                <StarRating size={12} value={5} />
+                <div className="flex justify-between items-center">
+                  <p className="flex items-center gap-1 text-sm text-gray-600">
+                    <span className="text-gray-800">Mohin Rana</span>
+                    <VerifiedIcon className="text-main" size={14} />
+                  </p>
+                  <p className="text-sm text-gray-500">1 Week ago</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">
+                  Received another shoe, not that what I had ordered. Also,
+                  Received with torn right shoe.Agreed, pricen is very low but
+                  should have been given without defective products...BIG
+                  DISAPPOINTING ...to the sellers and Daraz Team
+                </p>
+              </div>
+            </li>
+            <li className="py-3 px-5">
+              <div className="mb-2">
+                <StarRating size={12} value={5} />
+                <div className="flex justify-between items-center">
+                  <p className="flex items-center gap-1 text-sm text-gray-600">
+                    <span className="text-gray-800">Mohin Rana</span>
+                    <VerifiedIcon className="text-main" size={14} />
+                  </p>
+                  <p className="text-sm text-gray-500">1 Week ago</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">
+                  Received another shoe, not that what I had ordered. Also,
+                  Received with torn right shoe.Agreed, pricen is very low but
+                  should have been given without defective products...BIG
+                  DISAPPOINTING ...to the sellers and Daraz Team
+                </p>
+              </div>
+            </li>
+            <li className="py-3 px-5">
+              <div className="mb-2">
+                <StarRating size={12} value={5} />
+                <div className="flex justify-between items-center">
+                  <p className="flex items-center gap-1 text-sm text-gray-600">
+                    <span className="text-gray-800">Mohin Rana</span>
+                    <VerifiedIcon className="text-main" size={14} />
+                  </p>
+                  <p className="text-sm text-gray-500">1 Week ago</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">
+                  Received another shoe, not that what I had ordered. Also,
+                  Received with torn right shoe.Agreed, pricen is very low but
+                  should have been given without defective products...BIG
+                  DISAPPOINTING ...to the sellers and Daraz Team
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
