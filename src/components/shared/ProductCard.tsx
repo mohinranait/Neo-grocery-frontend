@@ -14,7 +14,7 @@ type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
-  const { name, slug, featureImage, price, isStock } = product || {};
+  const { name, slug, featureImage, price } = product || {};
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
