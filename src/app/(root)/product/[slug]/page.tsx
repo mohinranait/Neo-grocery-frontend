@@ -241,7 +241,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       {product?.details && (
         <div className="container mb-6 lg:grid grid-cols-3 px-2 md:px-0">
           <div className="bg-white col-span-2 px-5 py-4">
-            <p className="font-semibold mb-2 text-gray-700">
+            <p className="font-semibold text-sm mb-2 text-gray-700">
               Product details of {product?.name}
             </p>
             <div
@@ -254,6 +254,9 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
 
       <div className="container lg:grid grid-cols-3 mb-6 px-2 md:px-0">
         <div className="col-span-2  py-4">
+          <div className="bg-white text-sm font-semibold text-gray-700 px-5 py-3 border-b border-gray-100 ">
+            Ratings & Reviews of Running Shoes Sneakers Casual Mens Outdoor
+          </div>
           <div className="md:grid grid-cols-3 pb-5 gap-5 bg-white py-4 px-5">
             <div className=" space-y-2 mb-6 lg:mb-0">
               <div className="flex items-center gap-2">
