@@ -42,9 +42,9 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
           <ul>
             <li>
               <Link
-                href={"/profile"}
+                href={"/dashboard"}
                 className={` ${
-                  path === "/profile" && "bg-gray-100 text-gray-700"
+                  path === "/dashboard" && "bg-gray-100 text-gray-700"
                 } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
               >
                 <LucideLayoutDashboard size={18} />
@@ -53,9 +53,9 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
             </li>
             <li>
               <Link
-                href={"/profile/orders"}
+                href={"/dashboard/orders"}
                 className={` ${
-                  path === "/profile/orders" && "bg-gray-100 text-gray-700"
+                  path === "/dashboard/orders" && "bg-gray-100 text-gray-700"
                 } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
               >
                 <WalletCards size={18} />
@@ -64,9 +64,9 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
             </li>
             <li>
               <Link
-                href={"/profile/account"}
+                href={"/dashboard/profile"}
                 className={` ${
-                  path === "/profile/account" && "bg-gray-100 text-gray-700"
+                  path === "/dashboard/profile" && "bg-gray-100 text-gray-700"
                 } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
               >
                 <User2 size={18} />
@@ -75,9 +75,9 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
             </li>
             <li>
               <Link
-                href={"/profile/change-password"}
+                href={"/dashboard/change-password"}
                 className={` ${
-                  path === "/profile/change-password" &&
+                  path === "/dashboard/change-password" &&
                   "bg-gray-100 text-gray-700"
                 } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
               >

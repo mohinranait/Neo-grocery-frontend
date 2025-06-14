@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TCategoryType } from "@/types/category.type";
 
 
@@ -16,7 +16,7 @@ export const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {
-    addCategorys: (state, action: { payload: TCategoryType[] }) => {
+    addCategorys: (state, action: PayloadAction<TCategoryType[]>) => {
       // Add all categories in state
       state.categories = [...action?.payload];
     },

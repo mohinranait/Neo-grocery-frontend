@@ -75,6 +75,8 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       </div>
 
       <div className="container mb-6 px-2 md:px-0">
+        {/* Product display component */}
+        {/* <DisplayProduct /> */}
         <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[420px_auto_300px] gap-4">
           <div className="w-full">
             <div className="  md:w-[400px] ">
