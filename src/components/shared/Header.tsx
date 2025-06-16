@@ -27,6 +27,7 @@ import { setCartSidebarOpen } from "@/redux/features/uiSlice";
 const Header = () => {
   // Redux state
   const { carts } = useAppSelector((state) => state.cart);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
@@ -110,10 +111,35 @@ const Header = () => {
                     </div>
                   </li>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => handleLogout()}>
-                    Logout
-                  </DropdownMenuItem>
+                <DropdownMenuContent align="end">
+                  {isAuthenticated ? (
+                    <>
+                      <Link href={"/dashboard"}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          Dashboard
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => handleLogout()}
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <Link href={"/login"}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          Login
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link href={"/register"}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          Register
+                        </DropdownMenuItem>
+                      </Link>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
               <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">

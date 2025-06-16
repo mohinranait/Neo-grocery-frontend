@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { userRegister } from "@/actions/authApi";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export type TRegisterType = {
   name: { firstName: string; lastName: string };
@@ -58,14 +59,22 @@ const RegisterForm = () => {
   const registerForm: SubmitHandler<TRegisterType> = async (data) => {
     try {
       const res = await userRegister(data);
-
-      console.log({ res });
       if (res?.success) {
         toast.success("Register success");
         router.push(`/verify/${res?.payload}`);
+      } else {
+        toast.success(res.message);
       }
-    } catch (error) {
-      toast.error(`${error}`);
+    } catch (error: unknown) {
+      let errorMessage = "An unexpected error occurred";
+
+      if (axios.isAxiosError(error)) {
+        // Check if error response exists
+        errorMessage = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage);
     }
   };
   return (

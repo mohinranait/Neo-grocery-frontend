@@ -1,4 +1,8 @@
 "use client";
+import withAuth from "@/hoc/withAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import { useAppSelector } from "@/hooks/useRedux";
 import {
   Key,
   LogOut,
@@ -6,13 +10,13 @@ import {
   User2,
   WalletCards,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
     <div>
@@ -21,21 +25,21 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex pb-4 gap-3">
             <div>
               <div className="w-10">
-                <Image
-                  src={"/auth.png"}
-                  width={40}
-                  height={40}
-                  alt="image"
-                  className="w-[40px] ring-1 ring-offset-1 ring-main h-[40px] rounded-full"
-                />
+                <Avatar className="w-10 h-10 ring-1 ring-main ring-offset-1">
+                  <AvatarImage src={user?.profile} alt="Profile" />
+                  <AvatarFallback className="text-lg uppercase">
+                    {user?.name?.firstName[0]}
+                    {user?.name?.lastName[0]}
+                  </AvatarFallback>
+                </Avatar>
               </div>
             </div>
             <div>
               <p className="text-gray-800 font-semibold leading-[18px]">
-                Mohin Rana
+                {user?.name?.firstName} {user?.name?.lastName}
               </p>
               <p className="text-gray-400 text-sm leading-[16px]">
-                mohin@gmail.com
+                {user?.email}
               </p>
             </div>
           </div>
@@ -102,4 +106,4 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default ProfileLayout;
+export default withAuth(ProfileLayout);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,15 @@ import { setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { TOrderForm } from "@/types/order.type";
 import { placeNewOrder } from "@/actions/orderApi";
 import { useRouter } from "next/navigation";
+import {
+  createAddressByAuthUser,
+  getAllAddressByAuthUser,
+} from "@/actions/addressApi";
+import { TAddress } from "@/types/address.type";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Home, MapPin, Phone, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import GlobalModal from "@/components/shared/GlobalModal";
 
 const CheckoutComponent = () => {
   // Redux state
@@ -23,7 +32,9 @@ const CheckoutComponent = () => {
 
   // Local State
   const router = useRouter();
-  const [forms, setForms] = useState({
+  const [isAddressOpen, setIsAddressOpen] = useState(false);
+  const [userAddress, setUserAddress] = useState<TAddress[]>([]);
+  const [address, setAddress] = useState({
     userId: "",
     addressId: "",
     firstName: "",
@@ -43,33 +54,33 @@ const CheckoutComponent = () => {
     // If user not login
     if (!user || !user?._id) {
       // Check if firstName is not empty
-      if (!forms.firstName) {
+      if (!address.firstName) {
         newErrors.firstName = "First name is required";
       }
 
       // Check if lastName is not empty
-      if (!forms.lastName) {
+      if (!address.lastName) {
         newErrors.lastName = "Last name is required";
       }
 
       // Check if address is not empty
-      if (!forms.address) {
+      if (!address.address) {
         newErrors.address = "Address is required";
       }
 
       // Validate postal code (example: 5 digits)
-      if (!forms.postalCode) {
+      if (!address.postalCode) {
         newErrors.postalCode = "Postal code is required";
       }
 
       // Check if city is not empty
-      if (!forms.city) {
+      if (!address.city) {
         newErrors.city = "City is required.";
       }
     }
 
     // Validate phone number (basic validation for length)
-    if (!forms.phone || forms.phone.length < 10) {
+    if (!address.phone || address.phone.length < 10) {
       newErrors.phone = "Phone number must be at least 10 digits.";
     }
 
@@ -90,12 +101,12 @@ const CheckoutComponent = () => {
   const handleOrder = async () => {
     if (!validateForm()) return;
 
-    let data: TOrderForm = {
+    let order: TOrderForm = {
       items: [],
       totalAmount: 0,
       uid: generateRandomId(8),
-      email: forms?.email,
-      phone: forms?.phone,
+      email: address?.email,
+      phone: address?.phone,
     };
 
     carts?.forEach((cart) => {
@@ -114,36 +125,54 @@ const CheckoutComponent = () => {
       }
 
       // Update form data
-      data.totalAmount += cart?.price * cart?.quantity;
-      data.items.push({
+      order.totalAmount += cart?.price * cart?.quantity;
+      order.items.push({
         ...cart,
         image: findProduct?.featureImage?.image,
         name: findProduct?.name,
       });
     });
 
+    const addressData = {
+      firstName: address?.firstName,
+      lastName: address?.lastName,
+      phone: address?.phone,
+      address: address?.address,
+      postalCode: address?.postalCode,
+      city: address?.city,
+    };
+
     if (user?._id) {
-      data.userId = user?._id;
+      order.userId = user?._id;
     } else {
-      data = {
-        ...data,
+      order = {
+        ...order,
         shippingAddress: {
-          ...data.shippingAddress,
-          firstName: forms?.firstName,
-          lastName: forms?.lastName,
-          address: forms?.address,
-          postalCode: forms?.postalCode,
-          city: forms?.city,
+          ...order.shippingAddress,
+          userId: "",
+          ...addressData,
         },
       };
     }
 
+    // As a first time create new address for shipping
+    if (order?.userId && userAddress?.length === 0) {
+      const newAddress = {
+        ...addressData,
+        userId: user?._id as string,
+      };
+      const resData = await createAddressByAuthUser({
+        addressData: newAddress,
+      });
+      order.shippingAddressId = resData?.payload?._id;
+    }
+
     try {
-      const getResponse = await placeNewOrder(data);
+      const getResponse = await placeNewOrder(order);
       if (getResponse?.success) {
         dispatch(setAllCarts([]));
         if (!user) {
-          setForms({
+          setAddress({
             userId: "",
             addressId: "",
             firstName: "",
@@ -162,167 +191,280 @@ const CheckoutComponent = () => {
     }
   };
 
+  useEffect(() => {
+    (async function () {
+      try {
+        const data = await getAllAddressByAuthUser();
+        const address = data?.payload?.address;
+        setUserAddress(address);
+        if (data.success) {
+        }
+      } catch (error) {
+        console.log({ error });
+      }
+    })();
+  }, []);
+
   return (
     <div className="py-10">
       <div className="container px-2 md:px-0 xl:max-w-[1100px]  min-h-screen grid  lg:grid-cols-[auto_400px] gap-5">
         <div className="">
           <div className="space-y-4">
-            <div>
-              <p className="flex justify-between items-center text-lg mb-1 font-semibold">
-                Contact{" "}
-                <Link
-                  className="text-sm text-main underline font-normal"
-                  href={"/login"}
+            {userAddress?.length > 0 ? (
+              <div className="grid grid-cols-2 gap-4">
+                {userAddress?.map((address, index) => {
+                  return (
+                    <Card
+                      key={index}
+                      className="w-full gap-0 p-0 mx-auto bg-white shadow-sm border border-gray-200"
+                    >
+                      <CardHeader className=" py-3 px-4 pb-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                              <Home className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-gray-600">
+                                Home
+                              </span>
+                              <Badge
+                                variant={"default"}
+                                className="bg-orange-100 rounded py-1 text-orange-700 hover:bg-orange-100"
+                              >
+                                Selected Address
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="px-4 py-3 space-y-4">
+                        <div>
+                          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                            {address?.firstName} {address?.lastName}
+                          </h2>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-3">
+                            <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                            <div className="text-sm text-gray-600 leading-relaxed">
+                              {address?.address}
+                              {", "} {address?.city}
+                              {", "}
+                              {address?.postalCode}
+                              <br />
+                              United States
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                            <span className="text-sm text-gray-600">
+                              {address?.phone}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 pt-4">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                          >
+                            Shipping
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+                <Card
+                  onClick={() => setIsAddressOpen(true)}
+                  className="w-full max-w-md mx-auto bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                 >
-                  Log In
-                </Link>{" "}
-              </p>
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Phone number"
-                  value={forms?.phone}
-                  onChange={(e) =>
-                    setForms((prev) => ({ ...prev, phone: e.target.value }))
-                  }
-                  className={cn(
-                    "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                  )}
-                />
-                {errors?.phone && (
-                  <p className="text-xs text-red-500 mt-[3px]">
-                    {errors?.phone}
-                  </p>
-                )}
-                <div className="flex items-center mt-2 space-x-2">
-                  <Checkbox id="give_me_email" />
-                  <label
-                    htmlFor="give_me_email"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Email me with news and offers
-                  </label>
-                </div>
+                  <CardContent className="flex flex-col items-center justify-center py-12 px-6">
+                    <Button
+                      size="lg"
+                      className="w-12 h-12 rounded-full bg-black hover:bg-gray-800 mb-6 p-0"
+                    >
+                      <Plus className="w-6 h-6 text-white" />
+                    </Button>
+
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2 text-center">
+                      Add New Address
+                    </h3>
+
+                    <p className="text-sm text-gray-500 text-center">
+                      Add a shipping or billing address
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
-            </div>
-            <div>
-              <p className=" text-lg mb-1 font-semibold">Delivery</p>
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="First Name"
-                      className={cn(
-                        "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                      )}
-                      value={forms?.firstName}
-                      onChange={(e) =>
-                        setForms((prev) => ({
-                          ...prev,
-                          firstName: e.target.value,
-                        }))
-                      }
-                    />
-                    {errors?.firstName && (
-                      <p className="text-xs text-red-500 mt-[3px]">
-                        {errors?.firstName}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Last Name"
-                      className={cn(
-                        "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                      )}
-                      value={forms?.lastName}
-                      onChange={(e) =>
-                        setForms((prev) => ({
-                          ...prev,
-                          lastName: e.target.value,
-                        }))
-                      }
-                    />
-                    {errors?.lastName && (
-                      <p className="text-xs text-red-500 mt-[3px]">
-                        {errors?.lastName}
-                      </p>
-                    )}
-                  </div>
-                </div>
+            ) : (
+              <div>
+                <p className="flex justify-between items-center text-lg mb-1 font-semibold">
+                  Contact{" "}
+                  <Link
+                    className="text-sm text-main underline font-normal"
+                    href={"/login"}
+                  >
+                    Log In
+                  </Link>{" "}
+                </p>
                 <div>
                   <Input
                     type="text"
-                    placeholder="Address"
+                    placeholder="Phone number"
+                    value={address?.phone}
+                    onChange={(e) =>
+                      setAddress((prev) => ({ ...prev, phone: e.target.value }))
+                    }
                     className={cn(
                       "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
                     )}
-                    value={forms?.address}
-                    onChange={(e) =>
-                      setForms((prev) => ({ ...prev, address: e.target.value }))
-                    }
                   />
-                  {errors?.address && (
+                  {errors?.phone && (
                     <p className="text-xs text-red-500 mt-[3px]">
-                      {errors?.address}
+                      {errors?.phone}
                     </p>
                   )}
-                </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="City"
-                      className={cn(
-                        "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                      )}
-                      value={forms?.city}
-                      onChange={(e) =>
-                        setForms((prev) => ({ ...prev, city: e.target.value }))
-                      }
-                    />
-                    {errors?.city && (
-                      <p className="text-xs text-red-500 mt-[3px]">
-                        {errors?.city}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Postal Code"
-                      className={cn(
-                        "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                      )}
-                      value={forms?.postalCode}
-                      onChange={(e) =>
-                        setForms((prev) => ({
-                          ...prev,
-                          postalCode: e.target.value,
-                        }))
-                      }
-                    />
-                    {errors?.postalCode && (
-                      <p className="text-xs text-red-500 mt-[3px]">
-                        {errors?.postalCode}
-                      </p>
-                    )}
+                  <div className="flex items-center mt-2 space-x-2">
+                    <Checkbox id="give_me_email" />
+                    <label
+                      htmlFor="give_me_email"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Email me with news and offers
+                    </label>
                   </div>
                 </div>
                 <div>
-                  <p className=" text-base mb-1 font-normal">Shipping method</p>
-                  <div>
-                    <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
-                      <span>Standard Shipping</span>
-                      <span>$0</span>
+                  <p className=" text-lg mb-1 font-semibold">Delivery</p>
+                  <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Input
+                          type="text"
+                          placeholder="First Name"
+                          className={cn(
+                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
+                          )}
+                          value={address?.firstName}
+                          onChange={(e) =>
+                            setAddress((prev) => ({
+                              ...prev,
+                              firstName: e.target.value,
+                            }))
+                          }
+                        />
+                        {errors?.firstName && (
+                          <p className="text-xs text-red-500 mt-[3px]">
+                            {errors?.firstName}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Input
+                          type="text"
+                          placeholder="Last Name"
+                          className={cn(
+                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
+                          )}
+                          value={address?.lastName}
+                          onChange={(e) =>
+                            setAddress((prev) => ({
+                              ...prev,
+                              lastName: e.target.value,
+                            }))
+                          }
+                        />
+                        {errors?.lastName && (
+                          <p className="text-xs text-red-500 mt-[3px]">
+                            {errors?.lastName}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        placeholder="Address"
+                        className={cn(
+                          "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
+                        )}
+                        value={address?.address}
+                        onChange={(e) =>
+                          setAddress((prev) => ({
+                            ...prev,
+                            address: e.target.value,
+                          }))
+                        }
+                      />
+                      {errors?.address && (
+                        <p className="text-xs text-red-500 mt-[3px]">
+                          {errors?.address}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Input
+                          type="text"
+                          placeholder="City"
+                          className={cn(
+                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
+                          )}
+                          value={address?.city}
+                          onChange={(e) =>
+                            setAddress((prev) => ({
+                              ...prev,
+                              city: e.target.value,
+                            }))
+                          }
+                        />
+                        {errors?.city && (
+                          <p className="text-xs text-red-500 mt-[3px]">
+                            {errors?.city}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Input
+                          type="text"
+                          placeholder="Postal Code"
+                          className={cn(
+                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
+                          )}
+                          value={address?.postalCode}
+                          onChange={(e) =>
+                            setAddress((prev) => ({
+                              ...prev,
+                              postalCode: e.target.value,
+                            }))
+                          }
+                        />
+                        {errors?.postalCode && (
+                          <p className="text-xs text-red-500 mt-[3px]">
+                            {errors?.postalCode}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
+            )}
+
+            <div className="space-y-4">
+              <div>
+                <p className=" text-base mb-1 font-normal">Shipping method</p>
+
+                <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
+                  <span>Standard Shipping</span>
+                  <span>$0</span>
+                </div>
+              </div>
               <div>
                 <p className=" text-lg  font-semibold">Payment</p>
                 <p className=" text-slate-600 text-base mb-1 font-normal">
@@ -330,10 +472,8 @@ const CheckoutComponent = () => {
                 </p>
               </div>
               <div className="space-y-4">
-                <div>
-                  <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
-                    <span>Cash on Delivery (COD)</span>
-                  </div>
+                <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
+                  <span>Cash on Delivery (COD)</span>
                 </div>
               </div>
             </div>
@@ -427,6 +567,21 @@ const CheckoutComponent = () => {
           </div>
         </div>
       </div>
+
+      <GlobalModal
+        open={isAddressOpen}
+        setOpen={setIsAddressOpen}
+        className="w-[550px] md:w-[550px] lg:w-[550px]"
+        withFooter={
+          <div className="flex gap-2 items-center">
+            <Button>Save & Close</Button>
+          </div>
+        }
+        subTitle={`Select s to update from the series.`}
+        title={`Update recurring `}
+      >
+        asdf
+      </GlobalModal>
     </div>
   );
 };

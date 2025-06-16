@@ -1,3 +1,4 @@
+import { TAddress } from "./address.type";
 import { TCartItems } from "./cart.type";
 
 export type TEnhancedCartItem = TCartItems & {
@@ -7,13 +8,7 @@ export type TEnhancedCartItem = TCartItems & {
 
 export type TOrderForm = {
   userId?: string;
-  shippingAddress?: {
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    postalCode: string;
-  };
+  shippingAddress?: TAddress;
   shippingAddressId?: string;
   items: TEnhancedCartItem[];
   totalAmount: number;

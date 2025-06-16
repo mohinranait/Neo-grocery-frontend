@@ -23,9 +23,11 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Camera, Pen, Save, Shield } from "lucide-react";
+import { useAppSelector } from "@/hooks/useRedux";
 
 export default function UpdateProfile() {
   const [isEditing, setIsEditing] = useState(false);
+  const { user } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     name: "Md. Mahir Shikder",
     email: "mahir@example.com",
@@ -87,8 +89,11 @@ export default function UpdateProfile() {
                 <div className="flex flex-col items-center space-y-4">
                   <div className="relative">
                     <Avatar className="w-24 h-24">
-                      <AvatarImage src="/placeholder-user.jpg" alt="Profile" />
-                      <AvatarFallback className="text-lg">MR</AvatarFallback>
+                      <AvatarImage src={user?.profile} alt="Profile" />
+                      <AvatarFallback className="text-lg">
+                        {user?.name?.firstName[0]}
+                        {user?.name?.lastName[0]}
+                      </AvatarFallback>
                     </Avatar>
                     <Button
                       size="icon"
