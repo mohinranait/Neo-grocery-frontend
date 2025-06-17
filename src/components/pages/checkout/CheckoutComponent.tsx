@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
@@ -13,15 +11,20 @@ import { setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { TOrderForm } from "@/types/order.type";
 import { placeNewOrder } from "@/actions/orderApi";
 import { useRouter } from "next/navigation";
+
 import {
   createAddressByAuthUser,
+  deleteAddressByAddressId,
   getAllAddressByAuthUser,
+  updateAddressByAddressId,
 } from "@/actions/addressApi";
-import { TAddress } from "@/types/address.type";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Home, MapPin, Phone, Plus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { TAddress, TAddressResponse } from "@/types/address.type";
+import { Card, CardContent } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 import GlobalModal from "@/components/shared/GlobalModal";
+import AddressCard from "./AddressCard";
+
+import CheckoutForm from "./CheckoutForm";
 
 const CheckoutComponent = () => {
   // Redux state
@@ -33,50 +36,51 @@ const CheckoutComponent = () => {
   // Local State
   const router = useRouter();
   const [isAddressOpen, setIsAddressOpen] = useState(false);
-  const [userAddress, setUserAddress] = useState<TAddress[]>([]);
-  const [address, setAddress] = useState({
+  const [userAddress, setUserAddress] = useState<TAddressResponse[]>([]);
+  const [selectedAddress, setSelectedAddress] =
+    useState<TAddressResponse | null>(userAddress[0]);
+  const [errors, setErrors] = useState<Record<string, string>>();
+
+  const [address, setAddress] = useState<TAddress>({
     userId: "",
-    addressId: "",
     firstName: "",
     lastName: "",
     phone: "",
-    email: "",
     address: "",
     postalCode: "",
     city: "",
+    type: "Home",
   });
-  const [errors, setErrors] = useState<Record<string, string>>();
 
   // Validation function
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     // If user not login
-    if (!user || !user?._id) {
-      // Check if firstName is not empty
-      if (!address.firstName) {
-        newErrors.firstName = "First name is required";
-      }
 
-      // Check if lastName is not empty
-      if (!address.lastName) {
-        newErrors.lastName = "Last name is required";
-      }
+    // Check if firstName is not empty
+    if (!address.firstName) {
+      newErrors.firstName = "First name is required";
+    }
 
-      // Check if address is not empty
-      if (!address.address) {
-        newErrors.address = "Address is required";
-      }
+    // Check if lastName is not empty
+    if (!address.lastName) {
+      newErrors.lastName = "Last name is required";
+    }
 
-      // Validate postal code (example: 5 digits)
-      if (!address.postalCode) {
-        newErrors.postalCode = "Postal code is required";
-      }
+    // Check if address is not empty
+    if (!address.address) {
+      newErrors.address = "Address is required";
+    }
 
-      // Check if city is not empty
-      if (!address.city) {
-        newErrors.city = "City is required.";
-      }
+    // Validate postal code (example: 5 digits)
+    if (!address.postalCode) {
+      newErrors.postalCode = "Postal code is required";
+    }
+
+    // Check if city is not empty
+    if (!address.city) {
+      newErrors.city = "City is required.";
     }
 
     // Validate phone number (basic validation for length)
@@ -99,13 +103,13 @@ const CheckoutComponent = () => {
 
   // handle order data
   const handleOrder = async () => {
-    if (!validateForm()) return;
+    // Validation address form
+    if (!selectedAddress?._id && !validateForm()) return;
 
     let order: TOrderForm = {
       items: [],
       totalAmount: 0,
       uid: generateRandomId(8),
-      email: address?.email,
       phone: address?.phone,
     };
 
@@ -140,6 +144,7 @@ const CheckoutComponent = () => {
       address: address?.address,
       postalCode: address?.postalCode,
       city: address?.city,
+      type: address?.type as "Home" | "Office" | "Others",
     };
 
     if (user?._id) {
@@ -156,15 +161,19 @@ const CheckoutComponent = () => {
     }
 
     // As a first time create new address for shipping
-    if (order?.userId && userAddress?.length === 0) {
-      const newAddress = {
-        ...addressData,
-        userId: user?._id as string,
-      };
-      const resData = await createAddressByAuthUser({
-        addressData: newAddress,
-      });
-      order.shippingAddressId = resData?.payload?._id;
+    if (order?.userId) {
+      if (userAddress?.length > 0) {
+        order.shippingAddressId = selectedAddress?._id;
+      } else {
+        const newAddress = {
+          ...addressData,
+          userId: user?._id as string,
+        };
+        const resData = await createAddressByAuthUser({
+          addressData: newAddress,
+        });
+        order.shippingAddressId = resData?.payload?._id;
+      }
     }
 
     try {
@@ -172,17 +181,7 @@ const CheckoutComponent = () => {
       if (getResponse?.success) {
         dispatch(setAllCarts([]));
         if (!user) {
-          setAddress({
-            userId: "",
-            addressId: "",
-            firstName: "",
-            lastName: "",
-            phone: "",
-            email: "",
-            address: "",
-            postalCode: "",
-            city: "",
-          });
+          resetFrom();
         }
         router.push(`/order-success?code=${getResponse?.payload?.uid}`);
       }
@@ -191,19 +190,97 @@ const CheckoutComponent = () => {
     }
   };
 
+  const resetFrom = () => {
+    setAddress({
+      userId: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      address: "",
+      postalCode: "",
+      city: "",
+      type: "Home",
+    });
+  };
+
   useEffect(() => {
     (async function () {
       try {
         const data = await getAllAddressByAuthUser();
-        const address = data?.payload?.address;
-        setUserAddress(address);
+        const address: TAddressResponse[] = data?.payload?.address;
+
         if (data.success) {
+          setUserAddress(address);
+          setSelectedAddress(address[0]);
         }
       } catch (error) {
         console.log({ error });
       }
     })();
   }, []);
+
+  // Create Or Update address
+  const handelSaveAddress = async () => {
+    if (!validateForm()) return;
+
+    const addressData = {
+      firstName: address?.firstName,
+      lastName: address?.lastName,
+      phone: address?.phone,
+      address: address?.address,
+      postalCode: address?.postalCode,
+      city: address?.city,
+      type: address?.type as "Home" | "Office" | "Others",
+    };
+
+    const data = {
+      ...addressData,
+      userId: user?._id as string,
+    };
+
+    if (selectedAddress?._id) {
+      try {
+        const resData = await updateAddressByAddressId({
+          addressData: data,
+          addressId: selectedAddress?._id,
+        });
+        const resAddress = resData?.payload;
+        setUserAddress((prev) =>
+          prev?.map((add) => (add._id === resAddress?._id ? resAddress : add))
+        );
+        setSelectedAddress(resAddress);
+        setIsAddressOpen(false);
+        resetFrom();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const resData = await createAddressByAuthUser({
+          addressData: data,
+        });
+        const resAddress = resData?.payload;
+        setUserAddress((prev) => [...prev, resAddress]);
+        setSelectedAddress(resAddress);
+        setIsAddressOpen(false);
+        resetFrom();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleDeleteAddress = async (addressId: string) => {
+    try {
+      await deleteAddressByAddressId({
+        addressId,
+      });
+      setUserAddress((prev) => prev?.filter((add) => add?._id !== addressId));
+      setSelectedAddress(userAddress[0] || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="py-10">
@@ -212,75 +289,27 @@ const CheckoutComponent = () => {
           <div className="space-y-4">
             {userAddress?.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
-                {userAddress?.map((address, index) => {
-                  return (
-                    <Card
-                      key={index}
-                      className="w-full gap-0 p-0 mx-auto bg-white shadow-sm border border-gray-200"
-                    >
-                      <CardHeader className=" py-3 px-4 pb-0">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                              <Home className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm text-gray-600">
-                                Home
-                              </span>
-                              <Badge
-                                variant={"default"}
-                                className="bg-orange-100 rounded py-1 text-orange-700 hover:bg-orange-100"
-                              >
-                                Selected Address
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-
-                      <CardContent className="px-4 py-3 space-y-4">
-                        <div>
-                          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                            {address?.firstName} {address?.lastName}
-                          </h2>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-3">
-                            <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-                            <div className="text-sm text-gray-600 leading-relaxed">
-                              {address?.address}
-                              {", "} {address?.city}
-                              {", "}
-                              {address?.postalCode}
-                              <br />
-                              United States
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                            <span className="text-sm text-gray-600">
-                              {address?.phone}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 pt-4">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1"
-                          >
-                            Shipping
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                {userAddress?.map(
+                  (address: TAddressResponse, index: number) => {
+                    return (
+                      <AddressCard
+                        key={index}
+                        setSelectedAddress={setSelectedAddress}
+                        selectedAddress={selectedAddress}
+                        address={address}
+                        index={index}
+                        setFromAddress={setAddress}
+                        setIsAddressOpen={setIsAddressOpen}
+                        handleDeleteAddress={handleDeleteAddress}
+                      />
+                    );
+                  }
+                )}
                 <Card
-                  onClick={() => setIsAddressOpen(true)}
+                  onClick={() => {
+                    setIsAddressOpen(true);
+                    setSelectedAddress(null);
+                  }}
                   className="w-full max-w-md mx-auto bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <CardContent className="flex flex-col items-center justify-center py-12 px-6">
@@ -302,158 +331,11 @@ const CheckoutComponent = () => {
                 </Card>
               </div>
             ) : (
-              <div>
-                <p className="flex justify-between items-center text-lg mb-1 font-semibold">
-                  Contact{" "}
-                  <Link
-                    className="text-sm text-main underline font-normal"
-                    href={"/login"}
-                  >
-                    Log In
-                  </Link>{" "}
-                </p>
-                <div>
-                  <Input
-                    type="text"
-                    placeholder="Phone number"
-                    value={address?.phone}
-                    onChange={(e) =>
-                      setAddress((prev) => ({ ...prev, phone: e.target.value }))
-                    }
-                    className={cn(
-                      "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                    )}
-                  />
-                  {errors?.phone && (
-                    <p className="text-xs text-red-500 mt-[3px]">
-                      {errors?.phone}
-                    </p>
-                  )}
-                  <div className="flex items-center mt-2 space-x-2">
-                    <Checkbox id="give_me_email" />
-                    <label
-                      htmlFor="give_me_email"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Email me with news and offers
-                    </label>
-                  </div>
-                </div>
-                <div>
-                  <p className=" text-lg mb-1 font-semibold">Delivery</p>
-                  <div className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="First Name"
-                          className={cn(
-                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                          )}
-                          value={address?.firstName}
-                          onChange={(e) =>
-                            setAddress((prev) => ({
-                              ...prev,
-                              firstName: e.target.value,
-                            }))
-                          }
-                        />
-                        {errors?.firstName && (
-                          <p className="text-xs text-red-500 mt-[3px]">
-                            {errors?.firstName}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="Last Name"
-                          className={cn(
-                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                          )}
-                          value={address?.lastName}
-                          onChange={(e) =>
-                            setAddress((prev) => ({
-                              ...prev,
-                              lastName: e.target.value,
-                            }))
-                          }
-                        />
-                        {errors?.lastName && (
-                          <p className="text-xs text-red-500 mt-[3px]">
-                            {errors?.lastName}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <Input
-                        type="text"
-                        placeholder="Address"
-                        className={cn(
-                          "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                        )}
-                        value={address?.address}
-                        onChange={(e) =>
-                          setAddress((prev) => ({
-                            ...prev,
-                            address: e.target.value,
-                          }))
-                        }
-                      />
-                      {errors?.address && (
-                        <p className="text-xs text-red-500 mt-[3px]">
-                          {errors?.address}
-                        </p>
-                      )}
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="City"
-                          className={cn(
-                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                          )}
-                          value={address?.city}
-                          onChange={(e) =>
-                            setAddress((prev) => ({
-                              ...prev,
-                              city: e.target.value,
-                            }))
-                          }
-                        />
-                        {errors?.city && (
-                          <p className="text-xs text-red-500 mt-[3px]">
-                            {errors?.city}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="Postal Code"
-                          className={cn(
-                            "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-main h-auto py-3"
-                          )}
-                          value={address?.postalCode}
-                          onChange={(e) =>
-                            setAddress((prev) => ({
-                              ...prev,
-                              postalCode: e.target.value,
-                            }))
-                          }
-                        />
-                        {errors?.postalCode && (
-                          <p className="text-xs text-red-500 mt-[3px]">
-                            {errors?.postalCode}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <CheckoutForm
+                errors={errors}
+                address={address}
+                setAddress={setAddress}
+              />
             )}
 
             <div className="space-y-4">
@@ -570,17 +452,26 @@ const CheckoutComponent = () => {
 
       <GlobalModal
         open={isAddressOpen}
-        setOpen={setIsAddressOpen}
+        setOpen={() => {
+          setIsAddressOpen(false);
+          resetFrom();
+        }}
         className="w-[550px] md:w-[550px] lg:w-[550px]"
         withFooter={
           <div className="flex gap-2 items-center">
-            <Button>Save & Close</Button>
+            <Button type="button" onClick={handelSaveAddress}>
+              {selectedAddress?._id ? "Update Addres" : "Save & Close"}
+            </Button>
           </div>
         }
-        subTitle={`Select s to update from the series.`}
-        title={`Update recurring `}
+        subTitle={`Manage shipping address inforamtion`}
+        title={`Address modal `}
       >
-        asdf
+        <CheckoutForm
+          errors={errors}
+          address={address}
+          setAddress={setAddress}
+        />
       </GlobalModal>
     </div>
   );

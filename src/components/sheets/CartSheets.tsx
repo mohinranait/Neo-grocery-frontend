@@ -119,7 +119,9 @@ const CartSheets = () => {
                 <Link href={"/cart"} className="w-full">
                   <Button className="w-full">Cart </Button>
                 </Link>
-                <Button className="w-full">Checkout</Button>
+                <Link href={"/checkout"} className="w-full">
+                  <Button className="w-full">Checkout</Button>
+                </Link>
               </div>
             </div>
           </div>
