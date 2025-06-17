@@ -7,6 +7,7 @@ import {
   Key,
   LogOut,
   LucideLayoutDashboard,
+  MapPin,
   User2,
   WalletCards,
 } from "lucide-react";
@@ -75,6 +76,17 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
               >
                 <User2 size={18} />
                 Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={"/dashboard/address"}
+                className={` ${
+                  path === "/dashboard/address" && "bg-gray-100 text-gray-700"
+                } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
+              >
+                <MapPin size={18} />
+                Address
               </Link>
             </li>
             <li>

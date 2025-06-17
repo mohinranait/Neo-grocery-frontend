@@ -25,6 +25,8 @@ import GlobalModal from "@/components/shared/GlobalModal";
 import AddressCard from "./AddressCard";
 
 import CheckoutForm from "./CheckoutForm";
+import { addressFormValidation } from "@/validations/AddressFormValidation";
+import SpinnerLoading from "@/components/shared/SpinnerLoading";
 
 const CheckoutComponent = () => {
   // Redux state
@@ -40,6 +42,7 @@ const CheckoutComponent = () => {
   const [selectedAddress, setSelectedAddress] =
     useState<TAddressResponse | null>(userAddress[0]);
   const [errors, setErrors] = useState<Record<string, string>>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [address, setAddress] = useState<TAddress>({
     userId: "",
@@ -52,59 +55,16 @@ const CheckoutComponent = () => {
     type: "Home",
   });
 
-  // Validation function
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    // If user not login
-
-    // Check if firstName is not empty
-    if (!address.firstName) {
-      newErrors.firstName = "First name is required";
-    }
-
-    // Check if lastName is not empty
-    if (!address.lastName) {
-      newErrors.lastName = "Last name is required";
-    }
-
-    // Check if address is not empty
-    if (!address.address) {
-      newErrors.address = "Address is required";
-    }
-
-    // Validate postal code (example: 5 digits)
-    if (!address.postalCode) {
-      newErrors.postalCode = "Postal code is required";
-    }
-
-    // Check if city is not empty
-    if (!address.city) {
-      newErrors.city = "City is required.";
-    }
-
-    // Validate phone number (basic validation for length)
-    if (!address.phone || address.phone.length < 10) {
-      newErrors.phone = "Phone number must be at least 10 digits.";
-    }
-
-    // Validate email (simple regex)
-    // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    // if (!forms.email || !emailRegex.test(forms.email)) {
-    //   newErrors.email = "Please enter a valid email address.";
-    // }
-
-    // Update errors state
-    setErrors(newErrors);
-
-    // Return true if no errors
-    return Object.keys(newErrors).length === 0;
-  };
-
   // handle order data
   const handleOrder = async () => {
     // Validation address form
-    if (!selectedAddress?._id && !validateForm()) return;
+    const validations = addressFormValidation(address);
+    setErrors({ ...validations });
+    const isError = Object.keys(validations).length === 0;
+    if (!selectedAddress?._id && !isError) return;
+
+    // Validation empty carts
+    if (carts?.length === 0) return;
 
     let order: TOrderForm = {
       items: [],
@@ -177,6 +137,7 @@ const CheckoutComponent = () => {
     }
 
     try {
+      setIsLoading(true);
       const getResponse = await placeNewOrder(order);
       if (getResponse?.success) {
         dispatch(setAllCarts([]));
@@ -187,6 +148,8 @@ const CheckoutComponent = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -221,7 +184,10 @@ const CheckoutComponent = () => {
 
   // Create Or Update address
   const handelSaveAddress = async () => {
-    if (!validateForm()) return;
+    const validations = addressFormValidation(address);
+    setErrors({ ...validations });
+    const isError = Object.keys(validations).length === 0;
+    if (!isError) return;
 
     const addressData = {
       firstName: address?.firstName,
@@ -433,9 +399,11 @@ const CheckoutComponent = () => {
               <li className=" py-4 space-y-4">
                 <Button
                   onClick={handleOrder}
-                  className="w-full bg-main text-white "
+                  className="w-full bg-main  text-white "
                   size={"lg"}
+                  disabled={carts?.length === 0 || isLoading}
                 >
+                  {isLoading && <SpinnerLoading />}
                   Order Now
                 </Button>
 
