@@ -64,12 +64,6 @@ const Header = () => {
           {/* Middle column */}
           <div className="hidden flex-grow md:flex justify-center  ">
             <div className="border-slate-200 border min-w-[450px] lg:min-w-[600px] rounded-md flex items-center p-1 ">
-              <div>
-                <div className="px-2 text-nowrap text-sm text-text border-r border-slate-300 ">
-                  Select Categorys
-                </div>
-              </div>
-
               <input
                 type="search"
                 placeholder="Search..."
