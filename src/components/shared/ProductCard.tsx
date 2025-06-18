@@ -1,20 +1,23 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { TProduct } from "@/types/product.type";
-import { Minus, Plus } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { TCartItems } from "@/types/cart.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { Badge } from "../ui/badge";
 import ProductViewModal from "../modals/ProductViewModal";
+import { Card, CardContent } from "../ui/card";
 
 type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
+  console.log({ product });
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { name, slug, featureImage, price } = product || {};
   // Redux State
@@ -22,6 +25,8 @@ const ProductCard = ({ product }: Props) => {
   const { carts } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const findCart = carts?.find((cart) => cart?.product === product?._id);
+  const [images, setImages] = useState<string[]>([]);
+  const [featureImg, setFeatureImg] = useState(featureImage?.image);
 
   const handleAddToCart = () => {
     const cartData: TCartItems = {
@@ -62,15 +67,29 @@ const ProductCard = ({ product }: Props) => {
     }
   };
 
+  useEffect(() => {
+    let pImgs: string[] = [];
+    const { featureImage, imageGallary } = product || {};
+    if (product?.variant === "Variable Product") {
+      const imgs = product?.variations?.map((item) => item?.image);
+      pImgs = [featureImage?.image, ...imgs];
+    } else {
+      const gallarys = (imageGallary as string[]) || [];
+      pImgs = [featureImage?.image, ...gallarys];
+    }
+    setImages(pImgs || []);
+  }, [product]);
+
   return (
     <>
-      {/* <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-        <CardContent className="p-4">
-          <div className="relative mb-4">
+      <Card className="group  hover:shadow-lg transition-all duration-300 border-0 shadow-md">
+        <CardContent className="flex flex-col h-full p-3">
+          <div className="group/img relative mb-4">
             <Image
+              onClick={() => setIsOpen(!isOpen)}
               width={400}
               height={400}
-              src={featureImage?.image}
+              src={featureImg || featureImage?.image}
               alt={product.name}
               className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
             />
@@ -81,7 +100,19 @@ const ProductCard = ({ product }: Props) => {
             <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
               -45%
             </Badge>
-
+            <div className="absolute group-hover/img:scale-100 group-hover/img:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-1/4 ">
+              <div className="flex flex-col gap-1  p-1 h-[130px] w-[44px]">
+                {images?.slice(0, 3)?.map((img, imgIndex) => (
+                  <button
+                    onClick={() => setFeatureImg(img)}
+                    key={imgIndex}
+                    className=" border rounded size-10 bg-white hover:bg-white"
+                  >
+                    <Image src={img} width={40} height={40} alt="images" />
+                  </button>
+                ))}
+              </div>
+            </div>
             <Button
               size="icon"
               variant="ghost"
@@ -91,9 +122,14 @@ const ProductCard = ({ product }: Props) => {
             </Button>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 flex-grow">
             <h3 className="font-semibold text-sm line-clamp-2">
-              {product.name}
+              <Link
+                href={`/product/${slug}`}
+                className=" hover:text-main text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
+              >
+                {name}
+              </Link>
             </h3>
 
             <div className="flex items-center gap-1">
@@ -113,120 +149,57 @@ const ProductCard = ({ product }: Props) => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold text-green-600">৳100</span>
-
-              <span className="text-sm text-gray-500 line-through">৳60</span>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center border rounded-lg">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                  // onClick={decrementQuantity}
-                  // disabled={quantity === 0}
-                >
-                  <Minus className="w-3 h-3" />
-                </Button>
-                <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center">
-                  5
-                </span>
-                <Button size="icon" variant="ghost" className="h-8 w-8">
-                  <Plus className="w-3 h-3" />
-                </Button>
-              </div>
-
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                Add to Cart
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card> */}
-      <article className="border  overflow-hidden min-h-[250px] relative flex flex-col group bg-white hover:border-main border-border rounded">
-        <div className="absolute z-10 top-2 right-2 rotate-12">
-          <Badge className="bg-primary font-semibold">New</Badge>
-        </div>
-        <div className="aspect-square relative overflow-hidden  flex items-center justify-center ">
-          <Link
-            href={`/product/${slug}`}
-            className="h-full inline-flex items-center  justify-center "
-          >
-            <Image
-              src={featureImage?.image}
-              width={200}
-              height={150}
-              alt="Image"
-              className="h-full w-auto mx-auto"
-            />
-          </Link>
-          <div className="absolute scale-0 transition-all group-hover:scale-100 inset-0 bg-gradient-to-br from-muted/80 to-muted/20"></div>
-
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-            <Button
-              onClick={() => setIsOpen(!isOpen)}
-              type="button"
-              className="bg-black/80 hover:bg-black backdrop-blur-sm"
-            >
-              Quick Shop
-            </Button>
-          </div>
-        </div>
-        <div className="px-3 pt-4 min-h-[52px] flex-grow space-y-2">
-          <Link
-            href={`/product/${slug}`}
-            className=" hover:text-main text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
-          >
-            {name}
-          </Link>
-        </div>
-        <div className="px-3 pt-2 pb-3">
-          <div className=" relative h-[32px] gap-2 flex items-center justify-between ">
-            <div className="flex items-center gap-2 mt-1">
-              <span className="font-bold">
+              <span className="font-bold text-main">
                 ${price?.sellPrice > 0 ? price?.sellPrice : price?.productPrice}
               </span>
               {price?.sellPrice > 0 && (
-                <span className="text-sm text-muted-foreground line-through">
+                <span className="text-sm text-gray-500 line-through">
                   ${price?.productPrice}
                 </span>
               )}
             </div>
-
-            {findCart?.product ? (
-              <div className="absolute h-[32px] top-2/4 -translate-y-2/4 right-0">
-                <div className="inline-flex gap-1  items-center">
-                  <button
-                    onClick={() => decrement(findCart?.quantity || 1)}
-                    className="w-7 h-7 hover:bg-main hover:text-white rounded-full border border-border flex items-center justify-center cursor-pointer"
-                  >
-                    <Minus size={15} />
-                  </button>
-                  <span className="w-[20px] text-center py-[3px] text-sm">
-                    {findCart?.quantity}
-                  </span>
-                  <button
-                    onClick={() => increment(findCart?.quantity || 1)}
-                    className="w-7 h-7 hover:bg-main hover:text-white rounded-full border border-border flex items-center justify-center cursor-pointer"
-                  >
-                    <Plus size={15} />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Button
-                onClick={handleAddToCart}
-                type="button"
-                className=" h-[32px] px-[8px] "
-              >
-                <Plus />
-              </Button>
-            )}
           </div>
-        </div>
-        <ProductViewModal setOpen={setIsOpen} open={isOpen} />
-      </article>
+          <div>
+            <div className="flex relative items-center justify-between pt-2">
+              <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                Order Now
+              </Button>
+              {findCart?.product ? (
+                <div className=" h-8 flex items-center  ">
+                  <div className="flex gap-1 items-center">
+                    <button
+                      onClick={() => decrement(findCart?.quantity || 1)}
+                      className="w-7 h-7 hover:bg-main hover:text-white rounded-full border border-border flex items-center justify-center cursor-pointer"
+                    >
+                      <Minus size={15} />
+                    </button>
+                    <span className="w-[20px] text-center py-[3px] text-sm">
+                      {findCart?.quantity}
+                    </span>
+                    <button
+                      onClick={() => increment(findCart?.quantity || 1)}
+                      className="w-7 h-7 hover:bg-main hover:text-white rounded-full border border-border flex items-center justify-center cursor-pointer"
+                    >
+                      <Plus size={15} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  onClick={handleAddToCart}
+                  type="button"
+                  className=" h-[32px] px-[8px] "
+                >
+                  <ShoppingCart />
+                  {/* <Plus /> */}
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <ProductViewModal setOpen={setIsOpen} open={isOpen} />
     </>
   );
 };
