@@ -1,11 +1,42 @@
 import BannerSection from "@/components/pages/home/BannerSection";
 import ProductSection from "@/components/pages/home/ProductSection";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Banknote, CarTaxiFront, Headphones, ShieldCheck } from "lucide-react";
+import {
+  Banknote,
+  CarTaxiFront,
+  Gift,
+  Headphones,
+  Shield,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+const features = [
+  {
+    icon: Truck,
+    title: "Free Shipping",
+    description: "Free shipping on orders over $50",
+  },
+  {
+    icon: Shield,
+    title: "Secure Payment",
+    description: "100% secure payment processing",
+  },
+  {
+    icon: Gift,
+    title: "Special Offers",
+    description: "Regular discounts and promotions",
+  },
+  {
+    icon: Headphones,
+    title: "24/7 Support",
+    description: "Round-the-clock customer service",
+  },
+];
 
 const HomePage = () => {
   return (
@@ -418,6 +449,30 @@ const HomePage = () => {
               />
               <Button>Subscribe</Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <Card
+                key={index}
+                className="text-center p-6 hover:shadow-lg transition-shadow duration-300"
+              >
+                <CardContent className="p-0">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                    <feature.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <h4 className="font-semibold text-lg mb-2">
+                    {feature.title}
+                  </h4>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
