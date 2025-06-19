@@ -100,7 +100,7 @@ const ProductCard = ({ product }: Props) => {
             <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
               -45%
             </Badge>
-            <div className="absolute group-hover/img:scale-100 group-hover/img:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-1/4 ">
+            <div className="absolute group-hover:scale-100 group-hover:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-[18px] ">
               <div className="flex flex-col gap-1  p-1 h-[130px] w-[44px]">
                 {images?.slice(0, 3)?.map((img, imgIndex) => (
                   <button

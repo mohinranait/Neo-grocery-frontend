@@ -25,7 +25,7 @@ const MobileBottomBar = () => {
 
   return (
     <div className=" md:hidden bottom-0 sticky  left-0 right-0 z-50">
-      <ul className=" flex items-center justify-between px-4 bg-white border-t ">
+      <ul className=" flex items-center justify-between px-4 bg-white border-t py-1 ">
         {/* Mobile Menus */}
         <MobileMenuSheet />
         {pathName?.includes("shop") ? (
@@ -35,7 +35,7 @@ const MobileBottomBar = () => {
             href={"/shop"}
             className="py-3 inline-flex items-center justify-center flex-col px-2"
           >
-            <Store size={16} className="text-gray-500" />
+            <Store size={16} className="text-gray-500 w-5 h-5" />
             <p className="text-xs text-gray-500">Store</p>
           </Link>
         )}
@@ -43,7 +43,7 @@ const MobileBottomBar = () => {
           href={"/"}
           className="py-3 inline-flex items-center justify-center flex-col px-2"
         >
-          <Home size={16} className="text-gray-500" />
+          <Home size={16} className="text-gray-500 w-5 h-5" />
           <p className="text-xs text-gray-500">Home</p>
         </Link>
 
@@ -54,14 +54,14 @@ const MobileBottomBar = () => {
           <span className="px-1 text-[10px] md:text-xs font-semibold text-white rounded-full bg-main absolute top-[2px] right-0 md:-top-1 md:-right-1">
             {carts?.length || 0}
           </span>
-          <ShoppingCart className="md:hidden text-gray-500" size={16} />
+          <ShoppingCart className="md:hidden text-gray-500 w-5 h-5" size={16} />
           <p className="text-xs text-gray-500">Cart</p>
         </li>
 
         <DropdownMenu>
           <DropdownMenuTrigger>
             <li className="py-3 inline-flex items-center justify-center flex-col px-2">
-              <UserRound size={16} className="text-gray-500" />
+              <UserRound size={16} className="text-gray-500 w-5 h-5" />
               <p className="text-xs text-gray-500">Account</p>
             </li>
           </DropdownMenuTrigger>

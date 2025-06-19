@@ -1,4 +1,5 @@
-import BannerSection from "@/components/pages/home/BannerSection";
+// import BannerSection from "@/components/pages/home/BannerSection";
+import CategoriesSection from "@/components/pages/home/categories-section";
 import ProductSection from "@/components/pages/home/ProductSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -42,7 +43,8 @@ const HomePage = () => {
   return (
     <main>
       {/* Banner section */}
-      <BannerSection />
+      {/* <BannerSection /> */}
+      <CategoriesSection />
 
       <section className="py-10">
         <div className="xl:w-[1000px]  grid grid-cols-1 res5:grid-cols-2  md:grid-cols-4 gap-3 mx-auto">

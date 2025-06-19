@@ -1,7 +1,8 @@
-import Header from "./Header";
+// import Header from "./Header";
 import Footer from "./Footer";
 import MobileBottomBar from "./MobileBottomBar";
 import CartSheets from "../sheets/CartSheets";
+import Component from "../test-comp";
 
 type Props = {
   childComponent: React.ReactNode;
@@ -9,7 +10,8 @@ type Props = {
 const MainLayoutComponent = ({ childComponent }: Props) => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <Component />
       <main className="overflow-x-hidden">{childComponent}</main>
       <Footer />
       <MobileBottomBar />
