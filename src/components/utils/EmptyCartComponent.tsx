@@ -1,33 +1,28 @@
-import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 
 const EmptyCartComponent = () => {
   return (
-    <div className="flex h-full flex-col gap-6 justify-center items-center">
-      <div>
-        <Image
-          src={"/shipping-cart.jpg"}
-          width={150}
-          height={150}
-          alt="Shopping cart"
-        />
+    <>
+      <div className="flex flex-col items-center justify-center h-64 text-center">
+        <ShoppingCart className="h-16 w-16 text-slate-300 mb-4" />
+        <h3 className="text-lg font-semibold text-slate-600 mb-2">
+          Your cart is <span className="text-main">Empty</span>
+        </h3>
+        <p className="text-slate-500">
+          Add some premium products to get started
+        </p>
+        <div className="mt-4">
+          <Link href="/shop">
+            <Button type="button" className="bg-main text-white">
+              Start Shopping
+            </Button>
+          </Link>
+        </div>
       </div>
-      <p className="text-lg text-gray-700 ">
-        Your cart is <span className="text-main">Empty</span>{" "}
-      </p>
-      <p className="text-sm text-gray-500">
-        Looks like you have not made your choice yet...
-      </p>
-      <div>
-        <Link href="/shop">
-          <Button type="button" className="bg-main text-white">
-            Start Shopping
-          </Button>
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
 

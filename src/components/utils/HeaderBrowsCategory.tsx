@@ -62,12 +62,12 @@ const HeaderBrowsCategory = () => {
         <li key={index} className="group/category">
           <Link
             href={`/shop?cat=${category?._id}`}
-            className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
+            className="inline-flex text-primary font-medium transition-colors hover:text-main w-full px-4 py-2 justify-between items-center"
           >
             <span className="inline-flex gap-1 items-center">
               <Cookie size={14} />
 
-              <span className="text-sm">{category?.name}</span>
+              <span className="">{category?.name}</span>
             </span>
 
             {category?.children && category?.children?.length > 0 && (
@@ -80,12 +80,12 @@ const HeaderBrowsCategory = () => {
                 <li key={index} className="group/subcategory">
                   <Link
                     href={`/shop?cat=${subCat?._id}`}
-                    className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
+                    className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center font-medium transition-colors"
                   >
                     <span className="inline-flex gap-1 items-center">
                       {/* <Cookie size={14} /> */}
                       🍯
-                      <span className="text-sm">{subCat?.name}</span>
+                      <span className="">{subCat?.name}</span>
                     </span>
                     {subCat?.children && subCat?.children?.length > 0 && (
                       <ChevronRight size={16} className="text-gray-600" />
@@ -98,11 +98,11 @@ const HeaderBrowsCategory = () => {
                         <li key={index}>
                           <a
                             href="#"
-                            className="inline-flex  text-primary hover:text-main w-full px-4 py-2 justify-between items-center"
+                            className="inline-flex  text-primary hover:text-main w-full px-4 py-2 justify-between items-center font-medium transition-colors"
                           >
                             <span className="inline-flex gap-1 items-center">
                               🍯
-                              <span className="text-sm">{subSubCat?.name}</span>
+                              <span className="">{subSubCat?.name}</span>
                             </span>
                           </a>
                         </li>

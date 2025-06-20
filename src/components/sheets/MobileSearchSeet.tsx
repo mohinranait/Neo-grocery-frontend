@@ -16,7 +16,7 @@ const MobileSearchSeet: FC<Props> = ({ open, setOpen }) => {
       <SheetTrigger>
         <li className=" md:hidden rounded-full h-10 w-10 inline-flex items-center justify-center relative">
           <div className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full ">
-            <Search size={24} />
+            <Search size={24} className="text-gray-600" />
           </div>
         </li>
       </SheetTrigger>
