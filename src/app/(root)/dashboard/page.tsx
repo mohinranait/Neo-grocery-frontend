@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import {
@@ -18,6 +17,11 @@ import {
   Eye,
   Calendar,
 } from "lucide-react";
+import { TOrder, TOrderStatus } from "@/types/order.type";
+import { useEffect, useState } from "react";
+import { getAllOrdersByAuthUser } from "@/actions/orderApi";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const stats = [
   {
@@ -54,31 +58,32 @@ const stats = [
   },
 ];
 
-const recentOrders = [
-  {
-    id: "#ORD-001",
-    date: "২৫ নভেম্বর, ২০২৪",
-    status: "ডেলিভারড",
-    amount: "৳১,২৫০",
-    items: 3,
-  },
-  {
-    id: "#ORD-002",
-    date: "২২ নভেম্বর, ২০২৪",
-    status: "শিপিং",
-    amount: "৳৮৫০",
-    items: 2,
-  },
-  {
-    id: "#ORD-003",
-    date: "২০ নভেম্বর, ২০২৪",
-    status: "প্রসেসিং",
-    amount: "৳২,১০০",
-    items: 5,
-  },
-];
+const statusStyles: Record<TOrderStatus, string> = {
+  Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  Processing: "bg-blue-100 text-blue-800 border-blue-300",
+  Shipped: "bg-purple-100 text-purple-800 border-purple-300",
+  Delivered: "bg-green-100 text-green-800 border-green-300",
+  Cancelled: "bg-red-100 text-red-800 border-red-300",
+};
 
 export default function Dashboard() {
+  const [orders, setOrders] = useState<TOrder[]>([]);
+
+  const getAllOrders = async () => {
+    try {
+      const response = await getAllOrdersByAuthUser();
+      console.log({ response });
+      setOrders(response?.payload?.orders || []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    getAllOrders();
+  }, []);
+
   return (
     <div className="flex-1 space-y-4 px-4 md:px-4 ">
       <div className="flex items-center justify-between space-y-2">
@@ -117,50 +122,54 @@ export default function Dashboard() {
         {/* Recent Orders */}
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>সাম্প্রতিক অর্ডার</CardTitle>
-            <CardDescription>
-              আপনার সাম্প্রতিক অর্ডারগুলোর তালিকা
-            </CardDescription>
+            <CardTitle>Recent orders</CardTitle>
+            <CardDescription>List of your recent orders</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentOrders.map((order, index) => (
+              {orders?.slice(0, 3)?.map((order, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-4 border rounded-lg"
                 >
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {order.id}
+                    <p className="text-sm font-medium uppercase leading-none">
+                      #{order.uid}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {order.date} • {order.items} আইটেম
+                      {format(
+                        new Date(order.createdAt),
+                        "dd MMM yyyy, hh:mm a"
+                      )}{" "}
+                      • {order?.items?.length} Items
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge
-                      variant={
-                        order.status === "ডেলিভারড"
-                          ? "default"
-                          : order.status === "শিপিং"
-                          ? "secondary"
-                          : "outline"
-                      }
+                    <span
+                      className={cn(
+                        "inline-block text-xs font-semibold px-3 py-[2px] rounded-full border",
+                        statusStyles[order.status]
+                      )}
                     >
                       {order.status}
-                    </Badge>
-                    <span className="font-medium">{order.amount}</span>
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    </span>
+                    <span className="font-medium">{order.totalAmount}</span>
+                    <Link href={`/dashboard/orders/${order?._id}`}>
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="outline" className="w-full">
-                সব অর্ডার দেখুন
-              </Button>
+              <Link href="/dashboard/orders">
+                <Button variant="outline" className="w-full">
+                  See all orders
+                  <ShoppingCart className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

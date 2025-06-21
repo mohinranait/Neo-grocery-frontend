@@ -16,3 +16,13 @@ export type TOrderForm = {
   email?: string;
   phone: string;
 };
+
+export type TOrderStatus= "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+export type TOrder  = TOrderForm & {
+  _id:string;
+  status: TOrderStatus;
+  paymentStatus: "Pending" | "Paid" | "Failed" | "Refunded";
+  paymentMethod: "COD" | "Card" | "Bank Transfer";
+  createdAt: Date;
+  updatedAt: Date;
+};

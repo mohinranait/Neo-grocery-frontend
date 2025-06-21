@@ -67,7 +67,7 @@ const CartSheets = () => {
                 return (
                   <div
                     key={index}
-                    className="group bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-slate-300 transition-all duration-200"
+                    className="group bg-slate-50 rounded-lg p-3 border border-slate-200 hover:border-slate-300 transition-all duration-200"
                   >
                     <div className="flex gap-4">
                       <div className="relative">
@@ -94,7 +94,7 @@ const CartSheets = () => {
                         <h4 className="font-semibold text-slate-900 mb-1 line-clamp-2">
                           {findProduct?.name}
                         </h4>
-                        <p className="text-lg font-bold text-emerald-600 mb-3">
+                        <p className="text-lg font-bold text-emerald-600 ">
                           {currency}
                           {cart.price.toFixed(2)}
                         </p>

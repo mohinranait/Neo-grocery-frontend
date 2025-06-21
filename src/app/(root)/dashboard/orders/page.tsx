@@ -7,9 +7,16 @@ import {
   Archive,
   Download,
   MessageSquareText,
+  Package,
+  Truck,
+  CheckCircle,
+  XCircle,
+  Clock,
+  ShoppingCart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -26,79 +33,104 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 import Link from "next/link";
-
-interface OrderItem {
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-  quantity: number;
-  status: string;
-}
-
-interface Order {
-  date: string;
-  total: number;
-  deliveryPerson: string;
-  status: string;
-  statusColor: string;
-  items: OrderItem[];
-}
-
-const orders: Order[] = [
-  {
-    date: "May 25, 2024",
-    total: 724.5,
-    deliveryPerson: "Kazi Anwar",
-    status: "Delivered",
-    statusColor: "bg-green-100 text-green-800",
-    items: [
-      {
-        id: "1",
-        name: "Samsung Galaxy S24+ Cell Phone",
-        image: "/placeholder.svg?height=60&width=60",
-        price: 499.5,
-        quantity: 2,
-        status: "Delivered",
-      },
-      {
-        id: "2",
-        name: "Samsung Galaxy S24+ Cell Phone",
-        image: "/placeholder.svg?height=60&width=60",
-        price: 499.5,
-        quantity: 1,
-        status: "Delivered",
-      },
-    ],
-  },
-  {
-    date: "May 25, 2025",
-    total: 724.5,
-    deliveryPerson: "Kazi Anwar",
-    status: "Expected delivery: 5/26/2025",
-    statusColor: "bg-blue-100 text-blue-800",
-    items: [
-      {
-        id: "3",
-        name: "Samsung Galaxy S24+ Cell Phone",
-        image: "/placeholder.svg?height=60&width=60",
-        price: 499.5,
-        quantity: 3,
-        status: "Processing",
-      },
-      {
-        id: "4",
-        name: "Samsung Galaxy S24+ Cell Phone",
-        image: "/placeholder.svg?height=60&width=60",
-        price: 499.5,
-        quantity: 1,
-        status: "Processing",
-      },
-    ],
-  },
-];
+import { getAllOrdersByAuthUser } from "@/actions/orderApi";
+import { useEffect, useState } from "react";
+import { TOrder, TOrderStatus } from "@/types/order.type";
+import { cn } from "@/lib/utils";
+const statusStyles: Record<TOrderStatus, string> = {
+  Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  Processing: "bg-blue-100 text-blue-800 border-blue-300",
+  Shipped: "bg-purple-100 text-purple-800 border-purple-300",
+  Delivered: "bg-green-100 text-green-800 border-green-300",
+  Cancelled: "bg-red-100 text-red-800 border-red-300",
+};
 
 export default function MyOrders() {
+  const [orders, setOrders] = useState<TOrder[]>([]);
+
+  const pendingOrders = orders?.filter((order) => order.status === "Pending");
+  const processingOrders = orders?.filter(
+    (order) => order.status === "Processing"
+  );
+  const shippedOrders = orders?.filter((order) => order.status === "Shipped");
+  const deliveredOrders = orders?.filter(
+    (order) => order.status === "Delivered"
+  );
+  const cancelledOrders = orders?.filter(
+    (order) => order.status === "Cancelled"
+  );
+
+  const orderStats = [
+    {
+      id: "total",
+      label: "Total Orders",
+      value: orders?.length || 0,
+      icon: <ShoppingCart className="h-5 w-5" />,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+    },
+    {
+      id: "pending",
+      label: "Pending Orders",
+      count: pendingOrders?.length || 0,
+      icon: <Clock className="h-5 w-5" />,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      status: "Pending",
+    },
+    {
+      id: "processing",
+      label: "Processing Orders",
+      count: processingOrders?.length || 0,
+      icon: <Package className="h-5 w-5" />,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      status: "Processing",
+    },
+    {
+      id: "shipped",
+      label: "Shipped Orders",
+      count: shippedOrders?.length || 0,
+      icon: <Truck className="h-5 w-5" />,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
+      status: "Shipped",
+    },
+    {
+      id: "delivered",
+      label: "Delivered Orders",
+      count: deliveredOrders?.length || 0,
+      icon: <CheckCircle className="h-5 w-5" />,
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      status: "Delivered",
+    },
+    {
+      id: "cancelled",
+      label: "Cancelled Orders",
+      count: cancelledOrders?.length || 0,
+      icon: <XCircle className="h-5 w-5" />,
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+      status: "Cancelled",
+    },
+  ];
+
+  const getAllOrders = async () => {
+    try {
+      const response = await getAllOrdersByAuthUser();
+      console.log({ response });
+      setOrders(response?.payload?.orders || []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    getAllOrders();
+  }, []);
+
   return (
     <div className=" mx-auto px-4 space-y-6">
       <div className="flex items-center justify-between">
@@ -109,60 +141,73 @@ export default function MyOrders() {
         <Button className="flex items-center gap-2">Tracking Order</Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row py-3 items-center justify-between space-y-0 ">
-            <div className="text-sm font-medium">Total Orders</div>
-            <div className={`p-2 rounded-full text-xl `}>12</div>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row py-3 items-center justify-between space-y-0 ">
-            <div className="text-sm font-medium">Pending Orders</div>
-            <div className={`p-2 rounded-full text-xl `}>2</div>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row py-3 items-center justify-between space-y-0 ">
-            <div className="text-sm font-medium">Delivered Orders</div>
-            <div className={`p-2 rounded-full text-xl `}>8</div>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row py-3 items-center justify-between space-y-0 ">
-            <div className="text-sm font-medium">Cancel Orders</div>
-            <div className={`p-2 rounded-full text-xl `}>2</div>
-          </CardHeader>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+        {orderStats?.map((order, index) => (
+          <Card
+            key={index}
+            className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200"
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`p-2 rounded-lg ${order.bgColor}`}>
+                    <div className={order.color}>{order.icon}</div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      {order.label}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-bold text-gray-900">
+                    {order.count}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {orders.map((order, orderIndex) => (
         <Card key={orderIndex} className="w-full">
           <CardHeader className="pb-4 py-3 px-3 bg-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex items-start gap-4">
+            <div className="flex flex-wrap gap-3 items-center justify-between">
+              <div className="flex flex-wrap items-start gap-4">
                 <div>
                   <p className="uppercase text-xs text-gray-500 ">
                     Place Order
                   </p>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-semibold">{order.date}</span>
+                    <span className="font-semibold">
+                      {" "}
+                      {format(
+                        new Date(order.createdAt),
+                        "dd MMM yyyy, hh:mm a"
+                      )}
+                    </span>
                   </div>
                 </div>
                 <div>
                   <p className="uppercase text-xs text-gray-500 ">
                     Total Amount
                   </p>
-                  <div className=" font-semibold">${order.total}</div>
+                  <div className=" font-semibold">${order.totalAmount}</div>
                 </div>
                 <div>
                   <p className="uppercase text-xs text-gray-500 ">
                     Order Status
                   </p>
-                  <Badge className={order.statusColor} variant="secondary">
+                  <span
+                    className={cn(
+                      "inline-block text-xs font-semibold px-3 py-[2px] rounded-full border",
+                      statusStyles[order.status]
+                    )}
+                  >
                     {order.status}
-                  </Badge>
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -195,8 +240,8 @@ export default function MyOrders() {
               </div>
             </div>
             <Separator />
-            <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm">Order Id: 4as5df45</p>
+            <div className="flex flex-wrap justify-between items-center">
+              <p className="text-gray-500 text-sm">Order Id: {order?.uid}</p>
               <p className="text-gray-500 text-sm">Tracking: TRK123456789</p>
             </div>
           </CardHeader>
@@ -217,7 +262,7 @@ export default function MyOrders() {
                       className="w-16 h-16 object-cover rounded-md border"
                     />
                     <Badge
-                      className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full"
+                      className="absolute -top-2 -right-2 bg-main text-white text-xs px-2 py-1 rounded-full"
                       variant="secondary"
                     >
                       Qty: {item.quantity}
@@ -225,9 +270,7 @@ export default function MyOrders() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-sm">{item.name}</h3>
-                    <p className="text-lg font-bold text-orange-600">
-                      ${item.price}
-                    </p>
+                    <p className="text-lg font-bold text-main">${item.price}</p>
                     <p className="text-xs text-muted-foreground">
                       Total: ${(item.price * item.quantity).toFixed(2)}
                     </p>

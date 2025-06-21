@@ -49,3 +49,31 @@ export const getSingleOrderByUid = async (uid:string) => {
         return { success: false, payload: [] };
     }
 }
+
+
+/**
+ * @api {get} Get all orders by Auth User
+ * @param {string} userId - The ID of the user whose orders are to be fetched.
+ * @returns {Promise<{ success: boolean; payload: any[] }>}
+*/
+export const getAllOrdersByAuthUser = async () => {
+    try {
+        const response = await fetch(`${SERVER_URL}/orders`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials:'include',
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch orders");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return { success: false, payload: [] };
+    }
+};

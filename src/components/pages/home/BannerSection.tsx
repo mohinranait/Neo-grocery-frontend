@@ -88,7 +88,7 @@ const BannerSection = () => {
               <Image
                 width={800}
                 height={500}
-                src="/placeholder.svg?height=500&width=600"
+                src={"/hero-img.png"}
                 alt="Premium Fresh Products"
                 className="w-full h-auto rounded-2xl shadow-2xl"
               />
