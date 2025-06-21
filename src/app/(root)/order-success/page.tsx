@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getSingleOrderByUid } from "@/actions/orderApi";
 import { currency } from "@/helpers/utils";
 import { TEnhancedCartItem } from "@/types/order.type";
+import RedirectDashboard from "./RedirectDashboard";
 
 const OrderSuccessPage = async ({
   searchParams,
@@ -16,6 +17,24 @@ const OrderSuccessPage = async ({
   if (!orderCode) return;
 
   const data = await getSingleOrderByUid(orderCode);
+  const orderItems = data?.payload?.items || [];
+
+  const totalTax = orderItems.reduce(
+    (acc: number, item: TEnhancedCartItem) => acc + (item?.tax || 0),
+    0
+  );
+  const totalShipping = orderItems.reduce(
+    (acc: number, item: TEnhancedCartItem) => acc + (item?.shippingCharge || 0),
+    0
+  );
+
+  const totalPrice = orderItems.reduce(
+    (acc: number, item: TEnhancedCartItem) =>
+      acc + item?.price * item?.quantity,
+    0
+  );
+
+  console.log({ data: data?.payload?.items });
 
   return (
     <div>
@@ -71,15 +90,37 @@ const OrderSuccessPage = async ({
                 }
               )}
 
+              <li className="flex justify-between text-gray-600 py-3 items-center">
+                <p className="text-base ">Sub total</p>
+                <p className="text-base ">
+                  {currency}
+                  {totalPrice?.toFixed(2)}
+                </p>
+              </li>
+              {totalShipping > 0 && (
+                <li className="flex justify-between text-gray-600 py-3 items-center">
+                  <p className="text-base ">Shipping Service</p>
+                  <p className="text-base ">
+                    {currency}
+                    {totalShipping?.toFixed(2)}
+                  </p>
+                </li>
+              )}
+              {totalTax > 0 && (
+                <li className="flex justify-between text-gray-600 py-3 items-center">
+                  <p className="text-base ">Tax</p>
+                  <p className="text-base ">
+                    {currency}
+                    {totalTax?.toFixed(2)}
+                  </p>
+                </li>
+              )}
+
               <li className="flex justify-between py-3 items-center">
                 <p className="text-lg font-semibold">Total</p>
-                <p className="text-lg font-semibold">
+                <p className="text-lg font-semibold text-main">
                   {currency}
-                  {data.payload?.items?.reduce(
-                    (acc: number, curr: TEnhancedCartItem) =>
-                      acc + curr?.price * curr?.quantity,
-                    0
-                  )}
+                  {(totalPrice + totalShipping + totalTax).toFixed(2)}
                 </p>
               </li>
             </ul>
@@ -88,9 +129,7 @@ const OrderSuccessPage = async ({
             <Link href="/">
               <Button variant={"outline"}>Back to Home</Button>
             </Link>
-            <Link href="/">
-              <Button variant={"outline"}>Back to Dashboard</Button>
-            </Link>
+            <RedirectDashboard />
           </div>
         </div>
       </div>

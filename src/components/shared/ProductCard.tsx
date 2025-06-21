@@ -37,6 +37,8 @@ const ProductCard = ({ product }: Props) => {
         ? product?.price?.sellPrice
         : product?.price?.productPrice,
       sku: "default",
+      shippingCharge: product?.shippingCharge || 0,
+      tax: product?.tax || 0,
     };
     if (isAuthenticated) {
       cartData.user = user?._id as string;

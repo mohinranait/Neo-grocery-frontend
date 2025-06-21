@@ -13,9 +13,13 @@ import React from "react";
 
 const CartComponent = () => {
   // Redux state
-  const { carts } = useAppSelector((state) => state.cart);
+  const { carts, totalShipping, totalTax } = useAppSelector(
+    (state) => state.cart
+  );
   const { products } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
+
+  const totalCartPrice = useTotalCartPrice();
   return (
     <>
       <div className="grid md:grid-cols-2  gap-4 lg:grid-cols-3">
@@ -129,29 +133,40 @@ const CartComponent = () => {
             <div className=" py-4 ">
               <ul className="space-y-4">
                 <li className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Order Summery</span>
+                  <span className="text-sm text-gray-600">Subtotal</span>
                   <span className="text-sm text-gray-800">
                     {currency}
-                    {useTotalCartPrice()}
+                    {totalCartPrice.toFixed(2)}
                   </span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Tax</span>
-                  <span className="text-sm text-gray-800">$0.00</span>
+                  <span className="text-sm text-gray-800">
+                    {totalTax.toFixed(2)}
+                  </span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">
-                    Additional Service
+                    Shipping Service
                   </span>
-                  <span className="text-sm text-gray-800">$00.00</span>
+                  <span className="text-sm text-gray-800">
+                    {totalShipping > 0 ? (
+                      <>
+                        {currency}
+                        {totalShipping.toFixed(2)}
+                      </>
+                    ) : (
+                      <span className="text-main">FREE</span>
+                    )}
+                  </span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="text-base font-semibold text-gray-600">
-                    Total amount
+                    Total
                   </span>
-                  <span className="text-base font-semibold text-gray-800">
+                  <span className="text-base font-semibold text-main">
                     {currency}
-                    {useTotalCartPrice()}
+                    {(totalCartPrice + totalShipping + totalTax).toFixed(2)}
                   </span>
                 </li>
               </ul>

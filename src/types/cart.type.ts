@@ -6,4 +6,6 @@ export type TCartItems = {
     attributes?: Record<string, string> 
     price: number;
     sku?:string;
+    shippingCharge?:number;
+    tax?: number;
 }

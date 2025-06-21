@@ -30,10 +30,14 @@ import SpinnerLoading from "@/components/shared/SpinnerLoading";
 
 const CheckoutComponent = () => {
   // Redux state
-  const { carts } = useAppSelector((state) => state.cart);
+  const { carts, totalShipping, totalTax } = useAppSelector(
+    (state) => state.cart
+  );
   const { products } = useAppSelector((state) => state.product);
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+
+  const totalCartPrice = useTotalCartPrice();
 
   // Local State
   const router = useRouter();
@@ -55,6 +59,8 @@ const CheckoutComponent = () => {
     type: "Home",
   });
 
+  console.log({ selectedAddress });
+
   // handle order data
   const handleOrder = async () => {
     // Validation address form
@@ -70,7 +76,7 @@ const CheckoutComponent = () => {
       items: [],
       totalAmount: 0,
       uid: generateRandomId(8),
-      phone: address?.phone,
+      phone: address?.phone || selectedAddress?.phone || "",
     };
 
     carts?.forEach((cart) => {
@@ -89,7 +95,10 @@ const CheckoutComponent = () => {
       }
 
       // Update form data
-      order.totalAmount += cart?.price * cart?.quantity;
+      order.totalAmount +=
+        cart?.price * cart?.quantity +
+        (cart?.shippingCharge || 0) +
+        (cart?.tax || 0);
       order.items.push({
         ...cart,
         image: findProduct?.featureImage?.image,
@@ -382,18 +391,33 @@ const CheckoutComponent = () => {
                 <span>Subtotal</span>
                 <span>
                   {currency}
-                  {useTotalCartPrice()}{" "}
+                  {totalCartPrice.toFixed(2)}
                 </span>
               </li>
               <li className="flex py-4 justify-between items-center">
-                <span>Shipping</span>
-                <span>0%</span>
+                <span>Tax</span>
+
+                <span>
+                  {currency}
+                  {totalTax?.toFixed(2)}
+                </span>
+              </li>
+              <li className="flex py-4 justify-between items-center">
+                <span>Shipping Service</span>
+                {totalShipping > 0 ? (
+                  <>
+                    {currency}
+                    {totalShipping?.toFixed(2)}
+                  </>
+                ) : (
+                  <span className="uppercase text-main">Free</span>
+                )}
               </li>
               <li className="flex py-4 justify-between items-center">
                 <span>Total</span>
                 <span>
                   {currency}
-                  {useTotalCartPrice()}
+                  {(totalCartPrice + totalShipping + totalTax).toFixed(2)}
                 </span>
               </li>
               <li className=" py-4 space-y-4">

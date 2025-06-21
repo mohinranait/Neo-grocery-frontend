@@ -25,16 +25,13 @@ import { Separator } from "../ui/separator";
 const CartSheets = () => {
   const pathName = usePathname();
   // Redux state
-  const { carts } = useAppSelector((state) => state.cart);
+  const { carts, totalQuantity, totalShipping, totalTax } = useAppSelector(
+    (state) => state.cart
+  );
   const { cartSidebarOpen } = useAppSelector((state) => state.ui);
   const totalCartPrice = useTotalCartPrice();
   const { products } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
-  // Count total cart items
-  const totalItems = carts?.reduce(
-    (total, current) => total + current?.quantity,
-    0
-  );
 
   useEffect(() => {
     dispatch(setCartSidebarOpen(false));
@@ -50,7 +47,7 @@ const CartSheets = () => {
         <SheetHeader className="p-4">
           <SheetTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Shopping Cart ({totalItems} items)
+            Shopping Cart ({totalQuantity} items)
           </SheetTitle>
         </SheetHeader>
 
@@ -135,12 +132,24 @@ const CartSheets = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Tax</span>
-                  <span className="font-medium">$00.00</span>
+                  <span className="font-medium">
+                    {currency}
+                    {totalTax.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Shipping</span>
                   <span className="font-medium">
-                    <span className="text-emerald-600 font-semibold">FREE</span>
+                    {totalShipping > 0 ? (
+                      <>
+                        {currency}
+                        {totalShipping.toFixed(2)}
+                      </>
+                    ) : (
+                      <span className="text-emerald-600 font-semibold">
+                        FREE
+                      </span>
+                    )}
                   </span>
                 </div>
                 <Separator />
@@ -148,7 +157,7 @@ const CartSheets = () => {
                   <span>Total</span>
                   <span className="text-emerald-600">
                     {currency}
-                    {totalCartPrice?.toFixed(2)}
+                    {(totalCartPrice + totalTax + totalShipping).toFixed(2)}
                   </span>
                 </div>
               </div>
