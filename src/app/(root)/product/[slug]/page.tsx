@@ -1,4 +1,5 @@
 import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   Breadcrumb,
@@ -235,19 +236,31 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
         </div>
       </div>
 
-      {product?.details && (
-        <div className="container mb-6 lg:grid grid-cols-3 px-2 md:px-0">
-          <div className="bg-white col-span-2 px-5 py-4">
-            <p className="font-semibold text-sm mb-2 text-gray-700">
-              Product details of {product?.name}
-            </p>
-            <div
-              className="quill-content"
-              dangerouslySetInnerHTML={{ __html: product?.details }}
-            />
-          </div>
-        </div>
-      )}
+      <div className="container">
+        <Tabs defaultValue="details" className="">
+          <TabsList className="w-full">
+            <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="attributes">Attribue</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          </TabsList>
+          <TabsContent value="details">
+            <div className="bg-white col-span-2 px-5 py-4">
+              <p className="font-semibold text-sm mb-2 text-gray-700">
+                Product details of {product?.name}
+              </p>
+              {product?.details && (
+                <div
+                  className="quill-content"
+                  dangerouslySetInnerHTML={{ __html: product?.details }}
+                />
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="attributes">
+            Change your password here.
+          </TabsContent>
+        </Tabs>
+      </div>
 
       <div className="container lg:grid grid-cols-3 mb-6 px-2 md:px-0">
         <div className="col-span-2  py-4">

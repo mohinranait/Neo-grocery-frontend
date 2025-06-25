@@ -62,7 +62,7 @@ const ProductViewSlider = ({ product }: Props) => {
         {images?.map((img, i) => (
           <SwiperSlide
             key={i}
-            className="min-h-[400px] flex items-center"
+            className="min-h-[400px] flex items-center p-2 rounded bg-white"
             style={{ display: "flex" }}
           >
             <Image
