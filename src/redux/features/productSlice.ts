@@ -30,7 +30,7 @@ const initialState:TInitialStateType  = {
 
 
 const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
-  const { categoryIds, brandIds, priceRange,  shipping } = filters;
+  const { categoryIds, brandIds, priceRange  } = filters;
   
   const filteredProducts = products.filter((product) => {
     let isValid = true;
@@ -50,9 +50,9 @@ const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
       }
     }
 
-    if (shipping) {
-      isValid = isValid && product.freeShipping === shipping;
-    }
+    // if (shippingCharge ) {
+    //   isValid = isValid && product.freeShipping === shipping;
+    // }
 
     return isValid;
   });
