@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import {
   BadgeDollarSign,
+  Check,
+  CircleX,
   ShieldCheck,
+  Star,
   Truck,
   VerifiedIcon,
 } from "lucide-react";
@@ -26,6 +29,8 @@ import { TCategoryType } from "@/types/category.type";
 import ActionsButton from "@/components/pages/product/ActionsButton";
 
 import StarRating from "@/components/utils/StarRating";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProductBySlug(params?.slug);
@@ -78,96 +83,86 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
         {/* Product display component */}
         {/* <DisplayProduct /> */}
         <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[420px_auto_300px] gap-4">
-          <div className="w-full">
-            <div className="  md:w-[400px] ">
+          <div className="w-full ">
+            <div className=" sticky top-0 md:w-[400px] ">
               <ProductViewSlider product={product} />
             </div>
           </div>
           <div className="space-y-5 flex-grow">
             <div>
-              <h1 className="text-3xl font-semibold ">{product?.name}</h1>
-              <div className="flex items-center">
-                <svg
-                  className="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <svg
-                  className="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <svg
-                  className="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <svg
-                  className="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <svg
-                  className="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                </svg>
-                <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                  4.95
-                </p>
-                <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                  out of
-                </p>
-                <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                  5
+              {/* Header */}
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
+                      Organic
+                    </Badge>
+                    <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+                      {product?.name}
+                    </h1>
+                  </div>
+                </div>
+
+                {/* Rating */}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < Math.floor(3.5)
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-lg font-semibold text-gray-900">
+                    3.5
+                  </span>
+                  <span className="text-gray-500">(120 reviews)</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Experience the perfect balance of sweet and salty in every
+                  bite. Made with organic corn and natural seasonings, this
+                  premium kettle corn delivers exceptional taste and quality.
                 </p>
               </div>
-            </div>
-            <hr />
 
-            <p className="text-sm text-gray-600">
-              Consequat a scelerisque suspendisse vel et eget eu vitae
-              adipiscing.
-            </p>
+              {/* Product Info */}
+              <Card className="border-2 border-gray-100">
+                <CardContent className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    {product?.skuCode && (
+                      <div>
+                        <span className="text-gray-500">SKU:</span>
+                        <span className="ml-2 font-medium text-gray-900">
+                          {product?.skuCode}
+                        </span>
+                      </div>
+                    )}
 
-            <div>
-              {product?.skuCode && (
-                <p className="text-sm text-gray-600">
-                  SKU: <span>{product?.skuCode}</span>
-                </p>
-              )}
-              <p className="text-sm text-gray-600">
-                Stock:{" "}
-                {product?.isStock > 0 ? (
-                  <span className="text-green-600 font-semibold">In-stock</span>
-                ) : (
-                  <span className="text-red-600 font-semibold"> Out-stock</span>
-                )}
-              </p>
-              <p className="text-sm text-gray-600">
-                Type: <span className=" ">Organic</span>
-              </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500">Stock:</span>
+                      {product?.isStock > 0 ? (
+                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
+                          <Check className="w-3 h-3 mr-1" />
+                          In Stock
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+                          <CircleX className="w-3 h-3 mr-1" />
+                          In Stock
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
+
             <ActionsButton product={product} />
             <div>
               {brands?.length > 0 && (
@@ -202,7 +197,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             </div>
           </div>
           <div className="md:col-span-2 xl:col-span-1 w-full">
-            <div className=" xl:w-[310px] ">
+            <div className=" sticky top-0 xl:w-[310px] ">
               <ul className="bg-gray-100 space-y-6 p-10 lg:p-4 xl:p-10 rounded">
                 <li className="items-center flex  gap-2">
                   <div>

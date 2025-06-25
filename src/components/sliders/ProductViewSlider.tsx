@@ -1,14 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-
-// import required modules
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Image from "next/image";
 import { Swiper as SwiperClass } from "swiper/types";
@@ -25,41 +21,38 @@ const ProductViewSlider = ({ product }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   const { variant } = useAppSelector((state) => state.product);
 
-  // Load default product images
+  const mainSwiperRef = useRef<SwiperClass | null>(null);
+
+  // Load initial images
   useEffect(() => {
     let pImgs: string[] = [];
     const { featureImage, imageGallary } = product || {};
     if (product?.variant === "Variable Product") {
-      const imgs = product?.variations?.map((item) => item?.image);
-      pImgs = [featureImage?.image, ...imgs];
+      const imgs = product?.variations
+        ?.map((item) => item?.image)
+        .filter(Boolean);
+      pImgs = [featureImage?.image, ...(imgs ?? [])];
     } else {
       const gallarys = (imageGallary as string[]) || [];
       pImgs = [featureImage?.image, ...gallarys];
     }
-    setImages(pImgs || []);
+    setImages(pImgs);
   }, [product]);
 
-  // Update images when variant changes
+  // Scroll to the matching variant image
   useEffect(() => {
-    if (variant?.image) {
-      setImages([variant?.image]);
-    } else {
-      let pImgs: string[] = [];
-      const { featureImage, imageGallary } = product || {};
-      if (product?.variant === "Variable Product") {
-        const imgs = product?.variations?.map((item) => item?.image);
-        pImgs = [featureImage?.image, ...imgs];
-      } else {
-        const gallarys = (imageGallary as string[]) || [];
-        pImgs = [featureImage?.image, ...gallarys];
-      }
-      setImages(pImgs || []);
+    if (!variant?.image || !images?.length || !mainSwiperRef.current) return;
+
+    const imageIndex = images.findIndex((img) => img === variant.image);
+    if (imageIndex !== -1) {
+      mainSwiperRef.current.slideTo(imageIndex);
     }
-  }, [variant, product]);
+  }, [variant?.image, images]);
 
   return (
-    <React.Fragment>
+    <>
       <Swiper
+        onSwiper={(swiper) => (mainSwiperRef.current = swiper)}
         spaceBetween={10}
         navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
@@ -82,6 +75,7 @@ const ProductViewSlider = ({ product }: Props) => {
           </SwiperSlide>
         ))}
       </Swiper>
+
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={0}
@@ -97,7 +91,7 @@ const ProductViewSlider = ({ product }: Props) => {
           </SwiperSlide>
         ))}
       </Swiper>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import ProductCartCounter from "./ProductCartCounter";
-import { Heart, Share2, Shuffle } from "lucide-react";
+import { Heart, Share2, ShoppingCart, Shuffle } from "lucide-react";
 import { TProduct } from "@/types/product.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { TCartItems } from "@/types/cart.type";
@@ -9,12 +10,16 @@ import { useEffect, useMemo, useState } from "react";
 import { addToCart } from "@/redux/features/shoppingCartSlice";
 import { updateVariant } from "@/redux/features/productSlice";
 import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
+import { currency } from "@/helpers/utils";
 
 type Props = {
   product: TProduct;
 };
+
 const ActionsButton = ({ product }: Props) => {
-  // Redux State
+  const dispatch = useAppDispatch();
+
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
   const { attributes: getAttributes } = useAppSelector(
@@ -24,46 +29,77 @@ const ActionsButton = ({ product }: Props) => {
     (state) => state.attributeConfigs
   );
   const { variant } = useAppSelector((state) => state.product);
-  const dispatch = useAppDispatch();
-
-  // const cart = carts?.find(
-  //   (cart: TCartItems) => cart?.product === product?._id
-  // );
 
   const cart = useMemo(
     () => carts?.find((cart: TCartItems) => cart?.product === product?._id),
     [carts, product]
   );
 
-  // Local state
   const [quantity, setQuantity] = useState(cart?.quantity || 1);
   const [isPrice, setIsPrice] = useState({ oPrice: 0, pPrice: 0 });
   const [attributeIds, setAttributesIds] = useState<string[]>([]);
 
-  // Derived states using useMemo for performance optimization
   const attributes = useMemo(() => {
     const attrIds = product?.attributes?.map((attr) => attr?.attribute) || [];
     return getAttributes?.filter((attr) => attrIds.includes(attr?._id)) || [];
   }, [product, getAttributes]);
 
   const attrConfigs = useMemo(() => {
-    const configsIds =
+    const configIds =
       product?.attributes?.flatMap((attr) => attr?.attributeConfig) || [];
-    return (
-      getAttrConfigs?.filter((attr) => configsIds.includes(attr?._id)) || []
-    );
+    return getAttrConfigs?.filter((cfg) => configIds.includes(cfg?._id)) || [];
   }, [product, getAttrConfigs]);
 
-  // Update cart quantity
+  // ✅ Build a map of valid config options per attribute
+  const validConfigMap = useMemo(() => {
+    if (!product?.variations || !getAttrConfigs) return {};
+
+    const result: Record<string, string[]> = {};
+
+    attributes.forEach((attr) => {
+      const currentAttrId = attr._id;
+
+      const selectedMap = attributeIds.reduce((acc, id, i) => {
+        const aid = attributes[i]?._id;
+        if (aid && id) acc[aid] = id;
+        return acc;
+      }, {} as Record<string, string>);
+
+      const validIds = product.variations
+        .filter((variation) => {
+          return Object.entries(selectedMap).every(([attrId, configId]) => {
+            if (attrId === currentAttrId) return true;
+            return variation.attributeConfigs.some((ac) => {
+              const config = getAttrConfigs.find((cfg) => cfg._id === ac.value);
+              return (
+                config && config.attribute === attrId && config._id === configId
+              );
+            });
+          });
+        })
+        .flatMap((v) =>
+          v.attributeConfigs
+            .map((ac) => ac.value)
+            .filter((val) => {
+              const cfg = getAttrConfigs.find((c) => c._id === val);
+              return cfg?.attribute === currentAttrId;
+            })
+        );
+
+      result[currentAttrId] = validIds;
+    });
+
+    return result;
+  }, [attributeIds, attributes, product?.variations, getAttrConfigs]);
+
   const increment = () => setQuantity((prev) => (prev < 20 ? prev + 1 : prev));
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
 
-  // Add product in your shopping cart
   const handleAddToCart = () => {
     let cartData: TCartItems = {
       user: null,
       product: product?._id,
-      quantity: quantity,
+      quantity,
       price:
         product?.price?.sellPrice && product?.price?.sellPrice > 0
           ? product?.price?.sellPrice
@@ -71,7 +107,6 @@ const ActionsButton = ({ product }: Props) => {
       sku: product?.skuCode,
     };
 
-    // Show toast notification, when user don't select attribute
     if (
       product?.attributes &&
       product?.attributes?.length > 0 &&
@@ -80,17 +115,17 @@ const ActionsButton = ({ product }: Props) => {
       const prodAttributes = product?.attributes?.map(
         (item) => item?.attribute
       );
-
-      const attrConfigs = getAttributes?.filter((attr) =>
+      const missingAttrs = getAttributes?.filter((attr) =>
         prodAttributes?.includes(attr?._id)
       );
 
       toast.custom(
-        <div className="py-2 shadow-lg px-2 rounded-md text-sm text-[#1b1b1a] bg-[#ffffff]">
-          ⚠️ Select{" "}
-          {attrConfigs?.map((attr, i) => (
+        <div className="py-2 px-3 rounded-md text-sm bg-white text-black shadow-md">
+          ⚠️ Please select:{" "}
+          {missingAttrs?.map((a, i) => (
             <span key={i} className="font-semibold">
-              {attr?.name},
+              {a?.name}
+              {i < missingAttrs.length - 1 && ", "}
             </span>
           ))}
         </div>
@@ -98,7 +133,6 @@ const ActionsButton = ({ product }: Props) => {
       return;
     }
 
-    // If exists attributes for this product
     if (
       attributeIds?.length ===
       (product?.attributes && product?.attributes?.length)
@@ -108,7 +142,6 @@ const ActionsButton = ({ product }: Props) => {
       );
 
       attrConfigs?.forEach((item) => {
-        // Store empty object for attribute
         if (!cartData.attributes) {
           cartData.attributes = {};
         }
@@ -116,9 +149,8 @@ const ActionsButton = ({ product }: Props) => {
         const findAttr = getAttributes?.find(
           (attr) => attr?._id === item?.attribute
         );
-
         if (!findAttr) {
-          toast.error("Somthing wrong for attribute");
+          toast.error("Something went wrong with attributes");
           return;
         }
 
@@ -126,7 +158,6 @@ const ActionsButton = ({ product }: Props) => {
       });
     }
 
-    // For variable product
     if (product?.variant === "Variable Product") {
       cartData = {
         ...cartData,
@@ -137,7 +168,6 @@ const ActionsButton = ({ product }: Props) => {
       };
     }
 
-    // Checked authentication user
     if (isAuthenticated) {
       cartData.user = user?._id as string;
     }
@@ -145,12 +175,10 @@ const ActionsButton = ({ product }: Props) => {
     dispatch(addToCart(cartData));
   };
 
-  // Update quantity when cart updates
   useEffect(() => {
     if (cart?.quantity) setQuantity(cart?.quantity);
   }, [cart]);
 
-  // Update Product price state
   useEffect(() => {
     if (product?.price) {
       const { productPrice, sellPrice } = product?.price || {};
@@ -161,7 +189,6 @@ const ActionsButton = ({ product }: Props) => {
     }
   }, [product]);
 
-  // handle change attribute
   const handleChangeAttribute = (id: string, index: number) => {
     setAttributesIds((prev) => {
       const newArr = [...prev];
@@ -170,7 +197,6 @@ const ActionsButton = ({ product }: Props) => {
     });
   };
 
-  // Find variant
   useEffect(() => {
     if (product?.variations && attributeIds?.length > 0) {
       const variantObject = product?.variations?.find((item) =>
@@ -190,78 +216,95 @@ const ActionsButton = ({ product }: Props) => {
 
   return (
     <>
-      <div className="flex items-center gap-1">
+      <div className="space-y-2">
         {isPrice?.oPrice ? (
-          <>
-            <span className="text-2xl font-semibold text-gray-900">
-              ${isPrice?.oPrice}–{" "}
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-bold text-gray-900">
+              {currency}
+              {isPrice?.oPrice?.toFixed(2)}
             </span>
-            <del className="text-xl font-semibold text-gray-400">
-              ${isPrice?.pPrice}
-            </del>
-          </>
+            <span className="text-lg text-gray-500 line-through">
+              {currency}
+              {isPrice?.pPrice?.toFixed(2)}
+            </span>
+            <Badge className="bg-red-100 text-red-700 px-3 py-1">33% OFF</Badge>
+          </div>
         ) : (
-          <>
-            <span className="text-2xl font-semibold text-gray-900">
-              ${isPrice.pPrice}
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-bold text-gray-900">
+              {currency}
+              {isPrice.pPrice?.toFixed(2)}
             </span>
-          </>
+          </div>
         )}
+
+        <p className="text-sm text-gray-500">Price includes all taxes</p>
       </div>
 
       {attributes?.length > 0 && (
-        <ul>
-          {attributes?.map((attr, index) => {
+        <div className="space-y-2">
+          {attributes.map((attr, index) => {
             const matchedConfigs = attrConfigs?.filter(
-              (attrCon) => attrCon?.attribute === attr?._id
+              (ac) => ac?.attribute === attr?._id
             );
 
+            const validIds = validConfigMap[attr._id] || [];
             return (
-              <li key={index} className="flex justify-start items-center gap-2">
-                <span className="font-medium min-w-[60px] text-sm">
-                  {attr?.name}:
-                </span>
-                <select
-                  onChange={(e) => handleChangeAttribute(e.target.value, index)}
-                  className=" p-1 mt-1 border text-sm min-w-[100px] border-gray-300 rounded-md"
-                >
-                  <option>Select </option>
-                  {matchedConfigs?.map((config, index) => (
-                    <option key={index} value={config?._id}>
-                      {config?.name}
-                    </option>
+              <div key={index}>
+                <label className="block text-sm font-medium text-gray-900 mb-[3px]">
+                  {attr.name}
+                </label>
+                <div className="flex gap-2">
+                  {matchedConfigs?.map((config, iKey) => (
+                    <Button
+                      disabled={
+                        validIds.length > 0 && !validIds.includes(config._id)
+                      }
+                      key={iKey}
+                      onClick={() => handleChangeAttribute(config?._id, index)}
+                      className={` text-xs h-8 px-3 border bg-white hover:bg-white rounded  ${
+                        attributeIds?.includes(config?._id)
+                          ? "border-main  bg-emerald-100 hover:bg-emerald-100 text-main"
+                          : "border-main border-gray-300 text-gray-700 "
+                      }`}
+                    >
+                      {config.name}
+                    </Button>
                   ))}
-                </select>
-              </li>
+                </div>
+              </div>
             );
           })}
-        </ul>
+        </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-3">
+      {/* <p>Total: $15 × 3 = $45</p> */}
+      <div className="flex flex-wrap items-center gap-3 mt-4">
         <ProductCartCounter
           increment={increment}
           decrement={decrement}
           quantity={quantity || 1}
         />
         <Button type="button" onClick={handleAddToCart}>
+          <ShoppingCart />
           Add to cart
         </Button>
         <Button
-          variant={"outline"}
-          className="bg-main text-white hover:bg-main hover:text-white te"
+          variant="outline"
+          className="bg-main text-white hover:bg-main hover:text-white"
         >
           Buy Now
         </Button>
       </div>
-      <div className="flex items-center xl:gap-3">
-        <Button variant={"link"}>
+
+      <div className="flex items-center gap-3 mt-4">
+        <Button variant="link">
           <Heart /> Add wishlist
         </Button>
-        <Button variant={"link"}>
+        <Button variant="link">
           <Shuffle /> Add Compare
         </Button>
-        <Button variant={"link"} className="ml-auto">
+        <Button variant="link" className="ml-auto">
           <Share2 />
         </Button>
       </div>
