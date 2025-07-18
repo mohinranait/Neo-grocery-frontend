@@ -4,20 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { TProduct } from "@/types/product.type";
-import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
+import { Eye, Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { TCartItems } from "@/types/cart.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { Badge } from "../ui/badge";
 import ProductViewModal from "../modals/ProductViewModal";
 import { Card, CardContent } from "../ui/card";
+import {
+  calculateDiscount,
+  calculateVariableProductPrice,
+} from "@/helpers/product.helper";
+import { currency } from "@/helpers/utils";
 
 type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
-  console.log({ product });
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { name, slug, featureImage, price } = product || {};
   // Redux State
@@ -33,10 +36,10 @@ const ProductCard = ({ product }: Props) => {
       user: null,
       product: product?._id,
       quantity: 1,
-      price: product?.price?.sellPrice
-        ? product?.price?.sellPrice
+      price: product?.price?.discountValue
+        ? product?.price?.discountValue
         : product?.price?.productPrice,
-      sku: "default",
+      sku: product?.skuCode || "default",
       shippingCharge: product?.shippingCharge || 0,
       tax: product?.tax || 0,
     };
@@ -98,23 +101,27 @@ const ProductCard = ({ product }: Props) => {
             <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
               New
             </Badge>
-
-            <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
-              -45%
-            </Badge>
-            <div className="absolute group-hover:scale-100 group-hover:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-[18px] ">
-              <div className="flex flex-col gap-1  p-1 h-[130px] w-[44px]">
-                {images?.slice(0, 3)?.map((img, imgIndex) => (
-                  <button
-                    onClick={() => setFeatureImg(img)}
-                    key={imgIndex}
-                    className=" border rounded size-10 bg-white hover:bg-white"
-                  >
-                    <Image src={img} width={40} height={40} alt="images" />
-                  </button>
-                ))}
+            {product.variant === "Single Product" &&
+              price.discountValue > 0 && (
+                <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
+                  -{calculateDiscount(product).percentage}%
+                </Badge>
+              )}
+            {images?.length > 1 && (
+              <div className="absolute group-hover:scale-100 group-hover:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-[18px] ">
+                <div className="flex flex-col gap-1  p-1 h-[130px] w-[44px]">
+                  {images?.slice(0, 3)?.map((img, imgIndex) => (
+                    <button
+                      onClick={() => setFeatureImg(img)}
+                      key={imgIndex}
+                      className=" border rounded size-10 bg-white hover:bg-white"
+                    >
+                      <Image src={img} width={40} height={40} alt="images" />
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <Button
               size="icon"
               variant="ghost"
@@ -151,13 +158,24 @@ const ProductCard = ({ product }: Props) => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold text-main">
-                ${price?.sellPrice > 0 ? price?.sellPrice : price?.productPrice}
-              </span>
-              {price?.sellPrice > 0 && (
-                <span className="text-sm text-gray-500 line-through">
-                  ${price?.productPrice}
+              {product?.variant === "Variable Product" ? (
+                <span className="font-bold text-main">
+                  {currency}
+                  {calculateVariableProductPrice(product)}
                 </span>
+              ) : (
+                <>
+                  <span className="font-bold text-main">
+                    {currency}
+                    {calculateVariableProductPrice(product)}
+                  </span>
+                  {price?.discountValue > 0 && (
+                    <span className="text-sm text-gray-500 line-through">
+                      {currency}
+                      {price?.productPrice}
+                    </span>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -187,14 +205,23 @@ const ProductCard = ({ product }: Props) => {
                   </div>
                 </div>
               ) : (
-                <Button
-                  onClick={handleAddToCart}
-                  type="button"
-                  className=" h-[32px] px-[8px] "
-                >
-                  <ShoppingCart />
-                  {/* <Plus /> */}
-                </Button>
+                <>
+                  {product?.variant === "Single Product" ? (
+                    <Button
+                      onClick={handleAddToCart}
+                      type="button"
+                      className=" h-[32px] px-[8px] "
+                    >
+                      <ShoppingCart />
+                    </Button>
+                  ) : (
+                    <Link href={`/product/${slug}`}>
+                      <Button type="button" className=" h-[32px] px-[8px] ">
+                        <Eye />
+                      </Button>
+                    </Link>
+                  )}
+                </>
               )}
             </div>
           </div>

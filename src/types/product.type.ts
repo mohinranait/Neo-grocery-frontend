@@ -16,8 +16,9 @@ type FeatureImage = {
 }
 
 type Price = {
-  sellPrice: number;
+  discountValue: number;
   productPrice: number;
+  discountType: 'percent'|'fixed';
 }
 
 export type OfferDate= {

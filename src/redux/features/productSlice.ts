@@ -43,8 +43,8 @@ const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
     }
 
     if (priceRange && priceRange.length === 2) {
-      if(product.price?.sellPrice && product.price?.sellPrice > 0){
-        isValid = isValid && product.price?.sellPrice >= priceRange[0] && product.price?.sellPrice <= priceRange[1];
+      if(product.price?.discountValue && product.price?.discountValue > 0){
+        isValid = isValid && product.price?.discountValue >= priceRange[0] && product.price?.discountValue <= priceRange[1];
       } else{
         isValid = isValid && product.price?.productPrice >= priceRange[0] && product.price?.productPrice <= priceRange[1];
       }
@@ -99,9 +99,9 @@ export const productSlice = createSlice({
     addSortingProducts: (state, action: PayloadAction<{filter:'phl'|'plh'|'az'|'za'}>) => {
       const { filter } = action?.payload;
       if(filter === 'plh'){
-        state.filterProducts = [...state.filterProducts].sort((a, b) => (a.price?.sellPrice ? a.price?.sellPrice : a?.price?.productPrice || 0) - (b.price?.sellPrice ? b.price?.sellPrice : b?.price?.productPrice || 0));
+        state.filterProducts = [...state.filterProducts].sort((a, b) => (a.price?.discountValue ? a.price?.discountValue : a?.price?.productPrice || 0) - (b.price?.discountValue ? b.price?.discountValue : b?.price?.productPrice || 0));
       } else if(filter === 'phl'){
-        state.filterProducts = [...state.filterProducts].sort((a, b) => (b.price?.sellPrice ? b.price?.sellPrice : b?.price?.productPrice || 0) - (a.price?.sellPrice ? a.price?.sellPrice : a?.price?.productPrice || 0));
+        state.filterProducts = [...state.filterProducts].sort((a, b) => (b.price?.discountValue ? b.price?.discountValue : b?.price?.productPrice || 0) - (a.price?.discountValue ? a.price?.discountValue : a?.price?.productPrice || 0));
       } else if(filter === 'az'){
         state.filterProducts = [...state.filterProducts].sort((a, b) => a.name.localeCompare(b.name));
       } else if(filter === 'za'){

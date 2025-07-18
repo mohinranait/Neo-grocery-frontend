@@ -85,8 +85,8 @@ const CheckoutComponent = () => {
       );
       if (!findProduct) return;
       if (findProduct?.variant === "Single Product") {
-        const pPrice = findProduct?.price?.sellPrice
-          ? findProduct?.price?.sellPrice
+        const pPrice = findProduct?.price?.discountValue
+          ? findProduct?.price?.discountValue
           : findProduct?.price?.productPrice;
         if (pPrice !== cart?.price) {
           dispatch(setAllCarts([]));
