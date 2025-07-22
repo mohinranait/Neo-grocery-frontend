@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { useAppSelector } from "@/hooks/useRedux";
 import {
+  Heart,
   Key,
   LogOut,
   LucideLayoutDashboard,
@@ -87,6 +88,17 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
               >
                 <MapPin size={18} />
                 Address
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={"/dashboard/favorites"}
+                className={` ${
+                  path === "/dashboard/favorites" && "bg-gray-100 text-gray-700"
+                } inline-flex px-3 gap-2 text-gray-500 hover:text-gray-700 items-center hover:bg-gray-100 rounded w-full py-2`}
+              >
+                <Heart size={18} />
+                Favorites Products
               </Link>
             </li>
             <li>

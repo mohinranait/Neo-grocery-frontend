@@ -1,11 +1,13 @@
 "use client";
 
 import { getAllAttributeConfigs } from "@/actions/attributeConfigApi";
-import { useAppDispatch } from "@/hooks/useRedux";
+import { getAllFavoriteProducts } from "@/actions/favoriteApi";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addAttributeConfig } from "@/redux/features/attributeConfigSlice";
 import { addAttribute } from "@/redux/features/attributeSlice";
 import { addBrands } from "@/redux/features/brandSlice";
 import { addCategorys } from "@/redux/features/categorySlice";
+import { setFavorites } from "@/redux/features/favoriteSlice";
 import { setProducts } from "@/redux/features/productSlice";
 import { store, persistor } from "@/redux/store";
 import { TAttributeType } from "@/types/attribute.type";
@@ -60,6 +62,7 @@ const ChildWrapper = ({
   const rangeParams = searchParams.get("priceRange");
   const shippingParams = searchParams.get("shipping");
   const brandParams = searchParams.get("brandIds");
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -75,6 +78,13 @@ const ChildWrapper = ({
     }
   };
 
+  const getAllFavorites = async () => {
+    const res = await getAllFavoriteProducts();
+    if (res.success) {
+      dispatch(setFavorites(res?.payload));
+    }
+  };
+
   useEffect(() => {
     const prices = rangeParams?.split(",");
     const filters = {
@@ -84,6 +94,10 @@ const ChildWrapper = ({
         prices && ([Number(prices[0]), Number(prices[1])] as [number, number]),
       shipping: shippingParams as "yes" | "no",
     };
+    if (isAuthenticated) {
+      getAllFavorites();
+    }
+
     dispatch(addBrands(brands));
     dispatch(addCategorys(categories));
     dispatch(setProducts({ products, filters }));

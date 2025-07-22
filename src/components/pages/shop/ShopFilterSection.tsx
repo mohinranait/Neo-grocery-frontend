@@ -28,6 +28,7 @@ const ShopFilterSection = () => {
   const rangeParams = searchParams.get("priceRange");
   const shippingParams = searchParams.get("shipping");
   const brandParams = searchParams.get("brandIds");
+  const search = searchParams.get("search") || "";
   // const statusParams = searchParams.get("status");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
@@ -96,13 +97,14 @@ const ShopFilterSection = () => {
     const prices = rangeParams?.split(",");
     dispatch(
       setFilterProducts({
+        search: search,
         categoryIds: catParams?.split(","),
         brandIds: brandParams?.split(",") || [],
         priceRange: prices && [Number(prices[0]), Number(prices[1])],
         shipping: shippingParams as "yes" | "no",
       })
     );
-  }, [catParams, rangeParams, shippingParams, brandParams, dispatch]);
+  }, [catParams, rangeParams, shippingParams, brandParams, search, dispatch]);
 
   return (
     <Accordion

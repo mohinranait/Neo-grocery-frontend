@@ -10,6 +10,7 @@ type TFilter = {
   shipping?:'yes'|'no',
   sortBy?:string,
   status?:string,
+  search?:string,
 }
 
 type TInitialStateType = {
@@ -30,7 +31,7 @@ const initialState:TInitialStateType  = {
 
 
 const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
-  const { categoryIds, brandIds, priceRange  } = filters;
+  const { categoryIds, brandIds, priceRange,search  } = filters;
   
   const filteredProducts = products.filter((product) => {
     let isValid = true;
@@ -40,6 +41,10 @@ const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
 
     if (brandIds && brandIds.length > 0) {
       isValid = isValid && brandIds.some(brandId => product.brand?.includes(brandId) );
+    }
+
+    if (search && search.length > 0) {
+      isValid = isValid &&  product.name?.includes(search) ;
     }
 
     if (priceRange && priceRange.length === 2) {

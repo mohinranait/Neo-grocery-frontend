@@ -11,7 +11,7 @@ import { updateVariant } from "@/redux/features/productSlice";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { currency } from "@/helpers/utils";
-import { calculateVariableProductPrice } from "@/helpers/product.helper";
+import { calculateProductPrice } from "@/helpers/product.helper";
 import { calculateDiscount } from "@/helpers/product.helper";
 
 type Props = {
@@ -277,7 +277,7 @@ const ActionsButton = ({ product }: Props) => {
           <div className="flex items-baseline gap-3">
             <span className="text-xl font-bold text-gray-900">
               {currency}
-              {calculateVariableProductPrice(product)}
+              {calculateProductPrice(product)}
             </span>
             <span className="text-lg text-gray-500">Range</span>
           </div>

@@ -7,6 +7,7 @@ import  mediaReducer  from "./features/mediaSlice";
 import  attributeReducer  from "./features/attributeSlice";
 import  attributeConfigReducer  from "./features/attributeConfigSlice";
 import  shoppingCartReducer  from "./features/shoppingCartSlice";
+import  favoriteReducer  from "./features/favoriteSlice";
 import  uiReducer  from "./features/uiSlice";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
     attributes: attributeReducer,
     attributeConfigs: attributeConfigReducer,
     ui: uiReducer,
+    favorite: favoriteReducer,
 })
 
 export  const store = configureStore({

@@ -28,9 +28,9 @@ export const authSlice = createSlice({
  
     setLoading:(state , action: PayloadAction<boolean>) => {
       state.isLoading = action?.payload
-      console.log("pay",action?.payload);
       
-    }
+    },
+   
   },
 })
 

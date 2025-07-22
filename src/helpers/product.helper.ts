@@ -1,6 +1,10 @@
 import { TProduct } from "@/types/product.type";
 
-export const calculateVariableProductPrice = (product:TProduct) => {
+/**
+ * Calculate product price
+ * @prams {product}
+*/
+export const calculateProductPrice = (product:TProduct) => {
     const { variations,price, variant} = product || {}
    if (variant === "Variable Product") {
       const allPrice = variations?.map((vari) =>
@@ -10,9 +14,16 @@ export const calculateVariableProductPrice = (product:TProduct) => {
       const min = Math.min(...allPrice) || 0;
       return `${Number(min) || 0}-${max || 0}`;
     } else{
-         return price?.discountValue
-        ? (price?.productPrice - price?.discountValue).toFixed(2)
-        : (price?.productPrice).toFixed(2);
+         const hasDiscount = price?.discountValue && price?.discountType;
+
+      const finalPrice =
+        hasDiscount && price.discountType === "fixed"
+          ? price.productPrice - price.discountValue
+          : hasDiscount && price.discountType === "percent"
+          ? price.productPrice - (price.productPrice * price.discountValue) / 100
+          : price.productPrice;
+
+      return finalPrice.toFixed(2);
     }
 }
 export function calculateDiscount(product: TProduct) {

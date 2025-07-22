@@ -1,7 +1,9 @@
 "use client";
 
+import { DEFAULT_IMAGE } from "@/helpers/secretVariable";
 import { useAppSelector } from "@/hooks/useRedux";
-import { ChevronRight, Cookie } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -9,6 +11,7 @@ type TBuildTree = {
   _id: string;
   name: string;
   parent: string;
+  catThumbnail: string;
 };
 
 export type TTreeNode = TBuildTree & {
@@ -48,6 +51,7 @@ const HeaderBrowsCategory = () => {
     const formate = categories?.map((d) => ({
       _id: d?._id,
       name: d.name,
+      catThumbnail: d.catThumbnail,
       parent: d.parent,
     }));
 
@@ -64,10 +68,16 @@ const HeaderBrowsCategory = () => {
             href={`/shop?cat=${category?._id}`}
             className="inline-flex text-primary font-medium transition-colors hover:text-main w-full px-4 py-2 justify-between items-center"
           >
-            <span className="inline-flex gap-1 items-center">
-              <Cookie size={14} />
+            <span className="inline-flex gap-2 items-center">
+              <Image
+                src={category?.catThumbnail || `/${DEFAULT_IMAGE}`}
+                width={20}
+                height={20}
+                alt="Image"
+                className="w-5 h-5 rounded"
+              />
 
-              <span className="">{category?.name}</span>
+              <span className="text-gray-800">{category?.name}</span>
             </span>
 
             {category?.children && category?.children?.length > 0 && (
@@ -83,8 +93,6 @@ const HeaderBrowsCategory = () => {
                     className="inline-flex text-primary hover:text-main w-full px-4 py-2 justify-between items-center font-medium transition-colors"
                   >
                     <span className="inline-flex gap-1 items-center">
-                      {/* <Cookie size={14} /> */}
-                      🍯
                       <span className="">{subCat?.name}</span>
                     </span>
                     {subCat?.children && subCat?.children?.length > 0 && (
@@ -93,18 +101,17 @@ const HeaderBrowsCategory = () => {
                   </Link>
 
                   {subCat?.children && subCat?.children?.length > 0 && (
-                    <ul className="w-[250px] h-full border border-border border-l-0 border-t-0 group-hover/subcategory:block hidden absolute top-0 z-10 bg-white left-[250px]">
+                    <ul className="w-[250px] z-[999] h-full border border-border border-l-0 border-t-0 group-hover/subcategory:block hidden absolute top-0  bg-white left-[250px]">
                       {subCat?.children?.map((subSubCat: TTreeNode, index) => (
                         <li key={index}>
-                          <a
-                            href="#"
+                          <Link
+                            href={`/shop?cat=${subSubCat?._id}`}
                             className="inline-flex  text-primary hover:text-main w-full px-4 py-2 justify-between items-center font-medium transition-colors"
                           >
                             <span className="inline-flex gap-1 items-center">
-                              🍯
                               <span className="">{subSubCat?.name}</span>
                             </span>
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>

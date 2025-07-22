@@ -27,6 +27,7 @@ import AddressCard from "./AddressCard";
 import CheckoutForm from "./CheckoutForm";
 import { addressFormValidation } from "@/validations/AddressFormValidation";
 import SpinnerLoading from "@/components/shared/SpinnerLoading";
+import { calculateProductPrice } from "@/helpers/product.helper";
 
 const CheckoutComponent = () => {
   // Redux state
@@ -85,9 +86,7 @@ const CheckoutComponent = () => {
       );
       if (!findProduct) return;
       if (findProduct?.variant === "Single Product") {
-        const pPrice = findProduct?.price?.discountValue
-          ? findProduct?.price?.discountValue
-          : findProduct?.price?.productPrice;
+        const pPrice = +calculateProductPrice(findProduct);
         if (pPrice !== cart?.price) {
           dispatch(setAllCarts([]));
           return;

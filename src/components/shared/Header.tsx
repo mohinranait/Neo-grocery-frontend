@@ -11,9 +11,9 @@ import {
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Logo from "./Logo";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import MobileSearchSeet from "../sheets/MobileSearchSeet";
 import {
   DropdownMenu,
@@ -33,12 +33,17 @@ import { Badge } from "../ui/badge";
 const Header = () => {
   // Redux state
   const { carts } = useAppSelector((state) => state.cart);
+  const { favorites } = useAppSelector((state) => state.favorite);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const pathName = usePathname();
   const dispatch = useAppDispatch();
+
+  const [search, setSearch] = useState("");
 
   // handle logout
   const handleLogout = async () => {
@@ -50,6 +55,19 @@ const Header = () => {
       console.log({ error });
     }
   };
+
+  // handle search
+  const handleSearch = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (search) {
+      params.set("search", search);
+    } else {
+      params.delete("search");
+    }
+
+    router.push(`/shop?${params.toString()}`);
+  }, [search, searchParams, router]);
 
   useEffect(() => {
     setOpenCategory(false);
@@ -92,12 +110,16 @@ const Header = () => {
               {/* Desktop Search */}
               <div className="relative w-full">
                 <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   placeholder="Search for fresh products, organic foods..."
                   className="w-full pl-4  py-[14px] h-auto  rounded-full border-2 focus-visible:!outline-none border-gray-200 focus-visible:shadow-none focus-visible:ring-offset-0 focus-visible:border-emerald-500 focus-visible:ring-0 focus:ring-emerald-200 transition-all duration-200 text-base pr-20"
                 />
                 <Button
                   size="sm"
+                  type="button"
+                  onClick={handleSearch}
                   className="absolute py-[22px] h-auto right-1 top-2/4 -translate-y-2/4 bottom-1 px-8 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-md"
                 >
                   <Search className="w-4 h-4" />
@@ -148,10 +170,12 @@ const Header = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <li className="hidden  rounded-full h-10 w-10 md:inline-flex items-center justify-center relative">
-                  <Heart size={24} className="text-gray-600" />
-                  <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
-                    9+
-                  </span>
+                  <Link href={"/dashboard/favorites"}>
+                    <Heart size={24} className="text-gray-600" />
+                    <span className="px-1 text-xs font-semibold text-white rounded-full bg-main absolute -top-1 -right-1">
+                      {favorites?.length > 9 ? "9+" : favorites?.length}
+                    </span>
+                  </Link>
                 </li>
 
                 {/* Cart Button */}

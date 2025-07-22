@@ -13,9 +13,12 @@ import ProductViewModal from "../modals/ProductViewModal";
 import { Card, CardContent } from "../ui/card";
 import {
   calculateDiscount,
-  calculateVariableProductPrice,
+  calculateProductPrice,
 } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
+import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
+import toast from "react-hot-toast";
+import { removeFavorite, setFavorites } from "@/redux/features/favoriteSlice";
 
 type Props = {
   product: TProduct;
@@ -25,6 +28,7 @@ const ProductCard = ({ product }: Props) => {
   const { name, slug, featureImage, price } = product || {};
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { favorites } = useAppSelector((state) => state.favorite);
   const { carts } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const findCart = carts?.find((cart) => cart?.product === product?._id);
@@ -36,9 +40,7 @@ const ProductCard = ({ product }: Props) => {
       user: null,
       product: product?._id,
       quantity: 1,
-      price: product?.price?.discountValue
-        ? product?.price?.discountValue
-        : product?.price?.productPrice,
+      price: +calculateProductPrice(product),
       sku: product?.skuCode || "default",
       shippingCharge: product?.shippingCharge || 0,
       tax: product?.tax || 0,
@@ -48,6 +50,43 @@ const ProductCard = ({ product }: Props) => {
     }
 
     dispatch(addToCart(cartData));
+  };
+
+  const handleFavorite = async (product: TProduct) => {
+    if (!user?._id) {
+      toast.error("Please login, Then try again");
+      return;
+    }
+
+    const isExistsFavorite = favorites?.find(
+      (fav) => String(fav.product) === String(product._id)
+    );
+
+    if (isExistsFavorite?._id) {
+      const res = await deleteFavoriteById({
+        favoriteId: isExistsFavorite._id,
+        userId: user._id,
+      });
+
+      if (res.success) {
+        dispatch(removeFavorite(isExistsFavorite._id));
+        toast.success("Removed successfully");
+      }
+    } else {
+      try {
+        const res = await addFavoriteProduct({
+          userId: user._id,
+          product: product._id,
+        });
+
+        if (res.success) {
+          dispatch(setFavorites([...favorites, res.payload]));
+          toast.success("Added to your profile");
+        }
+      } catch (error) {
+        console.log({ error });
+      }
+    }
   };
 
   const increment = (qty: number) => {
@@ -125,6 +164,8 @@ const ProductCard = ({ product }: Props) => {
             <Button
               size="icon"
               variant="ghost"
+              onClick={() => handleFavorite(product)}
+              type="button"
               className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
             >
               <Heart className="w-4 h-4" />
@@ -161,13 +202,13 @@ const ProductCard = ({ product }: Props) => {
               {product?.variant === "Variable Product" ? (
                 <span className="font-bold text-main">
                   {currency}
-                  {calculateVariableProductPrice(product)}
+                  {calculateProductPrice(product)}
                 </span>
               ) : (
                 <>
                   <span className="font-bold text-main">
                     {currency}
-                    {calculateVariableProductPrice(product)}
+                    {calculateProductPrice(product)}
                   </span>
                   {price?.discountValue > 0 && (
                     <span className="text-sm text-gray-500 line-through">

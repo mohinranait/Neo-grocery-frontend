@@ -52,10 +52,12 @@ const shoppingCartSlice = createSlice({
             state.totalShipping = state.carts?.reduce((total, cart) => total + (cart?.shippingCharge || 0), 0);
             // Calculate total tax
             state.totalTax = state.carts?.reduce((total, cart) => total + (cart?.tax || 0), 0);
-           
+            
         },
         removeCart:(state, action:PayloadAction<string>) => {
             state.carts = state.carts?.filter(cart => cart?.product !== action?.payload)
+            state.totalShipping = state.carts?.reduce((total, cart) => total + (cart?.shippingCharge || 0), 0);
+            state.totalTax = state.carts?.reduce((total, cart) => total + (cart?.tax || 0), 0);
         }
     }
 })

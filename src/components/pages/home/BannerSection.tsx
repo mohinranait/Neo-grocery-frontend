@@ -94,7 +94,7 @@ const BannerSection = () => {
               />
 
               {/* Floating Cards */}
-              <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+              <div className="absolute z-10 -top-4 -left-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg flex items-center justify-center">
                     <Shield className="w-6 h-6 text-white" />
