@@ -1,13 +1,14 @@
 // import BannerSection from "@/components/pages/home/BannerSection";
 import BannerSection from "@/components/pages/home/BannerSection";
 import CategoriesSection from "@/components/pages/home/categories-section";
+import MasonaryProducts from "@/components/pages/home/masonary-products";
+import ProductSliderHome from "@/components/pages/home/product-slider";
 import ProductSection from "@/components/pages/home/ProductSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Gift, Headphones, Shield, Truck } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 const features = [
   {
@@ -43,77 +44,10 @@ const HomePage = () => {
       {/* Categoriys section */}
       <CategoriesSection />
 
-      {/* Product Section */}
-      <ProductSection />
+      <ProductSliderHome />
 
-      {/* Features Section */}
-      <section className="mb-10">
-        <div className="container mt-10 lg:mt-0">
-          <div className="grid lg:grid-cols-2 gap-6">
-            <div
-              className="relative group w-full h-[200px] bg-white p-4"
-              style={{
-                backgroundImage: `url('/intro.jpg')`,
-                backgroundPosition: "right",
-                backgroundSize: "cover",
-              }}
-            >
-              <div className="absolute w-full h-full flex items-center  pl-10 top-2/4 left-0 -translate-y-2/4">
-                <div className="relative ">
-                  <p className="text-xl z-30 text-text-color mb-1 font-semibold">
-                    Tomato
-                  </p>
-                  <p className="text-sm z-30 text-gray-600 font-medium mb-2">
-                    Optionals Skins
-                  </p>
-                  <div>
-                    <Link
-                      href={"/"}
-                      className="text-primary text-sm font-semibold"
-                    >
-                      Details new
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="relative h-[200px] group w-full bg-white p-4"
-              style={{
-                backgroundImage: `url('/intro2.jpg')`,
-                backgroundPosition: "right",
-                backgroundSize: "cover",
-              }}
-            >
-              <div className="absolute w-full h-full flex items-center  pl-10 top-2/4 left-0 -translate-y-2/4">
-                <div className="relative ">
-                  <p className="text-xl z-30 text-text-color mb-1 font-semibold">
-                    Tomato
-                  </p>
-                  <p className="text-sm z-30 text-gray-600 font-medium mb-2">
-                    Optionals Skins
-                  </p>
-                  <div>
-                    <Link
-                      href={"/"}
-                      className="text-primary text-sm font-semibold"
-                    >
-                      Details new
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              {/* <Image
-                className="w-full"
-                src="/intro.jpg"
-                alt="avater"
-                width={300}
-                height={200}
-              /> */}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Featured Products - Masonry Layout */}
+      <MasonaryProducts />
 
       {/* Promotional Banner */}
       <section className="py-16 relative overflow-hidden">
@@ -166,7 +100,7 @@ const HomePage = () => {
                 <div className="absolute inset-0 rounded-full bg-white/20 blur-3xl"></div>
                 <div className="absolute left-1/2 top-1/2 h-[250px] w-[250px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border-4 border-white/20 shadow-2xl">
                   <Image
-                    src="/placeholder.svg?height=500&width=500&text=SALE"
+                    src="/promo.jpg?height=500&width=500&text=SALE"
                     alt="Summer Sale"
                     fill
                     className="object-cover"
@@ -179,7 +113,7 @@ const HomePage = () => {
                 {/* Floating product images */}
                 <div className="absolute -left-8 top-10 h-16 w-16 rotate-12 overflow-hidden rounded-full border-2 border-white/20 shadow-xl">
                   <Image
-                    src="/placeholder.svg?height=100&width=100"
+                    src="/promo1.jpg?height=100&width=100"
                     alt="Product"
                     fill
                     className="object-cover"
@@ -187,7 +121,7 @@ const HomePage = () => {
                 </div>
                 <div className="absolute right-0 bottom-10 h-20 w-20 -rotate-12 overflow-hidden rounded-full border-2 border-white/20 shadow-xl">
                   <Image
-                    src="/placeholder.svg?height=100&width=100"
+                    src="/promo1.jpg?height=100&width=100"
                     alt="Product"
                     fill
                     className="object-cover"

@@ -1,126 +1,74 @@
 import Link from "next/link";
 import React from "react";
+import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
   return (
     <>
-      {/* Footer */}
-      <footer className="border-t bg-background">
-        <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-semibold mb-4">Shop</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    New Arrivals
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Best Sellers
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Sale
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Collections
-                  </Link>
-                </li>
-              </ul>
+      {/* Responsive Footer */}
+      <footer className="bg-gray-900 text-white py-12 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 sm:mb-12">
+            <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+              <h3 className="text-xl sm:text-2xl font-bold text-emerald-400">
+                FreshMart
+              </h3>
+              <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
+                Your trusted partner for fresh, organic produce delivered
+                straight from local farms to your doorstep.
+              </p>
             </div>
-            <div>
-              <h3 className="font-semibold mb-4">Help</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    FAQs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Shipping
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Returns
-                  </Link>
-                </li>
-              </ul>
+
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold">Quick Links</h4>
+              <div className="space-y-2">
+                <Link
+                  href="/"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/about"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  About Us
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  Contact
+                </Link>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold mb-4">About</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Our Story
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Sustainability
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
-                    Press
-                  </Link>
-                </li>
-              </ul>
+
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold">Categories</h4>
+              <div className="space-y-2">
+                <Link
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  Fresh Fruits
+                </Link>
+                <Link
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  Vegetables
+                </Link>
+                <Link
+                  href="#"
+                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                >
+                  Organic Products
+                </Link>
+              </div>
             </div>
+
             <div>
-              <h3 className="font-semibold mb-4">Follow Us</h3>
+              <h3 className="font-semibold mb-4 text-slate-100 d">Follow Us</h3>
               <div className="flex space-x-4">
                 <Link
                   href="#"
@@ -203,8 +151,27 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>© 2025 ShopNow. All rights reserved.</p>
+
+          <Separator className="bg-gray-800 mb-6 sm:mb-8" />
+
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
+              © 2024 FreshMart. All rights reserved.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm">
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-white transition-colors text-center"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="#"
+                className="text-gray-400 hover:text-white transition-colors text-center"
+              >
+                Terms of Service
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

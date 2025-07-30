@@ -240,24 +240,24 @@ const Header = () => {
             </div>
             <div className="flex-grow pl-2 flex justify-between items-center">
               <div className="flex items-center gap-6">
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
                 >
                   Home
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/about"
                   className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
                 >
                   About
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/contact-us"
                   className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </div>
               <div className="flex items-center gap-4">
                 <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full font-medium shadow-md">

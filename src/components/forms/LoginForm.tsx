@@ -53,7 +53,6 @@ const LoginForm = () => {
         dispatch(setAuthUser(res?.payload));
         reset();
         toast.success("Login successfull");
-        console.log({ user: res?.payload });
 
         // Update Shopping cart only user
         if (carts?.length > 0) {
