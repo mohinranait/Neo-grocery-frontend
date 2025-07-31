@@ -31,7 +31,7 @@ const ProductViewSlider = ({ product }: Props) => {
       const imgs = product?.variations
         ?.map((item) => item?.image)
         .filter(Boolean);
-      pImgs = [featureImage?.image, ...(imgs ?? [])];
+      pImgs = [...(imgs ?? [])];
     } else {
       const gallarys = (imageGallary as string[]) || [];
       pImgs = [featureImage?.image, ...gallarys];

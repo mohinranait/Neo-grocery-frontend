@@ -260,9 +260,11 @@ const Header = () => {
                 </Link>
               </div>
               <div className="flex items-center gap-4">
-                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full font-medium shadow-md">
-                  �� Special Offers
-                </Badge>
+                <Link href={"/offers"}>
+                  <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full font-medium shadow-md">
+                    �� Special Offers
+                  </Badge>
+                </Link>
               </div>
             </div>
           </div>

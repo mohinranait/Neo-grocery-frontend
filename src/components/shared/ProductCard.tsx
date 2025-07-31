@@ -11,9 +11,11 @@ import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { Badge } from "../ui/badge";
 import ProductViewModal from "../modals/ProductViewModal";
 import { Card, CardContent } from "../ui/card";
+import { isAfter, subDays } from "date-fns";
 import {
   calculateDiscount,
   calculateProductPrice,
+  isOfferStillActive,
 } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
 import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
@@ -34,6 +36,14 @@ const ProductCard = ({ product }: Props) => {
   const findCart = carts?.find((cart) => cart?.product === product?._id);
   const [images, setImages] = useState<string[]>([]);
   const [featureImg, setFeatureImg] = useState(featureImage?.image);
+
+  // finding new product
+  const newProduct = () => {
+    const createdDate = product?.createdAt;
+    const today = new Date();
+    const fiveDaysAgo = subDays(today, 15);
+    return isAfter(createdDate, fiveDaysAgo);
+  };
 
   const handleAddToCart = () => {
     const cartData: TCartItems = {
@@ -116,12 +126,13 @@ const ProductCard = ({ product }: Props) => {
     const { featureImage, imageGallary } = product || {};
     if (product?.variant === "Variable Product") {
       const imgs = product?.variations?.map((item) => item?.image);
-      pImgs = [featureImage?.image, ...imgs];
+      pImgs = [...imgs];
     } else {
       const gallarys = (imageGallary as string[]) || [];
       pImgs = [featureImage?.image, ...gallarys];
     }
     setImages(pImgs || []);
+    setFeatureImg(pImgs[0]);
   }, [product]);
 
   return (
@@ -137,10 +148,13 @@ const ProductCard = ({ product }: Props) => {
               alt={product.name}
               className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
             />
-            <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
-              New
-            </Badge>
+            {newProduct() && (
+              <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
+                New
+              </Badge>
+            )}
             {product.variant === "Single Product" &&
+              isOfferStillActive(product.offerDate) &&
               price.discountValue > 0 && (
                 <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
                   -{calculateDiscount(product).percentage}%

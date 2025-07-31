@@ -96,4 +96,5 @@ export type TProduct = {
   }[],
   shippingCharge: number;
   tax: number;
+  createdAt: string;
 }
