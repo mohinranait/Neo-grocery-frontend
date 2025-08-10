@@ -152,19 +152,6 @@ const ActionsButton = ({ product }: Props) => {
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
 
   const handleAddToCart = () => {
-    let cartData: TCartItems = {
-      user: null,
-      product: product?._id,
-      quantity,
-      price:
-        product?.variant !== "Variable Product"
-          ? calculateDiscount(product).finalPrice
-          : product?.price?.discountValue && product?.price?.discountValue > 0
-          ? product?.price?.discountValue
-          : product?.price?.productPrice,
-      sku: product?.skuCode,
-    };
-
     // For variable products, check if all attributes are selected
     if (
       product?.variant === "Variable Product" &&
@@ -191,6 +178,22 @@ const ActionsButton = ({ product }: Props) => {
       );
       return;
     }
+
+    let cartData: TCartItems = {
+      user: null,
+      product: product?._id,
+      quantity,
+      pImage:
+        product?.variant !== "Variable Product"
+          ? product?.featureImage?.image
+          : variant?.image || "",
+      pName: product?.name,
+      price:
+        product?.variant !== "Variable Product"
+          ? +calculateProductPrice(product)
+          : 0,
+      sku: product?.skuCode,
+    };
 
     // Add attribute information to cart for variable products
     if (

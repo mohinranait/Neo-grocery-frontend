@@ -13,8 +13,8 @@ const ProductSection = () => {
           <div className="px-2 md:px-0 container">
             <div className="flex justify-between items-center mb-2">
               <div>
-                <p className="text-primary leading-[20px] font-semibold text-lg">
-                  Best selling{" "}
+                <p className="text-2xl font-bold text-gray-900 ">
+                  Popular products
                 </p>
                 <p className="text-gray-600 text-sm">
                   Most popular product for last week

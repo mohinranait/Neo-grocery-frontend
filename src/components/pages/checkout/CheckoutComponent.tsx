@@ -60,8 +60,6 @@ const CheckoutComponent = () => {
     type: "Home",
   });
 
-  console.log({ selectedAddress });
-
   // handle order data
   const handleOrder = async () => {
     // Validation address form
@@ -100,8 +98,8 @@ const CheckoutComponent = () => {
         (cart?.tax || 0);
       order.items.push({
         ...cart,
-        image: findProduct?.featureImage?.image,
-        name: findProduct?.name,
+        image: cart?.pImage,
+        name: cart?.pName,
       });
     });
 

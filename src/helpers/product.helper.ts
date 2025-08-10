@@ -1,5 +1,5 @@
 import { TProduct } from "@/types/product.type";
-import { isAfter, isBefore, parseISO } from 'date-fns'
+import { isAfter, isBefore, parseISO, subDays } from 'date-fns'
 
 
 /**
@@ -94,4 +94,14 @@ export function calculateDiscount(product: TProduct) {
   };
 }
 
+
+
+// Find new product 
+  // finding new product
+  export const newProduct = (product:TProduct) => {
+    const createdDate = product?.createdAt;
+    const today = new Date();
+    const fiveDaysAgo = subDays(today, 15);
+    return isAfter(createdDate, fiveDaysAgo);
+  };
 

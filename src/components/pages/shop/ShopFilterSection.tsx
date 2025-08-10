@@ -62,7 +62,7 @@ const ShopFilterSection = () => {
       currentParams.delete(key);
     }
 
-    router.push(`${pathname}?${currentParams.toString()}`);
+    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
     dispatch(setFilterProducts({ [key]: updatedValues }));
   };
 
@@ -70,7 +70,7 @@ const ShopFilterSection = () => {
   const updateSingleValueQuery = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
-    router.push(`${pathname}?${currentParams.toString()}`);
+    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
     dispatch(setFilterProducts({ [key]: value }));
   };
 
@@ -83,7 +83,7 @@ const ShopFilterSection = () => {
     event.stopPropagation();
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.delete(key);
-    router.push(`${pathname}?${currentParams.toString()}`);
+    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
     dispatch(setFilterProducts({ [key]: "" }));
   };
 
@@ -150,7 +150,7 @@ const ShopFilterSection = () => {
             </div>
             <RangeSlider
               min={0}
-              max={5000}
+              max={50000}
               className="price-range-slider"
               defaultValue={priceRange}
               onInput={(e) => {

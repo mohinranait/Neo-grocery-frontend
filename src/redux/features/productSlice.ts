@@ -1,3 +1,4 @@
+import { calculateProductPrice } from '@/helpers/product.helper'
 import { TProduct, TVariation } from '@/types/product.type'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -47,12 +48,20 @@ const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
       isValid = isValid &&  product.name?.includes(search) ;
     }
 
+    // Price range filter
     if (priceRange && priceRange.length === 2) {
-      if(product.price?.discountValue && product.price?.discountValue > 0){
-        isValid = isValid && product.price?.discountValue >= priceRange[0] && product.price?.discountValue <= priceRange[1];
-      } else{
-        isValid = isValid && product.price?.productPrice >= priceRange[0] && product.price?.productPrice <= priceRange[1];
+      const finalPrice = Number(calculateProductPrice(product));
+
+      if(!isNaN(finalPrice)){
+        // For single product
+        isValid = isValid && finalPrice >= priceRange[0] && finalPrice <= priceRange[1];
+      }else{
+        // for variable products
+          const [min, max] = calculateProductPrice(product).split('-').map(Number);
+          isValid = isValid && ((min >= priceRange[0] && min <= priceRange[1]) ||
+        (max >= priceRange[0] && max <= priceRange[1]));
       }
+
     }
 
     // if (shippingCharge ) {
@@ -98,6 +107,8 @@ export const productSlice = createSlice({
       state.variant = action?.payload
     },
     setFilterProducts: (state, action: PayloadAction<TFilter>) => {
+      console.log({payload: action.payload});
+      
       const filteredProducts = productFiltersMethod(state.products, action?.payload);
       state.filterProducts = filteredProducts;
     },

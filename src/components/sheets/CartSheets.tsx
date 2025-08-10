@@ -30,7 +30,7 @@ const CartSheets = () => {
   );
   const { cartSidebarOpen } = useAppSelector((state) => state.ui);
   const totalCartPrice = useTotalCartPrice();
-  const { products } = useAppSelector((state) => state.product);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -58,9 +58,6 @@ const CartSheets = () => {
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto space-y-4 px-4">
               {carts.map((cart, index) => {
-                const findProduct = products?.find(
-                  (product) => product?._id === cart?.product
-                );
                 return (
                   <div
                     key={index}
@@ -69,11 +66,8 @@ const CartSheets = () => {
                     <div className="flex gap-4">
                       <div className="relative">
                         <Image
-                          src={
-                            findProduct?.featureImage?.image ||
-                            "/placeholder.svg"
-                          }
-                          alt={`${findProduct?.name}`}
+                          src={cart.pImage || "/placeholder.svg"}
+                          alt={`${cart?.pName}`}
                           width={80}
                           height={80}
                           className="rounded-lg object-cover bg-white border border-slate-200"
@@ -89,7 +83,7 @@ const CartSheets = () => {
 
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-slate-900 mb-1 line-clamp-2">
-                          {findProduct?.name}
+                          {cart?.pName}
                         </h4>
                         <p className="text-lg font-bold text-emerald-600 ">
                           {currency}

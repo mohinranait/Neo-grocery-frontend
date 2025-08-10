@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   Download,
@@ -131,8 +130,8 @@ export default function OrderDetailsPage() {
   const getStatusIndex = (status: string) => {
     return statusSteps.findIndex((step) => step.key === status);
   };
-  const [isDownloading, setIsDownloading] = useState(false);
 
+  const [isDownloading, setIsDownloading] = useState(false);
   const currentStatusIndex = getStatusIndex(orderData.status);
   const progressPercentage =
     ((currentStatusIndex + 1) / statusSteps.length) * 100;
@@ -156,139 +155,357 @@ export default function OrderDetailsPage() {
     }
   };
 
-  const generateInvoiceHTML = () => {
-    return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Invoice ${orderData.invoiceNumber}</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
-            .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-            .company-name { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
-            .invoice-title { font-size: 24px; color: #666; }
-            .info-section { display: flex; justify-content: space-between; margin-bottom: 30px; }
-            .info-block { width: 48%; }
-            .info-block h3 { margin-bottom: 10px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-            .table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-            .table th { background-color: #f5f5f5; font-weight: bold; }
-            .table .text-right { text-align: right; }
-            .totals { margin-top: 20px; }
-            .totals table { width: 300px; margin-left: auto; }
-            .total-row { font-weight: bold; background-color: #f0f0f0; }
-            .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <div class="company-name">Your Company Name</div>
-            <div class="invoice-title">INVOICE</div>
-        </div>
-        
-        <div class="info-section">
-            <div class="info-block">
-                <h3>Bill To:</h3>
-                <p><strong>${orderData.customer.name}</strong></p>
-                <p>${orderData.customer.email}</p>
-                <p>${orderData.customer.phone}</p>
-                ${orderData.customer.address
-                  .map((line) => `<p>${line}</p>`)
-                  .join("")}
-            </div>
-            <div class="info-block">
-                <h3>Invoice Details:</h3>
-                <p><strong>Invoice #:</strong> #INV:454554</p>
-                <p><strong>Order #:</strong> ORD-7445454</p>
-                <p><strong>Date:</strong> June 12, 2025</p>
-                <p><strong>Status:</strong> Processing</p>
-                ${
-                  orderData.trackingNumber
-                    ? `<p><strong>Tracking:</strong> ${orderData.trackingNumber}</p>`
-                    : ""
-                }
-            </div>
-        </div>
+  const downloadInvoicePDF = async () => {
+    setIsDownloading(true);
+    try {
+      // Dynamically import jsPDF and html2canvas
+      const jsPDF = (await import("jspdf")).default;
+      const html2canvas = (await import("html2canvas")).default;
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th class="text-right">Unit Price</th>
-                    <th class="text-right">Quantity</th>
-                    <th class="text-right">Total</th>
+      // Create a temporary div with the invoice content
+      const invoiceElement = document.createElement("div");
+      invoiceElement.innerHTML = `
+        <div style="
+          font-family: 'Arial', sans-serif;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 40px;
+          background: white;
+          color: #333;
+          line-height: 1.6;
+        ">
+          <!-- Header -->
+          <div style="
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+          ">
+            <h1 style="
+              font-size: 32px;
+              font-weight: bold;
+              color: #1f2937;
+              margin: 0 0 10px 0;
+            ">Your Company Name</h1>
+            <h2 style="
+              font-size: 24px;
+              color: #2563eb;
+              margin: 0;
+              font-weight: normal;
+            ">INVOICE</h2>
+          </div>
+
+          <!-- Invoice Info and Customer Info -->
+          <div style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 40px;
+          ">
+            <!-- Customer Info -->
+            <div style="flex: 1;">
+              <h3 style="
+                color: #1f2937;
+                font-size: 18px;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 5px;
+              ">Bill To:</h3>
+              <div style="color: #374151;">
+                <p style="margin: 5px 0; font-weight: bold; font-size: 16px;">${
+                  orderData.customer.name
+                }</p>
+                <p style="margin: 5px 0;">${orderData.customer.email}</p>
+                <p style="margin: 5px 0;">${orderData.customer.phone}</p>
+                ${orderData.customer.address
+                  .map((line) => `<p style="margin: 5px 0;">${line}</p>`)
+                  .join("")}
+              </div>
+            </div>
+
+            <!-- Invoice Details -->
+            <div style="flex: 1;">
+              <h3 style="
+                color: #1f2937;
+                font-size: 18px;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 5px;
+              ">Invoice Details:</h3>
+              <div style="color: #374151;">
+                <p style="margin: 8px 0;"><strong>Invoice #:</strong> INV-2024-001234</p>
+                <p style="margin: 8px 0;"><strong>Order #:</strong> ${
+                  orderData.orderNumber
+                }</p>
+                <p style="margin: 8px 0;"><strong>Date:</strong> ${
+                  orderData.orderDate
+                }</p>
+                <p style="margin: 8px 0;"><strong>Status:</strong> <span style="
+                  background: #dbeafe;
+                  color: #1d4ed8;
+                  padding: 4px 8px;
+                  border-radius: 4px;
+                  font-size: 12px;
+                ">${
+                  orderData.status.charAt(0).toUpperCase() +
+                  orderData.status.slice(1)
+                }</span></p>
+                <p style="margin: 8px 0;"><strong>Tracking:</strong> ${
+                  orderData.trackingNumber
+                }</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <div style="margin-bottom: 30px;">
+            <h3 style="
+              color: #1f2937;
+              font-size: 18px;
+              margin-bottom: 15px;
+            ">Order Items</h3>
+            <table style="
+              width: 100%;
+              border-collapse: collapse;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              overflow: hidden;
+            ">
+              <thead>
+                <tr style="background: #f9fafb;">
+                  <th style="
+                    padding: 15px;
+                    text-align: left;
+                    font-weight: bold;
+                    color: #374151;
+                    border-bottom: 1px solid #e5e7eb;
+                  ">Item Description</th>
+                  <th style="
+                    padding: 15px;
+                    text-align: right;
+                    font-weight: bold;
+                    color: #374151;
+                    border-bottom: 1px solid #e5e7eb;
+                  ">Unit Price</th>
+                  <th style="
+                    padding: 15px;
+                    text-align: center;
+                    font-weight: bold;
+                    color: #374151;
+                    border-bottom: 1px solid #e5e7eb;
+                  ">Qty</th>
+                  <th style="
+                    padding: 15px;
+                    text-align: right;
+                    font-weight: bold;
+                    color: #374151;
+                    border-bottom: 1px solid #e5e7eb;
+                  ">Total</th>
                 </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
                 ${orderData.items
                   .map(
-                    (item) => `
-                    <tr>
-                        <td>${item.name}</td>
-                       
-                        <td class="text-right">${formatCurrency(
-                          item.price
-                        )}</td>
-                        <td class="text-right">${item.quantity}</td>
-                        <td class="text-right">${formatCurrency(
-                          item.price * item.quantity
-                        )}</td>
-                    </tr>
+                    (item, index) => `
+                  <tr style="${
+                    index % 2 === 0
+                      ? "background: #ffffff;"
+                      : "background: #f9fafb;"
+                  }">
+                    <td style="
+                      padding: 15px;
+                      border-bottom: 1px solid #e5e7eb;
+                      color: #374151;
+                    ">${item.name}</td>
+                    <td style="
+                      padding: 15px;
+                      text-align: right;
+                      border-bottom: 1px solid #e5e7eb;
+                      color: #374151;
+                    ">${formatCurrency(item.price)}</td>
+                    <td style="
+                      padding: 15px;
+                      text-align: center;
+                      border-bottom: 1px solid #e5e7eb;
+                      color: #374151;
+                    ">${item.quantity}</td>
+                    <td style="
+                      padding: 15px;
+                      text-align: right;
+                      border-bottom: 1px solid #e5e7eb;
+                      color: #374151;
+                      font-weight: bold;
+                    ">${formatCurrency(item.price * item.quantity)}</td>
+                  </tr>
                 `
                   )
                   .join("")}
-            </tbody>
-        </table>
-
-        <div class="totals">
-            <table class="table">
-                <tr><td>Subtotal:</td><td class="text-right">${formatCurrency(
-                  orderData.orderSummary.subtotal
-                )}</td></tr>
-                <tr><td>Shipping:</td><td class="text-right">${formatCurrency(
-                  orderData.orderSummary.shipping
-                )}</td></tr>
-                <tr><td>Tax:</td><td class="text-right">${formatCurrency(
-                  orderData.orderSummary.tax
-                )}</td></tr>
-               
-                     <tr><td>Discount:</td><td class="text-right">-${formatCurrency(
-                       0
-                     )}</td></tr>
-              
-                <tr class="total-row"><td><strong>Total:</strong></td><td class="text-right"><strong>${formatCurrency(
-                  orderData.orderSummary.total
-                )}</strong></td></tr>
+              </tbody>
             </table>
+          </div>
+
+          <!-- Totals -->
+          <div style="
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+          ">
+            <div style="
+              min-width: 300px;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              overflow: hidden;
+            ">
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 20px;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+              ">
+                <span style="color: #374151;">Subtotal:</span>
+                <span style="color: #374151;">${formatCurrency(
+                  orderData.orderSummary.subtotal
+                )}</span>
+              </div>
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 20px;
+                background: #ffffff;
+                border-bottom: 1px solid #e5e7eb;
+              ">
+                <span style="color: #374151;">Shipping:</span>
+                <span style="color: #374151;">${formatCurrency(
+                  orderData.orderSummary.shipping
+                )}</span>
+              </div>
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 20px;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+              ">
+                <span style="color: #374151;">Tax:</span>
+                <span style="color: #374151;">${formatCurrency(
+                  orderData.orderSummary.tax
+                )}</span>
+              </div>
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 20px;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+              ">
+                <span style="color: #374151;">Discount:</span>
+                <span style="color: #374151;">-${formatCurrency(0)}</span>
+              </div>
+              <div style="
+                display: flex;
+                justify-content: space-between;
+                padding: 15px 20px;
+                background: #2563eb;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+              ">
+                <span>Total:</span>
+                <span>${formatCurrency(orderData.orderSummary.total)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div style="
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2563eb;
+          ">
+            <h3 style="
+              color: #1f2937;
+              font-size: 16px;
+              margin-bottom: 10px;
+            ">Payment Method</h3>
+            <p style="
+              color: #374151;
+              margin: 0;
+            ">${orderData.paymentMethod.type} ending in ${
+        orderData.paymentMethod.lastFour
+      }</p>
+          </div>
+
+          <!-- Footer -->
+          <div style="
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+          ">
+            <p style="margin: 10px 0; font-size: 18px; font-weight: bold; color: #2563eb;">
+              Thank you for your business!
+            </p>
+            <p style="margin: 5px 0; font-size: 14px;">
+              For questions about this invoice, please contact us at support@company.com
+            </p>
+            <p style="margin: 5px 0; font-size: 14px;">
+              Phone: +1 (555) 123-4567 | Website: www.yourcompany.com
+            </p>
+          </div>
         </div>
+      `;
 
-        <div class="footer">
-            <p>Thank you for your business!</p>
-            <p>For questions about this invoice, please contact us at support@company.com</p>
-        </div>
-    </body>
-    </html>
-    `;
-  };
+      // Add the element to the body temporarily
+      invoiceElement.style.position = "absolute";
+      invoiceElement.style.left = "-9999px";
+      invoiceElement.style.top = "0";
+      document.body.appendChild(invoiceElement);
 
-  const downloadInvoice = async () => {
-    setIsDownloading(true);
+      // Convert to canvas
+      const canvas = await html2canvas(invoiceElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        width: 800,
+        height: invoiceElement.scrollHeight,
+      });
 
-    try {
-      const invoiceHTML = generateInvoiceHTML();
-      const blob = new Blob([invoiceHTML], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
+      // Remove the temporary element
+      document.body.removeChild(invoiceElement);
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Invoice-${orderData.invoiceNumber}.html`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      // Create PDF
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      // Download the PDF
+      pdf.save(`Invoice-${orderData.invoiceNumber}.pdf`);
     } catch (error) {
-      console.error("Error downloading invoice:", error);
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
     } finally {
       setIsDownloading(false);
     }
@@ -303,7 +520,6 @@ export default function OrderDetailsPage() {
             <div className="flex items-center gap-4">
               <div>
                 <h1 className="text-xl font-semibold">Order Details</h1>
-
                 <p className="text-sm text-gray-500">
                   Order #{orderData.orderNumber}
                 </p>
@@ -318,18 +534,17 @@ export default function OrderDetailsPage() {
                   orderData.status.slice(1)}
               </Badge>
               <Button
-                onClick={downloadInvoice}
+                onClick={downloadInvoicePDF}
                 disabled={isDownloading}
                 variant="outline"
                 size="sm"
               >
                 <Download className="h-4 w-4 mr-2" />
-                {isDownloading ? "Downloading..." : "Download Invoice"}
+                {isDownloading ? "Generating PDF..." : "Download Invoice"}
               </Button>
             </div>
           </div>
         </div>
-
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -363,7 +578,6 @@ export default function OrderDetailsPage() {
             </div>
           </CardContent>
         </Card>
-
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-y-4 xl:gap-4">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
@@ -384,13 +598,11 @@ export default function OrderDetailsPage() {
                     </div>
                     <Progress value={progressPercentage} className="h-2" />
                   </div>
-
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     {statusSteps.map((step, index) => {
                       const Icon = step.icon;
                       const isCompleted = index <= currentStatusIndex;
                       const isCurrent = index === currentStatusIndex;
-
                       return (
                         <div
                           key={step.key}
@@ -428,7 +640,6 @@ export default function OrderDetailsPage() {
                 </div>
               </CardContent>
             </Card>
-
             {/* Order Items */}
             <Card>
               <CardHeader>
@@ -467,7 +678,6 @@ export default function OrderDetailsPage() {
                           </p>
                         </div>
                       </div>
-
                       <div className="flex mt-3 sm:mt-0 items-center gap-2">
                         <Button
                           title="Buy Again"
@@ -490,7 +700,6 @@ export default function OrderDetailsPage() {
               </CardContent>
             </Card>
           </div>
-
           {/* Sidebar */}
           <div className="grid sm:grid-cols-2 gap-4 xl:grid-cols-1 ">
             {/* Order Summary */}
@@ -520,7 +729,6 @@ export default function OrderDetailsPage() {
                 </div>
               </CardContent>
             </Card>
-
             {/* Shipping Address */}
             <Card>
               <CardHeader>
@@ -540,7 +748,6 @@ export default function OrderDetailsPage() {
                 </div>
               </CardContent>
             </Card>
-
             {/* Payment Method */}
             <Card>
               <CardHeader>
@@ -559,22 +766,30 @@ export default function OrderDetailsPage() {
                 </div>
               </CardContent>
             </Card>
-
             {/* Contact Support */}
             <Card>
               <CardHeader>
                 <CardTitle>Need Help?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <Phone className="h-4 w-4 mr-2" />
                   Call Support
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <Mail className="h-4 w-4 mr-2" />
                   Email Support
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Live Chat
                 </Button>

@@ -16,7 +16,7 @@ const CartComponent = () => {
   const { carts, totalShipping, totalTax } = useAppSelector(
     (state) => state.cart
   );
-  const { products } = useAppSelector((state) => state.product);
+
   const dispatch = useAppDispatch();
 
   const totalCartPrice = useTotalCartPrice();
@@ -36,9 +36,6 @@ const CartComponent = () => {
           {carts?.length === 0 && <EmptyCartComponent />}
           <ul className="space-y-4">
             {carts?.map((cart, i) => {
-              const findProduct = products?.find(
-                (product) => product?._id === cart?.product
-              );
               return (
                 <li
                   key={i}
@@ -53,7 +50,7 @@ const CartComponent = () => {
                     </button>
                     <div className="w-[100px]">
                       <Image
-                        src={findProduct?.featureImage?.image || ""}
+                        src={cart?.pImage || ""}
                         width={100}
                         height={100}
                         alt="Image"
@@ -65,7 +62,7 @@ const CartComponent = () => {
                       className="text-sm font-medium text-gray-700 hover:text-gray-900 inline-block hover:text-primary transition-all"
                       href={"/"}
                     >
-                      {findProduct?.name}
+                      {cart?.pName}
                     </Link>
 
                     {cart?.attributes &&

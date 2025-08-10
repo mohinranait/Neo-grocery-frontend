@@ -37,6 +37,7 @@ import { getAllOrdersByAuthUser } from "@/actions/orderApi";
 import { useEffect, useState } from "react";
 import { TOrder, TOrderStatus } from "@/types/order.type";
 import { cn } from "@/lib/utils";
+import { currency } from "@/helpers/utils";
 const statusStyles: Record<TOrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
   Processing: "bg-blue-100 text-blue-800 border-blue-300",
@@ -131,6 +132,8 @@ export default function MyOrders() {
     getAllOrders();
   }, []);
 
+  console.log({ orders });
+
   return (
     <div className=" mx-auto px-4 space-y-6">
       <div className="flex items-center justify-between">
@@ -211,7 +214,7 @@ export default function MyOrders() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link href={"/dashboard/orders/asdf"}>
+                <Link href={`/dashboard/orders/${order?.uid}`}>
                   <Button type="button" variant="outline" size="sm">
                     <Eye className="h-4 w-4 mr-1" />
                     View Details
@@ -270,10 +273,29 @@ export default function MyOrders() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-sm">{item.name}</h3>
-                    <p className="text-lg font-bold text-main">${item.price}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Total: ${(item.price * item.quantity).toFixed(2)}
+                    <p className="text-lg font-bold text-main">
+                      {currency}
+                      {item.price}
                     </p>
+                    <p className="text-xs text-muted-foreground">
+                      Total: {currency}
+                      {(item.price * item.quantity).toFixed(2)}
+                    </p>
+
+                    {item?.attributes &&
+                      Object.keys(item?.attributes)?.map((attr) => {
+                        if (!item?.attributes) {
+                          return;
+                        }
+                        return (
+                          <p
+                            key={attr}
+                            className="text-xs text-muted-foreground"
+                          >
+                            {attr}: {item?.attributes[attr]}
+                          </p>
+                        );
+                      })}
                   </div>
                 </div>
 

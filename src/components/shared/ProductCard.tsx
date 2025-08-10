@@ -11,16 +11,18 @@ import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { Badge } from "../ui/badge";
 import ProductViewModal from "../modals/ProductViewModal";
 import { Card, CardContent } from "../ui/card";
-import { isAfter, subDays } from "date-fns";
+
 import {
   calculateDiscount,
   calculateProductPrice,
   isOfferStillActive,
+  newProduct,
 } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
 import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
 import toast from "react-hot-toast";
 import { removeFavorite, setFavorites } from "@/redux/features/favoriteSlice";
+import { useRouter } from "next/navigation";
 
 type Props = {
   product: TProduct;
@@ -28,6 +30,7 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { name, slug, featureImage, price } = product || {};
+  const router = useRouter();
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { favorites } = useAppSelector((state) => state.favorite);
@@ -37,19 +40,13 @@ const ProductCard = ({ product }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   const [featureImg, setFeatureImg] = useState(featureImage?.image);
 
-  // finding new product
-  const newProduct = () => {
-    const createdDate = product?.createdAt;
-    const today = new Date();
-    const fiveDaysAgo = subDays(today, 15);
-    return isAfter(createdDate, fiveDaysAgo);
-  };
-
-  const handleAddToCart = () => {
+  const handleAddToCart = (action: "order" | "card" = "card") => {
     const cartData: TCartItems = {
       user: null,
       product: product?._id,
       quantity: 1,
+      pImage: product?.featureImage?.image || "",
+      pName: product?.name,
       price: +calculateProductPrice(product),
       sku: product?.skuCode || "default",
       shippingCharge: product?.shippingCharge || 0,
@@ -60,6 +57,9 @@ const ProductCard = ({ product }: Props) => {
     }
 
     dispatch(addToCart(cartData));
+    if (action === "order") {
+      router.push(`/checkout`);
+    }
   };
 
   const handleFavorite = async (product: TProduct) => {
@@ -148,7 +148,7 @@ const ProductCard = ({ product }: Props) => {
               alt={product.name}
               className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
             />
-            {newProduct() && (
+            {newProduct(product) && (
               <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
                 New
               </Badge>
@@ -236,9 +236,22 @@ const ProductCard = ({ product }: Props) => {
           </div>
           <div>
             <div className="flex relative items-center justify-between pt-2">
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                Order Now
-              </Button>
+              {product?.variant === "Single Product" ? (
+                <Button
+                  type="button"
+                  onClick={() => handleAddToCart("order")}
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  Order Now
+                </Button>
+              ) : (
+                <Link href={`/product/${slug}`}>
+                  <Button type="button" className=" h-[32px] px-[8px] ">
+                    Details
+                  </Button>
+                </Link>
+              )}
               {findCart?.product ? (
                 <div className=" h-8 flex items-center  ">
                   <div className="flex gap-1 items-center">
@@ -263,7 +276,7 @@ const ProductCard = ({ product }: Props) => {
                 <>
                   {product?.variant === "Single Product" ? (
                     <Button
-                      onClick={handleAddToCart}
+                      onClick={() => handleAddToCart("card")}
                       type="button"
                       className=" h-[32px] px-[8px] "
                     >

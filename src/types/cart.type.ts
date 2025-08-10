@@ -8,4 +8,6 @@ export type TCartItems = {
     sku?:string;
     shippingCharge?:number;
     tax?: number;
+    pImage:string;
+    pName:string;
 }
