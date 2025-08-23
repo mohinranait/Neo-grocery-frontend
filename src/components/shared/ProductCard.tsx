@@ -123,12 +123,12 @@ const ProductCard = ({ product }: Props) => {
 
   useEffect(() => {
     let pImgs: string[] = [];
-    const { featureImage, imageGallary } = product || {};
+    const { featureImage, imageGallery } = product || {};
     if (product?.variant === "Variable Product") {
       const imgs = product?.variations?.map((item) => item?.image);
       pImgs = [...imgs];
     } else {
-      const gallarys = (imageGallary as string[]) || [];
+      const gallarys = (imageGallery as string[]) || [];
       pImgs = [featureImage?.image, ...gallarys];
     }
     setImages(pImgs || []);

@@ -126,11 +126,11 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Experience the perfect balance of sweet and salty in every
-                  bite. Made with organic corn and natural seasonings, this
-                  premium kettle corn delivers exceptional taste and quality.
-                </p>
+                {product?.productShortDesc && (
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    {product?.productShortDesc}
+                  </p>
+                )}
               </div>
 
               {/* Product Info */}
