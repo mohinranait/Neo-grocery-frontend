@@ -38,6 +38,8 @@ import { useEffect, useState } from "react";
 import { TOrder, TOrderStatus } from "@/types/order.type";
 import { cn } from "@/lib/utils";
 import { currency } from "@/helpers/utils";
+import { setCommentModal } from "@/redux/features/uiSlice";
+import { useAppDispatch } from "@/hooks/useRedux";
 const statusStyles: Record<TOrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
   Processing: "bg-blue-100 text-blue-800 border-blue-300",
@@ -47,6 +49,7 @@ const statusStyles: Record<TOrderStatus, string> = {
 };
 
 export default function MyOrders() {
+  const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<TOrder[]>([]);
 
   const pendingOrders = orders?.filter((order) => order.status === "Pending");
@@ -311,7 +314,20 @@ export default function MyOrders() {
                   <Button title="View Item" variant="outline" size="sm">
                     <Eye className="h-4 w-4 mr-1" />
                   </Button>
-                  <Button title="Review" variant="outline" size="sm">
+                  <Button
+                    onClick={() => {
+                      dispatch(
+                        setCommentModal({
+                          name: item?.name,
+                          pId: item?.product,
+                          image: item?.image,
+                        })
+                      );
+                    }}
+                    title="Review"
+                    variant="outline"
+                    size="sm"
+                  >
                     <MessageSquareText className="h-4 w-4 mr-1" />
                   </Button>
                 </div>
