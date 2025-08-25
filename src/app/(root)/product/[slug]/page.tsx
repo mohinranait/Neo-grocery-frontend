@@ -1,5 +1,6 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatDistanceToNow } from "date-fns";
 
 import {
   Breadcrumb,
@@ -33,12 +34,31 @@ import StarRating from "@/components/utils/StarRating";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductGrid from "@/components/pages/product/product-grid";
+import { getCommentsByProductId } from "@/actions/commentApi";
+import { TProductComment as BaseProductComment } from "@/types/comment.type";
+
+type TProductComment = BaseProductComment & {
+  userId: {
+    name: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+};
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProductBySlug(params?.slug);
   const product: TProduct = payload;
   const productBrandIds = product?.brand;
   const productCategoryIds = product?.category;
+  const getAllReviews = await getCommentsByProductId(
+    product?._id || "",
+    "public"
+  );
+  const reviews: TProductComment[] = getAllReviews?.payload?.comments || [];
+  const avgRating =
+    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews?.length ||
+    0;
 
   const catRes = await getAllCategorys();
   const brandRes = await getAllBrands();
@@ -53,13 +73,34 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       productCategoryIds?.includes(cat?._id)
     ) || [];
 
-  const ratings = [
-    { _id: 1, label: 5, width: 80, reviews: 140 },
-    { _id: 2, label: 4, width: 45, reviews: 54 },
-    { _id: 3, label: 3, width: 40, reviews: 4 },
-    { _id: 4, label: 2, width: 45, reviews: 5 },
-    { _id: 5, label: 1, width: 10, reviews: 9 },
-  ];
+  // const ratings = [
+  //   { _id: 1, label: 5, width: 80, reviews: 140 },
+  //   { _id: 2, label: 4, width: 45, reviews: 54 },
+  //   { _id: 3, label: 3, width: 40, reviews: 4 },
+  //   { _id: 4, label: 2, width: 45, reviews: 5 },
+  //   { _id: 5, label: 1, width: 10, reviews: 9 },
+  // ];
+
+  // calculation for ratings progress bar
+  const ratings = [1, 2, 3, 4, 5]
+    .map((star) => {
+      const totalReviews =
+        reviews?.filter((st) => st.rating === star).length || 0;
+      return {
+        label: star,
+        width: reviews?.length > 0 ? (totalReviews / reviews?.length) * 100 : 0,
+        reviews: totalReviews,
+      };
+    })
+    ?.reverse();
+
+  console.log(JSON.stringify(reviews));
+
+  // revalidate date function formate
+  const formateDateRevalidate = (date: string) => {
+    const formate = new Date(date);
+    return formatDistanceToNow(formate, { addSuffix: true });
+  };
 
   return (
     <section className=" space-y-4">
@@ -71,11 +112,11 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+              <BreadcrumbLink href="/shop">Product</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+              <BreadcrumbPage>{product?.name}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -112,7 +153,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                       <Star
                         key={i}
                         className={`w-5 h-5 ${
-                          i < Math.floor(3.5)
+                          i < Math.floor(avgRating)
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
                         }`}
@@ -120,9 +161,11 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                     ))}
                   </div>
                   <span className="text-lg font-semibold text-gray-900">
-                    3.5
+                    {avgRating || 0}/5
                   </span>
-                  <span className="text-gray-500">(120 reviews)</span>
+                  <span className="text-gray-500">
+                    ({reviews?.length || 0} reviews)
+                  </span>
                 </div>
 
                 {/* Description */}
@@ -270,27 +313,31 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             <TabsContent value="reviews">
               <div className="col-span-2  py-4">
                 <div className="bg-white text-sm font-semibold text-gray-700 px-5 py-3 border-b border-gray-100 ">
-                  Ratings & Reviews of Running Shoes Sneakers Casual Mens
-                  Outdoor
+                  Ratings & Reviews of {product?.name}
                 </div>
                 <div className="md:grid grid-cols-3 pb-5 gap-5 bg-white py-4 px-5">
                   <div className=" space-y-2 mb-6 lg:mb-0">
                     <div className="flex items-center gap-2">
                       <span className="text-3xl font-bold">
-                        {product?.rating?.toFixed(1) || 0}/
+                        {avgRating?.toFixed(1) || 0}/
                         <span className="text-2xl">5</span>
                       </span>{" "}
                       <span className="text-white text-nowrap bg-[#FD8C00] text-xs py-1 px-3">
-                        {" "}
-                        Top Rated
+                        {avgRating >= 4
+                          ? "Top Rated"
+                          : avgRating >= 3
+                          ? "Excellent"
+                          : avgRating >= 2
+                          ? "Good"
+                          : "Poor"}
                       </span>{" "}
                     </div>
                     <div className="flex items-center gap-2">
                       {" "}
-                      <StarRating value={3.5} />
+                      <StarRating value={avgRating} />
                     </div>
                     <p className="text-gray500 text-xs font-medium text-gray-600">
-                      {product?.reviews || 0} Ratings
+                      {reviews?.length || 0} Ratings
                     </p>
                   </div>
                   <div className="col-span-2">
@@ -319,69 +366,30 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                   Product Reviews
                 </div>
                 <ul className="bg-white divide-y divide-gray-100">
-                  <li className="py-3 px-5">
-                    <div className="mb-2">
-                      <StarRating size={12} value={5} />
-                      <div className="flex justify-between items-center">
-                        <p className="flex items-center gap-1 text-sm text-gray-600">
-                          <span className="text-gray-800">Mohin Rana</span>
-                          <VerifiedIcon className="text-main" size={14} />
-                        </p>
-                        <p className="text-sm text-gray-500">1 Week ago</p>
+                  {reviews?.map((review, index) => (
+                    <li className="py-3 px-5" key={index}>
+                      <div className="mb-2">
+                        <StarRating size={12} value={review?.rating} />
+                        <div className="flex justify-between items-center">
+                          <p className="flex items-center gap-1 text-sm text-gray-600">
+                            <span className="text-gray-800">
+                              {review?.userId?.name?.firstName}{" "}
+                              {review?.userId?.name?.lastName}
+                            </span>
+                            <VerifiedIcon className="text-main" size={14} />
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {formateDateRevalidate(review?.createdAt)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">
-                        Received another shoe, not that what I had ordered.
-                        Also, Received with torn right shoe.Agreed, pricen is
-                        very low but should have been given without defective
-                        products...BIG DISAPPOINTING ...to the sellers and Daraz
-                        Team
-                      </p>
-                    </div>
-                  </li>
-                  <li className="py-3 px-5">
-                    <div className="mb-2">
-                      <StarRating size={12} value={5} />
-                      <div className="flex justify-between items-center">
-                        <p className="flex items-center gap-1 text-sm text-gray-600">
-                          <span className="text-gray-800">Mohin Rana</span>
-                          <VerifiedIcon className="text-main" size={14} />
+                      <div>
+                        <p className="text-sm text-gray-600">
+                          {review?.comment}
                         </p>
-                        <p className="text-sm text-gray-500">1 Week ago</p>
                       </div>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">
-                        Received another shoe, not that what I had ordered.
-                        Also, Received with torn right shoe.Agreed, pricen is
-                        very low but should have been given without defective
-                        products...BIG DISAPPOINTING ...to the sellers and Daraz
-                        Team
-                      </p>
-                    </div>
-                  </li>
-                  <li className="py-3 px-5">
-                    <div className="mb-2">
-                      <StarRating size={12} value={5} />
-                      <div className="flex justify-between items-center">
-                        <p className="flex items-center gap-1 text-sm text-gray-600">
-                          <span className="text-gray-800">Mohin Rana</span>
-                          <VerifiedIcon className="text-main" size={14} />
-                        </p>
-                        <p className="text-sm text-gray-500">1 Week ago</p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">
-                        Received another shoe, not that what I had ordered.
-                        Also, Received with torn right shoe.Agreed, pricen is
-                        very low but should have been given without defective
-                        products...BIG DISAPPOINTING ...to the sellers and Daraz
-                        Team
-                      </p>
-                    </div>
-                  </li>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </TabsContent>

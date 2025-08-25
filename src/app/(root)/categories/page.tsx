@@ -1,6 +1,5 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { DEFAULT_IMAGE } from "@/helpers/secretVariable";
 import { useAppSelector } from "@/hooks/useRedux";
 import Image from "next/image";
@@ -59,10 +58,10 @@ const colors = [
     textColor: "text-indigo-50",
   },
 ];
-const CategoriesSection = () => {
+
+const CategoriesPage = () => {
   const { categories } = useAppSelector((state) => state.category);
   const cates = categories?.filter((cat) => cat.parent === null);
-
   return (
     <section className="py-12 lg:py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -123,21 +122,9 @@ const CategoriesSection = () => {
             </div>
           ))}
         </div>
-
-        {/* View All Categories Button */}
-        <div className="text-center mt-8 lg:mt-12">
-          <Link href={`/categories`}>
-            <Button
-              variant="outline"
-              className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-3 rounded-full text-lg font-medium hover:shadow-lg transition-all duration-300"
-            >
-              View All Categories
-            </Button>
-          </Link>
-        </div>
       </div>
     </section>
   );
 };
 
-export default CategoriesSection;
+export default CategoriesPage;
