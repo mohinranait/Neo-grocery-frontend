@@ -190,7 +190,7 @@ const ProductCard = ({ product }: Props) => {
             <h3 className="font-semibold text-sm line-clamp-2">
               <Link
                 href={`/product/${slug}`}
-                className=" hover:text-main text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
+                className=" hover:text-main line-clamp-1 text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
               >
                 {name}
               </Link>
@@ -241,9 +241,9 @@ const ProductCard = ({ product }: Props) => {
                   type="button"
                   onClick={() => handleAddToCart("order")}
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700"
+                  className="h-[32px] px-[8px]"
                 >
-                  Order Now
+                  Order
                 </Button>
               ) : (
                 <Link href={`/product/${slug}`}>
@@ -278,13 +278,16 @@ const ProductCard = ({ product }: Props) => {
                     <Button
                       onClick={() => handleAddToCart("card")}
                       type="button"
-                      className=" h-[32px] px-[8px] "
+                      className=" h-[32px] bg-main hover:bg-main-light px-[8px] "
                     >
                       <ShoppingCart />
                     </Button>
                   ) : (
                     <Link href={`/product/${slug}`}>
-                      <Button type="button" className=" h-[32px] px-[8px] ">
+                      <Button
+                        type="button"
+                        className=" bg-main hover:bg-main-light h-[32px] px-[8px] "
+                      >
                         <Eye />
                       </Button>
                     </Link>

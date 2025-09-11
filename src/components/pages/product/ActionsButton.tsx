@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import ProductCartCounter from "./ProductCartCounter";
-import { Heart, Share2, ShoppingCart, Shuffle } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import type { TProduct } from "@/types/product.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import type { TCartItems } from "@/types/cart.type";
@@ -377,21 +377,6 @@ const ActionsButton = ({ product }: Props) => {
           className="bg-main text-white hover:bg-main hover:text-white"
         >
           Buy Now
-        </Button>
-      </div>
-
-      <div className="flex items-center gap-3 mt-4">
-        <Button variant="link" className="text-gray-600 hover:text-gray-800">
-          <Heart className="w-4 h-4 mr-1" /> Add wishlist
-        </Button>
-        <Button variant="link" className="text-gray-600 hover:text-gray-800">
-          <Shuffle className="w-4 h-4 mr-1" /> Add Compare
-        </Button>
-        <Button
-          variant="link"
-          className="ml-auto text-gray-600 hover:text-gray-800"
-        >
-          <Share2 className="w-4 h-4" />
         </Button>
       </div>
     </>

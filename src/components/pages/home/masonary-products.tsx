@@ -84,7 +84,7 @@ const MasonaryProducts = () => {
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold text-emerald-600">
+                      <span className="text-2xl font-bold text-main">
                         {currency}
                         {calculateProductPrice(feature)}
                       </span>
@@ -97,7 +97,7 @@ const MasonaryProducts = () => {
                       )}
                     </div>
                     <Link href={`/product/${feature?.slug}`}>
-                      <Button className="bg-emerald-600 hover:bg-emerald-700 rounded-full">
+                      <Button className="bg-main hover:bg-main-light rounded-full">
                         View Product
                       </Button>
                     </Link>
@@ -156,7 +156,7 @@ const MasonaryProducts = () => {
                   </h3>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1">
-                      <span className="font-bold text-emerald-600">
+                      <span className="font-bold text-main">
                         {currency}
                         {calculateProductPrice(product)}
                       </span>
@@ -171,7 +171,7 @@ const MasonaryProducts = () => {
                     <Link href={`/product/${product?.slug}`}>
                       <Button
                         size="sm"
-                        className="bg-emerald-600 hover:bg-emerald-700 rounded-full"
+                        className="bg-main hover:bg-main-light rounded-full"
                       >
                         View
                       </Button>

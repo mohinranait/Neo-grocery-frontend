@@ -73,9 +73,9 @@ const Header = () => {
     setOpenCategory(false);
   }, [pathName]);
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-white">
+    <div className="bg-white">
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-2 px-4">
+      <div className="bg-main text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm gap-2 sm:gap-0">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
             <div className="flex items-center gap-2">
@@ -114,13 +114,13 @@ const Header = () => {
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   placeholder="Search for fresh products, organic foods..."
-                  className="w-full pl-4  py-[14px] h-auto  rounded-full border-2 focus-visible:!outline-none border-gray-200 focus-visible:shadow-none focus-visible:ring-offset-0 focus-visible:border-emerald-500 focus-visible:ring-0 focus:ring-emerald-200 transition-all duration-200 text-base pr-20"
+                  className="w-full pl-4 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 py-[14px] h-auto  rounded-full border-2  border-gray-200   focus-visible:border-main   transition-all duration-200 text-base pr-20"
                 />
                 <Button
                   size="sm"
                   type="button"
                   onClick={handleSearch}
-                  className="absolute py-[22px] h-auto right-1 top-2/4 -translate-y-2/4 bottom-1 px-8 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-md"
+                  className="absolute  py-5 h-auto right-2 top-2/4 -translate-y-2/4 bottom-1 px-8 rounded-full bg-main hover:bg-main-light shadow-md"
                 >
                   <Search className="w-4 h-4" />
                 </Button>
@@ -182,7 +182,7 @@ const Header = () => {
                 <li className="hidden md:block relative">
                   <Button
                     onClick={() => dispatch(setCartSidebarOpen(true))}
-                    className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-full px-3 sm:px-6 sm:pl-4 sm:pr-2 py-2 shadow-lg text-sm sm:text-base"
+                    className="flex items-center gap-1 sm:gap-2 bg-main hover:bg-main-light rounded-full px-3 sm:px-6 sm:pl-4 sm:pr-2 py-2 shadow-lg text-sm sm:text-base"
                   >
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span className="hidden sm:inline font-medium">Cart</span>
@@ -200,11 +200,11 @@ const Header = () => {
               <Input
                 type="text"
                 placeholder="Search products..."
-                className="w-full pl-4 pr-12 py-[10px] h-auto rounded-full border-2 border-gray-200 focus:border-emerald-500 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200"
+                className="w-full pl-4 pr-12 py-[10px] h-auto rounded-full border-2 border-gray-200 focus:border-main-light focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200"
               />
               <Button
                 size="sm"
-                className="absolute right-1 top-2/4 -translate-y-2/4 bottom-1 px-7 h-auto py-5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-md"
+                className="absolute right-1 top-2/4 -translate-y-2/4 bottom-1 px-7 h-auto py-5 rounded-full bg-gradient-to-r from-main to-main-light hover:from-main hover:to-main-light shadow-md"
               >
                 <Search className="w-4 h-4" />
               </Button>
@@ -242,19 +242,19 @@ const Header = () => {
               <div className="flex items-center gap-6">
                 <Link
                   href="/"
-                  className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
+                  className="text-gray-700 hover:text-main font-medium transition-colors"
                 >
                   Home
                 </Link>
                 <Link
                   href="/about"
-                  className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
+                  className="text-gray-700 hover:text-main font-medium transition-colors"
                 >
                   About
                 </Link>
                 <Link
                   href="/contact-us"
-                  className="text-gray-700 hover:text-emerald-600 font-medium transition-colors"
+                  className="text-gray-700 hover:text-main font-medium transition-colors"
                 >
                   Contact
                 </Link>

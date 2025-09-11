@@ -57,12 +57,12 @@ const ProductViewSlider = ({ product }: Props) => {
         navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper2"
+        className="mySwiper2 mb-2"
       >
         {images?.map((img, i) => (
           <SwiperSlide
             key={i}
-            className="min-h-[400px] flex items-center p-2 rounded bg-white"
+            className="min-h-[400px]  flex items-center p-2 rounded bg-white"
             style={{ display: "flex" }}
           >
             <Image
@@ -78,7 +78,7 @@ const ProductViewSlider = ({ product }: Props) => {
 
       <Swiper
         onSwiper={setThumbsSwiper}
-        spaceBetween={0}
+        spaceBetween={5}
         slidesPerView={4}
         freeMode={true}
         watchSlidesProgress={true}
@@ -86,8 +86,14 @@ const ProductViewSlider = ({ product }: Props) => {
         className="mySwiper"
       >
         {images?.map((img, i) => (
-          <SwiperSlide key={i}>
-            <Image alt="image" width={400} height={400} src={img} />
+          <SwiperSlide key={i} className="h-[70px]">
+            <Image
+              alt="image"
+              width={100}
+              height={100}
+              src={img}
+              className="object-cover h-[70px] cursor-pointer "
+            />
           </SwiperSlide>
         ))}
       </Swiper>

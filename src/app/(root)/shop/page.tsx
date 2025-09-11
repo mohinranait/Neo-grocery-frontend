@@ -12,7 +12,6 @@ import {
 
 import ShopFilterSection from "@/components/pages/shop/ShopFilterSection";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { addSortingProducts } from "@/redux/features/productSlice";
 
@@ -30,12 +29,9 @@ const ShopPage = () => {
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
+
             <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+              <BreadcrumbPage>Products</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -47,15 +43,6 @@ const ShopPage = () => {
           </div>
         </div>
         <div className=" flex-grow space-y-4">
-          <div className="res5:h-[200px] overflow-hidden bg-red-100 flex items-center justify-center">
-            <Image
-              src={"/promotion.jpg"}
-              width={800}
-              height={200}
-              alt="Promo"
-              className="w-full h-auto object-contain"
-            />
-          </div>
           <div className="py-3 bg-white px-3 flex items-center justify-between rounded shadow">
             <p className="text-gray-600 text-sm">
               Showing all {filterProducts?.length} results

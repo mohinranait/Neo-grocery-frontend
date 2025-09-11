@@ -82,10 +82,10 @@ const CartSheets = () => {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-slate-900 mb-1 line-clamp-2">
+                        <h4 className="font-semibold text-slate-800 mb-1 line-clamp-2">
                           {cart?.pName}
                         </h4>
-                        <p className="text-lg font-bold text-emerald-600 ">
+                        <p className="text-lg font-bold text-main ">
                           {currency}
                           {cart.price.toFixed(2)}
                         </p>
@@ -140,16 +140,14 @@ const CartSheets = () => {
                         {totalShipping.toFixed(2)}
                       </>
                     ) : (
-                      <span className="text-emerald-600 font-semibold">
-                        FREE
-                      </span>
+                      <span className="text-main font-semibold">FREE</span>
                     )}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span className="text-emerald-600">
+                  <span className="text-main">
                     {currency}
                     {(totalCartPrice + totalTax + totalShipping).toFixed(2)}
                   </span>
@@ -159,7 +157,7 @@ const CartSheets = () => {
               <div className=" grid grid-cols-2 gap-4 pb-5">
                 <Link href={"/cart"}>
                   <Button
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="w-full bg-main hover:bg-main-light-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
                     size="lg"
                   >
                     Cart
@@ -184,85 +182,3 @@ const CartSheets = () => {
 };
 
 export default CartSheets;
-
-//  <Sheet
-//       onOpenChange={() => dispatch(setCartSidebarOpen(!cartSidebarOpen))}
-//       open={cartSidebarOpen}
-//       key={"right"}
-//     >
-//       <SheetContent className="w-full px-0 py-0 res4:w-[400px]">
-//         <div className="flex flex-col h-full">
-//
-//           <div className="flex-grow h-[calc(100vh-170px)] overflow-y-auto">
-//             {carts?.length === 0 && <EmptyCartComponent />}
-//             <ul className="divide-y divide-slate-200">
-//               {carts?.map((cart, index) => {
-//                 const findProduct = products?.find(
-//                   (product) => product?._id === cart?.product
-//                 );
-//                 return (
-//                   <li
-//                     key={index}
-//                     className="flex  hover:bg-gray-50 py-3 gap-3 px-3 items-center"
-//                   >
-//                     <div>
-//                       <div className="relative w-[100px]">
-//                         <button
-//                           onClick={() => dispatch(removeCart(cart?.product))}
-//                           className="absolute cursor-pointer flex items-center justify-center -top-1 -left-1 h-7 w-7 bg-white rounded-full shadow"
-//                         >
-//                           <Trash2 className="text-red-500" size={14} />
-//                         </button>
-//                         <Image
-//                           src={findProduct?.featureImage?.image || ""}
-//                           width={100}
-//                           height={100}
-//                           alt="Image"
-//                           className="w-[100px] h-100px"
-//                         />
-//                       </div>
-//                     </div>
-//                     <div className="w-full">
-//                       <Link
-//                         href={"/"}
-//                         className="block text-sm relative  text-black"
-//                       >
-//                         {findProduct?.name}
-//                       </Link>
-//                       <p className="text-xs my-[2px] text-gray-600">
-//                         Product Price: {cart?.price}$
-//                       </p>
-//                       <div className="flex justify-between">
-//                         <CartCounter cart={cart} />
-//                         <span className="text-sm text-black">
-//                           {cart?.price * cart?.quantity}$
-//                         </span>
-//                       </div>
-//                     </div>
-//                   </li>
-//                 );
-//               })}
-//             </ul>
-//           </div>
-//           <div className="px-3 py-3 border-t border-border">
-//             <div className="h-[86px]">
-//               <div className="flex items-center justify-between">
-//                 <p className="text-gray-800">Sub Total</p>
-//                 <p className="text-primary">
-//                   {currency}
-//                   {useTotalCartPrice()}
-//                 </p>
-//               </div>
-//               <div className="flex gap-2 mt-3">
-//                 <Link href={"/cart"} className="w-full">
-//                   <Button className="w-full">Cart </Button>
-//                 </Link>
-//                 <Link href={"/checkout"} className="w-full">
-//                   <Button className="w-full">Checkout</Button>
-//                 </Link>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </SheetContent>
-//     </Sheet>

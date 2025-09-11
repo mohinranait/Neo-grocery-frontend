@@ -14,6 +14,8 @@ import {
   BadgeDollarSign,
   Check,
   CircleX,
+  Heart,
+  Share2,
   ShieldCheck,
   Star,
   Truck,
@@ -32,10 +34,10 @@ import ActionsButton from "@/components/pages/product/ActionsButton";
 
 import StarRating from "@/components/utils/StarRating";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import ProductGrid from "@/components/pages/product/product-grid";
 import { getCommentsByProductId } from "@/actions/commentApi";
 import { TProductComment as BaseProductComment } from "@/types/comment.type";
+import { Button } from "@/components/ui/button";
 
 type TProductComment = BaseProductComment & {
   userId: {
@@ -122,24 +124,40 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
         </Breadcrumb>
       </div>
 
-      <div className="container mb-6 px-2 md:px-0">
+      <div className="container  mb-6 px-2 md:px-0">
         {/* Product display component */}
         {/* <DisplayProduct /> */}
-        <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[420px_auto_300px] gap-4">
+        <div className=" flex-col flex md:grid md:grid-cols-[420px_auto] lg:flex lg:flex-row xl:grid xl:grid-cols-[500px_auto_300px] 2xl:grid-cols-[700px_auto_300px] gap-4">
           <div className="w-full ">
-            <div className=" sticky top-0 md:w-[400px] ">
+            <div className=" sticky top-0 md:w-[400px] xl:w-[500px] 2xl:w-[700px] ">
               <ProductViewSlider product={product} />
             </div>
           </div>
-          <div className="space-y-5 flex-grow">
+          <div className="space-y-4 flex-grow">
             <div>
               {/* Header */}
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
-                    <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
-                      Organic
-                    </Badge>
+                    <div className="flex justify-between items-center gap-3 flex-wrap">
+                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
+                        Organic
+                      </Badge>
+                      <div className="flex gap-2 items-center">
+                        <Button
+                          variant="link"
+                          className="text-gray-600 h-auto py-1 px-1"
+                        >
+                          <Heart className="w-4 h-4 mr-1" />
+                        </Button>
+                        <Button
+                          variant="link"
+                          className="text-gray-600 h-auto py-1 px-1"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
                     <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
                       {product?.name}
                     </h1>
@@ -147,12 +165,12 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                 </div>
 
                 {/* Rating */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-5 h-5 ${
+                        className={`w-4 h-4 ${
                           i < Math.floor(avgRating)
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
@@ -160,10 +178,10 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                       />
                     ))}
                   </div>
-                  <span className="text-lg font-semibold text-gray-900">
+                  <span className="text-base font-semibold text-gray-900">
                     {avgRating || 0}/5
                   </span>
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 text-base">
                     ({reviews?.length || 0} reviews)
                   </span>
                 </div>
@@ -177,35 +195,31 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
               </div>
 
               {/* Product Info */}
-              <Card className="border-2 border-gray-100">
-                <CardContent className="p-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    {product?.skuCode && (
-                      <div>
-                        <span className="text-gray-500">SKU:</span>
-                        <span className="ml-2 font-medium text-gray-900">
-                          {product?.skuCode}
-                        </span>
-                      </div>
-                    )}
+            </div>
+            <div className="flex flex-wrap  gap-4 text-sm">
+              {product?.skuCode && (
+                <div>
+                  <span className="text-gray-500">SKU:</span>
+                  <span className="ml-2 font-medium text-gray-900">
+                    {product?.skuCode}
+                  </span>
+                </div>
+              )}
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500">Stock:</span>
-                      {product?.isStock > 0 ? (
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
-                          <Check className="w-3 h-3 mr-1" />
-                          In Stock
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
-                          <CircleX className="w-3 h-3 mr-1" />
-                          In Stock
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500">Stock:</span>
+                {product?.isStock > 0 ? (
+                  <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
+                    <Check className="w-3 h-3 mr-1" />
+                    In Stock
+                  </Badge>
+                ) : (
+                  <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+                    <CircleX className="w-3 h-3 mr-1" />
+                    In Stock
+                  </Badge>
+                )}
+              </div>
             </div>
 
             <ActionsButton product={product} />
@@ -243,7 +257,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
           </div>
           <div className="md:col-span-2 xl:col-span-1 w-full">
             <div className=" sticky top-0 xl:w-[310px] ">
-              <ul className="bg-gray-100 space-y-6 p-10 lg:p-4 xl:p-10 rounded">
+              <ul className="bg-gray-100 space-y-6 p-10 lg:p-4 xl:p-6 rounded">
                 <li className="items-center flex  gap-2">
                   <div>
                     <div className="w-7 text-gray-500">

@@ -16,9 +16,10 @@ body {
 @layer base {
   :root {
      /* Equivalent to #27AE60 */
-  --main: 161.38deg 93.55% 30.39%;       
-  /* Equivalent to #2ECC71 */  
-  --main-light: 145 63% 48%; 
+    --main: 204, 71%, 38%;       
+    --main-light: 204, 63%, 47%;       
+    /* Equivalent to #2ECC71 */  
+    /* --main-light: 145 63% 48%;  */
 
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;

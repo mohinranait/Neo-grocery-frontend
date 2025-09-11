@@ -13,7 +13,7 @@ const Logo = () => {
             </span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-emerald-600">FreshMart</h1>
+            <h1 className="text-2xl font-bold text-main">FreshMart</h1>
             <p className="text-xs text-gray-500">Your Fresh Store</p>
           </div>
         </div>
