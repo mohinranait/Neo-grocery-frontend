@@ -9,7 +9,6 @@ import { TCartItems } from "@/types/cart.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { Badge } from "../ui/badge";
-import ProductViewModal from "../modals/ProductViewModal";
 import { Card, CardContent } from "../ui/card";
 
 import {
@@ -23,12 +22,12 @@ import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
 import toast from "react-hot-toast";
 import { removeFavorite, setFavorites } from "@/redux/features/favoriteSlice";
 import { useRouter } from "next/navigation";
+import { setProductModal } from "@/redux/features/uiSlice";
 
 type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { name, slug, featureImage, price } = product || {};
   const router = useRouter();
   // Redux State
@@ -141,7 +140,9 @@ const ProductCard = ({ product }: Props) => {
         <CardContent className="flex flex-col h-full p-3">
           <div className="group/img relative mb-4">
             <Image
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                dispatch(setProductModal(product));
+              }}
               width={400}
               height={400}
               src={featureImg || featureImage?.image}
@@ -169,7 +170,13 @@ const ProductCard = ({ product }: Props) => {
                       key={imgIndex}
                       className=" border rounded size-10 bg-white hover:bg-white"
                     >
-                      <Image src={img} width={40} height={40} alt="images" />
+                      <Image
+                        src={img}
+                        width={40}
+                        height={40}
+                        alt="images"
+                        className="w-full object-cover h-full bg-white"
+                      />
                     </button>
                   ))}
                 </div>
@@ -298,8 +305,6 @@ const ProductCard = ({ product }: Props) => {
           </div>
         </CardContent>
       </Card>
-
-      <ProductViewModal setOpen={setIsOpen} open={isOpen} />
     </>
   );
 };

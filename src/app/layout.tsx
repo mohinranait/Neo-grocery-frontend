@@ -7,6 +7,7 @@ import { getAllCategorys } from "@/actions/categoriesApi";
 import { getAllBrands } from "@/actions/brandApi";
 import { getAllProducts } from "@/actions/productApi";
 import { getAllAttributes } from "@/actions/attributeApi";
+import ProductViewModal from "@/components/modals/ProductViewModal";
 
 const inter = Inter({
   weight: "400",
@@ -44,6 +45,7 @@ export default async function RootLayout({
         >
           {children}
           <Toaster />
+          <ProductViewModal />
         </ReduxProvider>
       </body>
     </html>

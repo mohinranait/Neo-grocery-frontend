@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { getAllOrdersByAuthUser } from "@/actions/orderApi";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { currency } from "@/helpers/utils";
 
 const stats = [
   {
@@ -153,7 +154,10 @@ export default function Dashboard() {
                     >
                       {order.status}
                     </span>
-                    <span className="font-medium">{order.totalAmount}</span>
+                    <span className="font-medium">
+                      {currency}
+                      {order.totalAmount}
+                    </span>
                     <Link href={`/dashboard/orders/${order?._id}`}>
                       <Button variant="ghost" size="sm">
                         <Eye className="h-4 w-4" />

@@ -4,19 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { calculateProductPrice, newProduct } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
-import { useAppSelector } from "@/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { setProductModal } from "@/redux/features/uiSlice";
+import { TProduct } from "@/types/product.type";
 import { ArrowRight, Heart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const MasonaryProducts = () => {
+  // Redux state
   const { products } = useAppSelector((state) => state.product);
+  const dispatch = useAppDispatch();
   const normalProducts = products?.filter(
     (product) => product?.variant === "Single Product"
   );
 
+  // Show big product from masonary
   const feature = normalProducts[0];
+
+  // handle open modal for show single product details
+  const handleOpenModal = (product: TProduct) => {
+    if (!product) {
+      return;
+    }
+    dispatch(setProductModal(product));
+  };
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -42,6 +55,7 @@ const MasonaryProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Image
+                    onClick={() => handleOpenModal(feature)}
                     src={`${feature?.featureImage?.image}?height=600&width=600`}
                     alt={feature?.name}
                     width={600}
@@ -116,6 +130,7 @@ const MasonaryProducts = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Image
+                    onClick={() => handleOpenModal(product)}
                     src={`${product?.featureImage?.image}?height=200&width=300`}
                     alt={product.name}
                     width={300}
