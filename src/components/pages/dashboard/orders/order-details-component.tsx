@@ -17,6 +17,8 @@ import {
   Home,
   Briefcase,
   Box,
+  X,
+  Repeat2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,70 +38,6 @@ interface OrderItem {
   rating: number;
   reviews: number;
 }
-
-interface OrderDetails {
-  orderNumber: string;
-  orderDate: string;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  trackingNumber: string;
-  invoiceNumber: string;
-  estimatedDelivery: string;
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string[];
-  };
-  paymentMethod: {
-    type: string;
-    lastFour: string;
-    cardType: "visa" | "mastercard" | "amex";
-  };
-  orderSummary: {
-    subtotal: number;
-    shipping: number;
-    tax: number;
-    total: number;
-  };
-  items: OrderItem[];
-}
-
-const orderData: OrderDetails = {
-  orderNumber: "ORD-2024-001234",
-  orderDate: "June 12, 2025",
-  status: "shipped",
-  trackingNumber: "TRK123456789",
-  invoiceNumber: "TRK123456789",
-  estimatedDelivery: "June 15, 2025",
-  customer: {
-    name: "Kazi Anwar",
-    email: "kazi.anwar@email.com",
-    phone: "+1 (555) 123-4567",
-    address: ["114 CROFTSTONE DR", "RICHMOND, VA 23237-2491", "United States"],
-  },
-  paymentMethod: {
-    type: "Mastercard",
-    lastFour: "9768",
-    cardType: "mastercard",
-  },
-  orderSummary: {
-    subtotal: 87.34,
-    shipping: 0.0,
-    tax: 0.0,
-    total: 499.6,
-  },
-  items: [
-    {
-      id: "1",
-      name: "Samsung Galaxy S24+ Cell Phone",
-      image: "/placeholder.svg?height=80&width=80",
-      price: 499.5,
-      quantity: 1,
-      rating: 4.5,
-      reviews: 1234,
-    },
-  ],
-};
 
 const typeObject: Record<string, { icon: JSX.Element; className: string }> = {
   Home: {
@@ -121,28 +59,40 @@ const receiveFrom = (type: "Home" | "Office" | "Others") =>
 
 const statusSteps = [
   {
-    key: "pending",
+    key: "Pending",
     label: "Order Placed",
     icon: Clock,
     description: "Your order has been placed",
   },
   {
-    key: "processing",
+    key: "Processing",
     label: "Processing",
     icon: Package,
     description: "We're preparing your order",
   },
   {
-    key: "shipped",
+    key: "Shipped",
     label: "Shipped",
     icon: Truck,
     description: "Your order is on the way",
   },
   {
-    key: "delivered",
+    key: "Delivered",
     label: "Delivered",
     icon: CheckCircle,
     description: "Order delivered successfully",
+  },
+  {
+    key: "Cancelled",
+    label: "Cancelled",
+    icon: X,
+    description: "Order delivery cancel",
+  },
+  {
+    key: "Returned",
+    label: "Returned",
+    icon: Repeat2,
+    description: "Return your order",
   },
 ];
 
@@ -174,7 +124,7 @@ export default function OrderDetailsComponent({ order }: Props) {
   );
 
   const [isDownloading, setIsDownloading] = useState(false);
-  const currentStatusIndex = getStatusIndex(orderData.status);
+  const currentStatusIndex = getStatusIndex(order?.status);
 
   const formatCurrency = (amount: number) => `${currency}${amount.toFixed(2)}`;
 
@@ -200,183 +150,166 @@ export default function OrderDetailsComponent({ order }: Props) {
   const downloadInvoicePDF = async () => {
     setIsDownloading(true);
     try {
-      // Dynamically import jsPDF and html2canvas
       const jsPDF = (await import("jspdf")).default;
       const html2canvas = (await import("html2canvas")).default;
 
-      // Create a temporary div with the invoice content
       const invoiceElement = document.createElement("div");
       invoiceElement.innerHTML = `
         <div style="
-          font-family: 'Arial', sans-serif;
-          max-width: 800px;
+          font-family: 'Helvetica', 'Arial', sans-serif;
+          max-width: 850px;
           margin: 0 auto;
-          padding: 40px;
-          background: white;
-          color: #333;
-          line-height: 1.6;
+          padding: 50px;
+          background: #ffffff;
+          color: #1a1a1a;
+          line-height: 1.7;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         ">
           <!-- Header -->
           <div style="
             text-align: center;
             margin-bottom: 40px;
-            border-bottom: 3px solid #2563eb;
+            border-bottom: 4px solid #4a90e2;
             padding-bottom: 20px;
           ">
+            <img src="https://via.placeholder.com/150x50?text=Your+Company+Logo" alt="Company Logo" style="margin-bottom: 10px;">
             <h1 style="
-              font-size: 32px;
-              font-weight: bold;
-              color: #1f2937;
-              margin: 0 0 10px 0;
-            ">Your Company Name</h1>
-            <h2 style="
-              font-size: 24px;
-              color: #2563eb;
+              font-size: 28px;
+              font-weight: 700;
+              color: #2c3e50;
               margin: 0;
-              font-weight: normal;
-            ">INVOICE</h2>
+            ">INVOICE</h1>
+            <p style="color: #7f8c8d; font-size: 14px;">Invoice #INV-0000</p>
           </div>
 
-          <!-- Invoice Info and Customer Info -->
+          <!-- Invoice Info -->
           <div style="
             display: flex;
             justify-content: space-between;
             margin-bottom: 40px;
-            gap: 40px;
+            gap: 30px;
           ">
-            <!-- Customer Info -->
             <div style="flex: 1;">
               <h3 style="
-                color: #1f2937;
+                color: #2c3e50;
                 font-size: 18px;
                 margin-bottom: 15px;
-                border-bottom: 2px solid #e5e7eb;
+                border-bottom: 2px solid #ecf0f1;
                 padding-bottom: 5px;
               ">Bill To:</h3>
-              <div style="color: #374151;">
-                <p style="margin: 5px 0; font-weight: bold; font-size: 16px;">${
-                  orderData.customer.name
-                }</p>
-                <p style="margin: 5px 0;">${orderData.customer.email}</p>
-                <p style="margin: 5px 0;">${orderData.customer.phone}</p>
-                ${orderData.customer.address
-                  .map((line) => `<p style="margin: 5px 0;">${line}</p>`)
-                  .join("")}
+              <div style="color: #7f8c8d;">
+                <p style="margin: 5px 0; font-weight: 500;">Mohin Rana</p>
+                <p style="margin: 5px 0;">mohin@gmail.com</p>
+                <p style="margin: 5px 0;">01728068200</p>
+               <p style="margin: 5px 0;">Uttara, Dhaka, Bangladesh</p>
               </div>
             </div>
-
-            <!-- Invoice Details -->
             <div style="flex: 1;">
               <h3 style="
-                color: #1f2937;
+                color: #2c3e50;
                 font-size: 18px;
                 margin-bottom: 15px;
-                border-bottom: 2px solid #e5e7eb;
+                border-bottom: 2px solid #ecf0f1;
                 padding-bottom: 5px;
               ">Invoice Details:</h3>
-              <div style="color: #374151;">
-                <p style="margin: 8px 0;"><strong>Invoice #:</strong> INV-2024-001234</p>
+              <div style="color: #7f8c8d;">
                 <p style="margin: 8px 0;"><strong>Order #:</strong> ${
-                  orderData.orderNumber
+                  order?.uid || "ORD-0000"
                 }</p>
-                <p style="margin: 8px 0;"><strong>Date:</strong> ${
-                  orderData.orderDate
-                }</p>
+                <p style="margin: 8px 0;"><strong>Date:</strong> ${format(
+                  new Date(Date.now()),
+                  "dd MMM yyyy"
+                )}</p>
                 <p style="margin: 8px 0;"><strong>Status:</strong> <span style="
-                  background: #dbeafe;
-                  color: #1d4ed8;
-                  padding: 4px 8px;
-                  border-radius: 4px;
+                  background: #e8f4f8;
+                  color: #3498db;
+                  padding: 5px 10px;
+                  border-radius: 5px;
                   font-size: 12px;
-                ">${
-                  orderData.status.charAt(0).toUpperCase() +
-                  orderData.status.slice(1)
-                }</span></p>
-                <p style="margin: 8px 0;"><strong>Tracking:</strong> ${
-                  orderData.trackingNumber
+                  text-transform: capitalize;
+                ">${order?.status || "N/A"}</span></p>
+                <p style="margin: 8px 0;"><strong>Tracking #:</strong> ${
+                  order?.uid || "N/A"
                 }</p>
               </div>
             </div>
           </div>
 
           <!-- Items Table -->
-          <div style="margin-bottom: 30px;">
-            <h3 style="
-              color: #1f2937;
-              font-size: 18px;
-              margin-bottom: 15px;
-            ">Order Items</h3>
+          <div style="margin-bottom: 40px;">
+            <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 20px;">Order Items</h3>
             <table style="
               width: 100%;
               border-collapse: collapse;
-              border: 1px solid #e5e7eb;
+              background: #ffffff;
+              border: 1px solid #ecf0f1;
               border-radius: 8px;
               overflow: hidden;
             ">
               <thead>
-                <tr style="background: #f9fafb;">
+                <tr style="background: #f5f6fa;">
                   <th style="
-                    padding: 15px;
+                    padding: 12px 15px;
                     text-align: left;
-                    font-weight: bold;
-                    color: #374151;
-                    border-bottom: 1px solid #e5e7eb;
-                  ">Item Description</th>
+                    font-weight: 600;
+                    color: #2c3e50;
+                    border-bottom: 2px solid #ecf0f1;
+                  ">Description</th>
                   <th style="
-                    padding: 15px;
+                    padding: 12px 15px;
                     text-align: right;
-                    font-weight: bold;
-                    color: #374151;
-                    border-bottom: 1px solid #e5e7eb;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    border-bottom: 2px solid #ecf0f1;
                   ">Unit Price</th>
                   <th style="
-                    padding: 15px;
+                    padding: 12px 15px;
                     text-align: center;
-                    font-weight: bold;
-                    color: #374151;
-                    border-bottom: 1px solid #e5e7eb;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    border-bottom: 2px solid #ecf0f1;
                   ">Qty</th>
                   <th style="
-                    padding: 15px;
+                    padding: 12px 15px;
                     text-align: right;
-                    font-weight: bold;
-                    color: #374151;
-                    border-bottom: 1px solid #e5e7eb;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    border-bottom: 2px solid #ecf0f1;
                   ">Total</th>
                 </tr>
               </thead>
               <tbody>
-                ${orderData.items
+                ${(order?.items || [])
                   .map(
                     (item, index) => `
                   <tr style="${
                     index % 2 === 0
-                      ? "background: #ffffff;"
-                      : "background: #f9fafb;"
+                      ? "background: #fafafa;"
+                      : "background: #ffffff;"
                   }">
                     <td style="
-                      padding: 15px;
-                      border-bottom: 1px solid #e5e7eb;
-                      color: #374151;
+                      padding: 12px 15px;
+                      border-bottom: 1px solid #ecf0f1;
+                      color: #7f8c8d;
                     ">${item.name}</td>
                     <td style="
-                      padding: 15px;
+                      padding: 12px 15px;
                       text-align: right;
-                      border-bottom: 1px solid #e5e7eb;
-                      color: #374151;
+                      border-bottom: 1px solid #ecf0f1;
+                      color: #7f8c8d;
                     ">${formatCurrency(item.price)}</td>
                     <td style="
-                      padding: 15px;
+                      padding: 12px 15px;
                       text-align: center;
-                      border-bottom: 1px solid #e5e7eb;
-                      color: #374151;
+                      border-bottom: 1px solid #ecf0f1;
+                      color: #7f8c8d;
                     ">${item.quantity}</td>
                     <td style="
-                      padding: 15px;
+                      padding: 12px 15px;
                       text-align: right;
-                      border-bottom: 1px solid #e5e7eb;
-                      color: #374151;
-                      font-weight: bold;
+                      border-bottom: 1px solid #ecf0f1;
+                      color: #7f8c8d;
+                      font-weight: 500;
                     ">${formatCurrency(item.price * item.quantity)}</td>
                   </tr>
                 `
@@ -387,139 +320,121 @@ export default function OrderDetailsComponent({ order }: Props) {
           </div>
 
           <!-- Totals -->
-          <div style="
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 40px;
-          ">
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
             <div style="
               min-width: 300px;
-              border: 1px solid #e5e7eb;
+              border: 1px solid #ecf0f1;
               border-radius: 8px;
               overflow: hidden;
+              background: #ffffff;
             ">
               <div style="
                 display: flex;
                 justify-content: space-between;
-                padding: 12px 20px;
-                background: #f9fafb;
-                border-bottom: 1px solid #e5e7eb;
+                padding: 10px 15px;
+                background: #f5f6fa;
+                border-bottom: 1px solid #ecf0f1;
               ">
-                <span style="color: #374151;">Subtotal:</span>
-                <span style="color: #374151;">${formatCurrency(
-                  orderData.orderSummary.subtotal
-                )}</span>
+                <span style="color: #2c3e50;">Subtotal:</span>
+                <span style="color: #2c3e50;">${formatCurrency(subTotal)}</span>
               </div>
               <div style="
                 display: flex;
                 justify-content: space-between;
-                padding: 12px 20px;
+                padding: 10px 15px;
                 background: #ffffff;
-                border-bottom: 1px solid #e5e7eb;
+                border-bottom: 1px solid #ecf0f1;
               ">
-                <span style="color: #374151;">Shipping:</span>
-                <span style="color: #374151;">${formatCurrency(
-                  orderData.orderSummary.shipping
+                <span style="color: #2c3e50;">Shipping:</span>
+                <span style="color: #2c3e50;">${formatCurrency(
+                  shippingTotal
                 )}</span>
               </div>
               <div style="
                 display: flex;
                 justify-content: space-between;
-                padding: 12px 20px;
-                background: #f9fafb;
-                border-bottom: 1px solid #e5e7eb;
+                padding: 10px 15px;
+                background: #f5f6fa;
+                border-bottom: 1px solid #ecf0f1;
               ">
-                <span style="color: #374151;">Tax:</span>
-                <span style="color: #374151;">${formatCurrency(
-                  orderData.orderSummary.tax
-                )}</span>
+                <span style="color: #2c3e50;">Tax:</span>
+                <span style="color: #2c3e50;">${formatCurrency(taxTotal)}</span>
               </div>
               <div style="
                 display: flex;
                 justify-content: space-between;
-                padding: 12px 20px;
-                background: #f9fafb;
-                border-bottom: 1px solid #e5e7eb;
+                padding: 10px 15px;
+                background: #ffffff;
+                border-bottom: 1px solid #ecf0f1;
               ">
-                <span style="color: #374151;">Discount:</span>
-                <span style="color: #374151;">-${formatCurrency(0)}</span>
+                <span style="color: #2c3e50;">Discount:</span>
+                <span style="color: #2c3e50;">-${formatCurrency(0)}</span>
               </div>
               <div style="
                 display: flex;
                 justify-content: space-between;
-                padding: 15px 20px;
-                background: #2563eb;
-                color: white;
-                font-weight: bold;
-                font-size: 18px;
+                padding: 12px 15px;
+                background: #4a90e2;
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 16px;
               ">
                 <span>Total:</span>
-                <span>${formatCurrency(orderData.orderSummary.total)}</span>
+                <span>${formatCurrency(order?.totalAmount || 0)}</span>
               </div>
             </div>
           </div>
 
           <!-- Payment Method -->
           <div style="
-            background: #f8fafc;
+            background: #f9fbfd;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #2563eb;
+            border-left: 4px solid #4a90e2;
+            margin-bottom: 40px;
           ">
-            <h3 style="
-              color: #1f2937;
-              font-size: 16px;
-              margin-bottom: 10px;
-            ">Payment Method</h3>
-            <p style="
-              color: #374151;
-              margin: 0;
-            ">${orderData.paymentMethod.type} ending in ${
-        orderData.paymentMethod.lastFour
-      }</p>
+            <h3 style="color: #2c3e50; font-size: 16px; margin-bottom: 10px;">Payment Method</h3>
+            <p style="color: #7f8c8d; margin: 0;">${
+              order?.paymentMethod || "N/A"
+            } </p>
           </div>
 
           <!-- Footer -->
           <div style="
             text-align: center;
             padding-top: 30px;
-            border-top: 2px solid #e5e7eb;
-            color: #6b7280;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
           ">
-            <p style="margin: 10px 0; font-size: 18px; font-weight: bold; color: #2563eb;">
-              Thank you for your business!
+            <p style="margin: 10px 0; font-size: 16px; font-weight: 600; color: #4a90e2;">
+              Thank You for Your Business!
             </p>
-            <p style="margin: 5px 0; font-size: 14px;">
-              For questions about this invoice, please contact us at support@company.com
+            <p style="margin: 5px 0; font-size: 12px;">
+              For inquiries, contact us at <a href="mailto:support@yourcompany.com" style="color: #3498db; text-decoration: none;">support@yourcompany.com</a>
             </p>
-            <p style="margin: 5px 0; font-size: 14px;">
-              Phone: +1 (555) 123-4567 | Website: www.yourcompany.com
+            <p style="margin: 5px 0; font-size: 12px;">
+              Phone: ${"+1 (555) 123-4567"} | Website: <a href="https://www.yourcompany.com" style="color: #3498db; text-decoration: none;">www.yourcompany.com</a>
             </p>
           </div>
         </div>
       `;
 
-      // Add the element to the body temporarily
       invoiceElement.style.position = "absolute";
       invoiceElement.style.left = "-9999px";
       invoiceElement.style.top = "0";
       document.body.appendChild(invoiceElement);
 
-      // Convert to canvas
       const canvas = await html2canvas(invoiceElement, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
-        width: 800,
+        width: 850,
         height: invoiceElement.scrollHeight,
       });
 
-      // Remove the temporary element
       document.body.removeChild(invoiceElement);
 
-      // Create PDF
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
 
@@ -531,11 +446,9 @@ export default function OrderDetailsComponent({ order }: Props) {
       let heightLeft = imgHeight;
       let position = 0;
 
-      // Add first page
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
 
-      // Add additional pages if needed
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
@@ -543,8 +456,7 @@ export default function OrderDetailsComponent({ order }: Props) {
         heightLeft -= pdfHeight;
       }
 
-      // Download the PDF
-      pdf.save(`Invoice-${orderData.invoiceNumber}.pdf`);
+      pdf.save(`Invoice-${order?.uid || "INV-0000"}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("Error generating PDF. Please try again.");
@@ -623,7 +535,7 @@ export default function OrderDetailsComponent({ order }: Props) {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
             {/* Order Progress */}
-            <Card>
+            <Card className="">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Truck className="h-5 w-5" />
@@ -631,46 +543,44 @@ export default function OrderDetailsComponent({ order }: Props) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    {statusSteps.map((step, index) => {
-                      const Icon = step.icon;
-                      const isCompleted = index <= currentStatusIndex;
-                      const isCurrent = index === currentStatusIndex;
-                      return (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {statusSteps.map((step, index) => {
+                    const Icon = step.icon;
+                    const isCompleted = index <= currentStatusIndex;
+                    const isCurrent = index === currentStatusIndex;
+                    return (
+                      <div
+                        key={step.key}
+                        className="flex flex-col items-center text-center"
+                      >
                         <div
-                          key={step.key}
-                          className="flex flex-col items-center text-center"
+                          className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                            isCompleted
+                              ? isCurrent
+                                ? "bg-blue-600 text-white"
+                                : "bg-green-600 text-white"
+                              : "bg-gray-200 text-gray-400"
+                          }`}
                         >
-                          <div
-                            className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
-                              isCompleted
-                                ? isCurrent
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-green-600 text-white"
-                                : "bg-gray-200 text-gray-400"
-                            }`}
-                          >
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <h4
-                            className={`font-medium text-sm ${
-                              isCompleted ? "text-gray-900" : "text-gray-400"
-                            }`}
-                          >
-                            {step.label}
-                          </h4>
-                          <p
-                            className={`text-xs mt-1 ${
-                              isCompleted ? "text-gray-600" : "text-gray-400"
-                            }`}
-                          >
-                            {step.description}
-                          </p>
+                          <Icon className="h-5 w-5" />
                         </div>
-                      );
-                    })}
-                  </div>
+                        <h4
+                          className={`font-medium text-sm ${
+                            isCompleted ? "text-gray-900" : "text-gray-400"
+                          }`}
+                        >
+                          {step.key}
+                        </h4>
+                        <p
+                          className={`text-xs mt-1 ${
+                            isCompleted ? "text-gray-600" : "text-gray-400"
+                          }`}
+                        >
+                          {step.description}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

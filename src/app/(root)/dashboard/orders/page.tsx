@@ -3,7 +3,6 @@ import {
   Calendar,
   MoreHorizontal,
   Eye,
-  RotateCcw,
   Archive,
   Download,
   Package,
@@ -42,6 +41,7 @@ const statusStyles: Record<TOrderStatus, string> = {
   Shipped: "bg-purple-100 text-purple-800 border-purple-300",
   Delivered: "bg-green-100 text-green-800 border-green-300",
   Cancelled: "bg-red-100 text-red-800 border-red-300",
+  Returned: "bg-sky-100 text-sky-800 border-sky-300",
 };
 
 export default function MyOrders() {
@@ -240,8 +240,12 @@ export default function MyOrders() {
             </div>
             <Separator />
             <div className="flex flex-wrap justify-between items-center">
-              <p className="text-gray-500 text-sm">Order Id: {order?.uid}</p>
-              <p className="text-gray-500 text-sm">Tracking: TRK123456789</p>
+              <p className="text-gray-500 text-sm uppercase">
+                Invoice ID: {order?.uid}
+              </p>
+              <p className="text-gray-500 text-sm uppercase">
+                Tracking: {order?.uid}
+              </p>
             </div>
           </CardHeader>
 
@@ -253,10 +257,6 @@ export default function MyOrders() {
           <Separator />
           <CardFooter className="py-2 justify-between  px-3 ">
             <div className="flex items-center gap-2 ">
-              <Button variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4 " />
-                Reorder Items
-              </Button>
               <Button variant="outline" size="sm">
                 <Download className="h-4 w-4 " />
                 Download Invoice

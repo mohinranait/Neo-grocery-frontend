@@ -30,6 +30,7 @@ const statusStyles: Record<TOrderStatus, string> = {
   Shipped: "bg-purple-100 text-purple-800 border-purple-300",
   Delivered: "bg-green-100 text-green-800 border-green-300",
   Cancelled: "bg-red-100 text-red-800 border-red-300",
+  Returned: "bg-sky-100 text-sky-800 border-sky-300",
 };
 
 export default function Dashboard() {
