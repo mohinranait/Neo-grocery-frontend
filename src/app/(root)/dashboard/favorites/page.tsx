@@ -15,7 +15,7 @@ const FavoriteProducts = () => {
   );
 
   return (
-    <div className=" mx-auto px-4 space-y-6">
+    <div className=" mx-auto px-4 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Favorites</h2>
@@ -26,8 +26,8 @@ const FavoriteProducts = () => {
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
         {getMatchProducts?.map((prod, index) => {
           return (
-            <div key={index}>
-              <ProductCard product={prod} key={index} />
+            <div key={index} className="h-full">
+              <ProductCard product={prod} key={index} className={"h-full"} />
             </div>
           );
         })}

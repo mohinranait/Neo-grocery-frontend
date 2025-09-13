@@ -31,9 +31,10 @@ export const getAllProducts = async () => {
 /**
  * @api {get}  Get Single product by Slug method
 */
-export const getSingleProductBySlug = async (slug:string)=>{
+export const getSingleProduct = async (paramiter:string, requestBy:'slug'|'id' = 'slug') => {
     try {
-        const response = await fetch(`${SERVER_URL}/view-product/${slug}`,{
+      const url = requestBy === 'id' ? `${SERVER_URL}/product/${paramiter}` : `${SERVER_URL}/view-product/${paramiter}`;
+        const response = await fetch(url,{
             method:"GET",
             headers:{
                 "Content-type":"Application/json",

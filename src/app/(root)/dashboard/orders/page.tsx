@@ -13,6 +13,7 @@ import {
   XCircle,
   Clock,
   ShoppingCart,
+  Banknote,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ import { cn } from "@/lib/utils";
 import { currency } from "@/helpers/utils";
 import { setCommentModal } from "@/redux/features/uiSlice";
 import { useAppDispatch } from "@/hooks/useRedux";
+import useViewSingleProductByModal from "@/hooks/useViewSingleProductByModal";
 const statusStyles: Record<TOrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
   Processing: "bg-blue-100 text-blue-800 border-blue-300",
@@ -49,6 +51,7 @@ const statusStyles: Record<TOrderStatus, string> = {
 };
 
 export default function MyOrders() {
+  const { viewProductByModal } = useViewSingleProductByModal();
   const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<TOrder[]>([]);
 
@@ -68,7 +71,7 @@ export default function MyOrders() {
     {
       id: "total",
       label: "Total Orders",
-      value: orders?.length || 0,
+      count: orders?.length || 0,
       icon: <ShoppingCart className="h-5 w-5" />,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
@@ -135,8 +138,6 @@ export default function MyOrders() {
     getAllOrders();
   }, []);
 
-  console.log({ orders });
-
   return (
     <div className=" mx-auto px-4 space-y-6">
       <div className="flex items-center justify-between">
@@ -147,7 +148,7 @@ export default function MyOrders() {
         <Button className="flex items-center gap-2">Tracking Order</Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
         {orderStats?.map((order, index) => (
           <Card
             key={index}
@@ -155,7 +156,7 @@ export default function MyOrders() {
           >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-wrap items-center space-x-3">
                   <div className={`p-2 rounded-lg ${order.bgColor}`}>
                     <div className={order.color}>{order.icon}</div>
                   </div>
@@ -177,8 +178,8 @@ export default function MyOrders() {
       </div>
 
       {orders.map((order, orderIndex) => (
-        <Card key={orderIndex} className="w-full">
-          <CardHeader className="pb-4 py-3 px-3 bg-gray-100">
+        <Card key={orderIndex} className="w-full  bg-white">
+          <CardHeader className="pb-4 py-3 px-3 bg-slate-100 rounded-t-md">
             <div className="flex flex-wrap gap-3 items-center justify-between">
               <div className="flex flex-wrap items-start gap-4">
                 <div>
@@ -311,7 +312,13 @@ export default function MyOrders() {
                   >
                     <RotateCcw className="h-4 w-4 mr-1" />
                   </Button>
-                  <Button title="View Item" variant="outline" size="sm">
+                  <Button
+                    onClick={() => viewProductByModal(item?.product)}
+                    type="button"
+                    title="View Item"
+                    variant="outline"
+                    size="sm"
+                  >
                     <Eye className="h-4 w-4 mr-1" />
                   </Button>
                   <Button
@@ -335,17 +342,26 @@ export default function MyOrders() {
             ))}
           </CardContent>
           <Separator />
-          <CardFooter className="py-2 px-3 ">
+          <CardFooter className="py-2 justify-between  px-3 ">
             <div className="flex items-center gap-2 ">
               <Button variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4 mr-1" />
+                <RotateCcw className="h-4 w-4 " />
                 Reorder Items
               </Button>
               <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-1" />
+                <Download className="h-4 w-4 " />
                 Download Invoice
               </Button>
             </div>
+            {order?.paymentMethod === "COD" &&
+              order?.paymentStatus !== "Paid" && (
+                <div className="flex items-center gap-2 ">
+                  <Button variant="outline" size="sm">
+                    <Banknote className="h-4 w-4 " />
+                    Payment
+                  </Button>
+                </div>
+              )}
           </CardFooter>
         </Card>
       ))}

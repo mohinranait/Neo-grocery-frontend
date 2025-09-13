@@ -17,7 +17,7 @@ import {
   VerifiedIcon,
 } from "lucide-react";
 
-import { getSingleProductBySlug } from "@/actions/productApi";
+import { getSingleProduct } from "@/actions/productApi";
 import { TProduct } from "@/types/product.type";
 import { getAllCategorys } from "@/actions/categoriesApi";
 import { getAllBrands } from "@/actions/brandApi";
@@ -41,7 +41,7 @@ type TProductComment = BaseProductComment & {
 };
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
-  const { payload } = await getSingleProductBySlug(params?.slug);
+  const { payload } = await getSingleProduct(params?.slug);
   const product: TProduct = payload;
   const productBrandIds = product?.brand;
   const productCategoryIds = product?.category;

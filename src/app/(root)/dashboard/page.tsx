@@ -24,41 +24,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { currency } from "@/helpers/utils";
 
-const stats = [
-  {
-    title: "Total Orders",
-    value: "12",
-    description: "+20.1% last month",
-    icon: Package,
-    color: "text-blue-600",
-    bgColor: "bg-blue-100",
-  },
-  {
-    title: "Total cost",
-    value: "$15, 451",
-    description: "+15% last month",
-    icon: CreditCard,
-    color: "text-green-600",
-    bgColor: "bg-green-100",
-  },
-  {
-    title: "Pending Orders",
-    value: "3",
-    description: "Processing is in progress.",
-    icon: ShoppingCart,
-    color: "text-orange-600",
-    bgColor: "bg-orange-100",
-  },
-  {
-    title: "Savings",
-    value: "$2,300",
-    description: "From discount",
-    icon: TrendingUp,
-    color: "text-purple-600",
-    bgColor: "bg-purple-100",
-  },
-];
-
 const statusStyles: Record<TOrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
   Processing: "bg-blue-100 text-blue-800 border-blue-300",
@@ -69,6 +34,43 @@ const statusStyles: Record<TOrderStatus, string> = {
 
 export default function Dashboard() {
   const [orders, setOrders] = useState<TOrder[]>([]);
+  const totalCosts = orders?.reduce((accu, cur) => accu + cur.totalAmount, 0);
+  const pendingOrders = orders?.filter((order) => order.status === "Pending");
+
+  const stats = [
+    {
+      title: "Total Orders",
+      value: orders?.length || 0,
+      description: "+20.1% last month",
+      icon: Package,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+    },
+    {
+      title: "Total cost",
+      value: `${currency}${totalCosts?.toFixed(2)}`,
+      description: "+15% last month",
+      icon: CreditCard,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+    },
+    {
+      title: "Pending Orders",
+      value: pendingOrders?.length || 0,
+      description: "Processing is in progress.",
+      icon: ShoppingCart,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
+    },
+    {
+      title: "Savings",
+      value: "$0.00",
+      description: "From discount",
+      icon: TrendingUp,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
+    },
+  ];
 
   const getAllOrders = async () => {
     try {

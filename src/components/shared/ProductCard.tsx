@@ -33,8 +33,9 @@ import useFavoriteAction from "@/hooks/useFavoriteAction";
 
 type Props = {
   product: TProduct;
+  className?: string;
 };
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, className }: Props) => {
   const { name, slug, featureImage, price } = product || {};
   // Custom hooks
   const {
@@ -111,7 +112,12 @@ const ProductCard = ({ product }: Props) => {
 
   return (
     <>
-      <Card className="group  hover:shadow-lg transition-all duration-300 border-0 shadow-md">
+      <Card
+        className={cn(
+          "group  hover:shadow-lg transition-all duration-300 border-0 shadow-md",
+          className
+        )}
+      >
         <CardContent className="flex flex-col h-full p-3">
           <div className="group/img relative mb-4">
             <Image
