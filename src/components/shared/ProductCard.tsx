@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { TProduct } from "@/types/product.type";
-import { Eye, Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
+import {
+  Eye,
+  Heart,
+  LoaderCircle,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Star,
+} from "lucide-react";
 import { TCartItems } from "@/types/cart.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
@@ -21,15 +29,15 @@ import { currency } from "@/helpers/utils";
 import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
 import toast from "react-hot-toast";
 import { removeFavorite, setFavorites } from "@/redux/features/favoriteSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { setProductModal } from "@/redux/features/uiSlice";
+import { cn } from "@/lib/utils";
 
 type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
   const { name, slug, featureImage, price } = product || {};
-  const router = useRouter();
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { favorites } = useAppSelector((state) => state.favorite);
@@ -38,6 +46,9 @@ const ProductCard = ({ product }: Props) => {
   const findCart = carts?.find((cart) => cart?.product === product?._id);
   const [images, setImages] = useState<string[]>([]);
   const [featureImg, setFeatureImg] = useState(featureImage?.image);
+  const pathName = usePathname();
+  const router = useRouter();
+  const [favoriteLoading, setFavoriteLoadig] = useState(false);
 
   const handleAddToCart = (action: "order" | "card" = "card") => {
     const cartData: TCartItems = {
@@ -61,16 +72,18 @@ const ProductCard = ({ product }: Props) => {
     }
   };
 
+  // Find existing favorite item
+  const isExistsFavorite = favorites?.find(
+    (fav) => String(fav.product) === String(product._id)
+  );
+
   const handleFavorite = async (product: TProduct) => {
     if (!user?._id) {
       toast.error("Please login, Then try again");
+      router.push(`/login?redirectTo=${pathName}`);
       return;
     }
-
-    const isExistsFavorite = favorites?.find(
-      (fav) => String(fav.product) === String(product._id)
-    );
-
+    setFavoriteLoadig(true);
     if (isExistsFavorite?._id) {
       const res = await deleteFavoriteById({
         favoriteId: isExistsFavorite._id,
@@ -96,6 +109,7 @@ const ProductCard = ({ product }: Props) => {
         console.log({ error });
       }
     }
+    setFavoriteLoadig(false);
   };
 
   const increment = (qty: number) => {
@@ -189,7 +203,16 @@ const ProductCard = ({ product }: Props) => {
               type="button"
               className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
             >
-              <Heart className="w-4 h-4" />
+              {favoriteLoading ? (
+                <LoaderCircle className="animate-spin w-4 h-4" />
+              ) : (
+                <Heart
+                  className={cn(
+                    "w-4 h-4",
+                    isExistsFavorite?._id && "text-red-700"
+                  )}
+                />
+              )}
             </Button>
           </div>
 

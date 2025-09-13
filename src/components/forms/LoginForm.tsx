@@ -12,8 +12,10 @@ import { userLogin } from "@/actions/authApi";
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setAuthUser } from "@/redux/features/authSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setAllCarts } from "@/redux/features/shoppingCartSlice";
+import { getAllFavoriteProducts } from "@/actions/favoriteApi";
+import { setFavorites } from "@/redux/features/favoriteSlice";
 
 type Inputs = {
   email: string;
@@ -45,12 +47,20 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const params = useSearchParams();
+  const redirectTo = params.get("redirectTo");
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       const res = await userLogin(data);
       if (res?.success) {
         dispatch(setAuthUser(res?.payload));
+        const favoritesRes = await getAllFavoriteProducts();
+        if (favoritesRes?.success) {
+          dispatch(setFavorites(favoritesRes?.payload));
+        }
+
         reset();
         toast.success("Login successfull");
 
@@ -63,7 +73,7 @@ const LoginForm = () => {
           dispatch(setAllCarts(allCarts));
         }
 
-        router.push("/");
+        router.push(`${redirectTo}`);
       } else {
         toast.error("Somthing wrong");
       }
