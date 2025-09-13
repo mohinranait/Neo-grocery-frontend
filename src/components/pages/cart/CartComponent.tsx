@@ -16,6 +16,7 @@ const CartComponent = () => {
   const { carts, totalShipping, totalTax } = useAppSelector(
     (state) => state.cart
   );
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -26,7 +27,8 @@ const CartComponent = () => {
         <div className="lg:col-span-2 space-y-4">
           <div className="py-4 px-4 rounded bg-white border border-slate-200">
             <p className="text-gray-800 mb-1">
-              Free shipping delivery <span className="text-main">1000 BDT</span>{" "}
+              Free shipping delivery{" "}
+              <span className="text-main">{currency}1000 </span>{" "}
             </p>
             <div className="w-full bg-gray-200 rounded-3xl relative h-2">
               <span className="absolute -top-6 right-0 ">60%</span>
@@ -54,16 +56,14 @@ const CartComponent = () => {
                         width={100}
                         height={100}
                         alt="Image"
+                        className="h-[100px] object-cover rounded-l"
                       />
                     </div>
                   </div>
                   <div className="pt-3 w-full pr-3">
-                    <Link
-                      className="text-sm font-medium text-gray-700 hover:text-gray-900 inline-block hover:text-primary transition-all"
-                      href={"/"}
-                    >
+                    <p className="text-sm font-medium text-gray-700 hover:text-gray-900 inline-block hover:text-primary transition-all">
                       {cart?.pName}
-                    </Link>
+                    </p>
 
                     {cart?.attributes &&
                       Object.entries(cart?.attributes).length > 0 && (
@@ -104,10 +104,14 @@ const CartComponent = () => {
                           </button>
                         </div> */}
                       </div>
-                      <p>{cart?.price} BDT</p>
+                      <p>
+                        {currency}
+                        {cart?.price}
+                      </p>
                     </div>
                     <p className="text-gray-800 font-semibold">
-                      {cart?.price * cart?.quantity} BDT
+                      {currency}
+                      {cart?.price * cart?.quantity}
                     </p>
                   </div>
                 </li>
@@ -118,9 +122,11 @@ const CartComponent = () => {
         <div>
           <div className="border rounded p-4 bg-white">
             <div className="space-y-3">
-              <p className="py-3 text-center text-sm uppercase px-4 rounded bg-red-50 text-red-500">
-                Unregisterd Account
-              </p>
+              {!isAuthenticated && (
+                <p className="py-3 text-center text-sm uppercase px-4 rounded bg-red-50 text-red-500">
+                  Unregisterd Account
+                </p>
+              )}
               <div className="">
                 <p className="text-gray-700 font-semibold">
                   Free Delivery for <span className="text-main ">1000%</span>{" "}
@@ -139,6 +145,7 @@ const CartComponent = () => {
                 <li className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Tax</span>
                   <span className="text-sm text-gray-800">
+                    {currency}
                     {totalTax.toFixed(2)}
                   </span>
                 </li>

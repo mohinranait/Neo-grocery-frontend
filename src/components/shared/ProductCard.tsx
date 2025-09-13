@@ -26,29 +26,30 @@ import {
   newProduct,
 } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
-import { addFavoriteProduct, deleteFavoriteById } from "@/actions/favoriteApi";
-import toast from "react-hot-toast";
-import { removeFavorite, setFavorites } from "@/redux/features/favoriteSlice";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setProductModal } from "@/redux/features/uiSlice";
 import { cn } from "@/lib/utils";
+import useFavoriteAction from "@/hooks/useFavoriteAction";
 
 type Props = {
   product: TProduct;
 };
 const ProductCard = ({ product }: Props) => {
   const { name, slug, featureImage, price } = product || {};
+  // Custom hooks
+  const {
+    isFavorite,
+    toggleFavorite,
+    loading: favoriteLoading,
+  } = useFavoriteAction();
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-  const { favorites } = useAppSelector((state) => state.favorite);
   const { carts } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const findCart = carts?.find((cart) => cart?.product === product?._id);
   const [images, setImages] = useState<string[]>([]);
   const [featureImg, setFeatureImg] = useState(featureImage?.image);
-  const pathName = usePathname();
   const router = useRouter();
-  const [favoriteLoading, setFavoriteLoadig] = useState(false);
 
   const handleAddToCart = (action: "order" | "card" = "card") => {
     const cartData: TCartItems = {
@@ -70,46 +71,6 @@ const ProductCard = ({ product }: Props) => {
     if (action === "order") {
       router.push(`/checkout`);
     }
-  };
-
-  // Find existing favorite item
-  const isExistsFavorite = favorites?.find(
-    (fav) => String(fav.product) === String(product._id)
-  );
-
-  const handleFavorite = async (product: TProduct) => {
-    if (!user?._id) {
-      toast.error("Please login, Then try again");
-      router.push(`/login?redirectTo=${pathName}`);
-      return;
-    }
-    setFavoriteLoadig(true);
-    if (isExistsFavorite?._id) {
-      const res = await deleteFavoriteById({
-        favoriteId: isExistsFavorite._id,
-        userId: user._id,
-      });
-
-      if (res.success) {
-        dispatch(removeFavorite(isExistsFavorite._id));
-        toast.success("Removed successfully");
-      }
-    } else {
-      try {
-        const res = await addFavoriteProduct({
-          userId: user._id,
-          product: product._id,
-        });
-
-        if (res.success) {
-          dispatch(setFavorites([...favorites, res.payload]));
-          toast.success("Added to your profile");
-        }
-      } catch (error) {
-        console.log({ error });
-      }
-    }
-    setFavoriteLoadig(false);
   };
 
   const increment = (qty: number) => {
@@ -199,7 +160,7 @@ const ProductCard = ({ product }: Props) => {
             <Button
               size="icon"
               variant="ghost"
-              onClick={() => handleFavorite(product)}
+              onClick={() => toggleFavorite(product)}
               type="button"
               className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
             >
@@ -209,7 +170,7 @@ const ProductCard = ({ product }: Props) => {
                 <Heart
                   className={cn(
                     "w-4 h-4",
-                    isExistsFavorite?._id && "text-red-700"
+                    isFavorite(product)?._id && "text-red-700"
                   )}
                 />
               )}
