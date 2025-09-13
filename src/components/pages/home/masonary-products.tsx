@@ -33,7 +33,7 @@ const MasonaryProducts = () => {
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 ">
               Featured Products

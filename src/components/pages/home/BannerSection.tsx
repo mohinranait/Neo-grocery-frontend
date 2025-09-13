@@ -30,8 +30,8 @@ const BannerSection = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-3xl font-bold text-gray-900">
+            <div className="flex items-center flex-wrap sm:flex-row gap-4">
+              <div className="text-3xl w-full sm:w-auto font-bold text-gray-900">
                 Starting from <span className="text-main">৳100</span>
               </div>
               <div className="text-lg text-gray-500 line-through">৳150</div>
@@ -47,7 +47,7 @@ const BannerSection = () => {
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex items-center gap-8 pt-4">
+            <div className="flex items-center flex-wrap gap-2 sm:gap-8 pt-4">
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (

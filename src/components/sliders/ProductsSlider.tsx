@@ -12,11 +12,11 @@ const ProductsSlider = () => {
   const { products } = useAppSelector((state) => state.product);
   return (
     <Swiper
-      slidesPerView={2}
+      slidesPerView={1}
       spaceBetween={10}
       modules={[Navigation]}
       breakpoints={{
-        640: {
+        500: {
           slidesPerView: 2,
           spaceBetween: 12,
         },
