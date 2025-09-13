@@ -1,4 +1,4 @@
-import { TAddress } from "./address.type";
+import { TAddress, TAddressResponse } from "./address.type";
 import { TCartItems } from "./cart.type";
 
 export type TEnhancedCartItem = TCartItems & {
@@ -17,10 +17,11 @@ export type TOrderForm = {
   phone: string;
 };
 
-export type TOrderStatus= "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+export type TOrderStatus= "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled"|'Returned';
 export type TOrder  = TOrderForm & {
   _id:string;
   status: TOrderStatus;
+  shippingAddressId: TAddressResponse,
   paymentStatus: "Pending" | "Paid" | "Failed" | "Refunded";
   paymentMethod: "COD" | "Card" | "Bank Transfer";
   createdAt: Date;

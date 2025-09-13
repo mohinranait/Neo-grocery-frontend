@@ -6,7 +6,6 @@ import {
   RotateCcw,
   Archive,
   Download,
-  MessageSquareText,
   Package,
   Truck,
   CheckCircle,
@@ -15,7 +14,6 @@ import {
   ShoppingCart,
   Banknote,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import {
@@ -30,7 +28,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 import Link from "next/link";
@@ -38,10 +35,7 @@ import { getAllOrdersByAuthUser } from "@/actions/orderApi";
 import { useEffect, useState } from "react";
 import { TOrder, TOrderStatus } from "@/types/order.type";
 import { cn } from "@/lib/utils";
-import { currency } from "@/helpers/utils";
-import { setCommentModal } from "@/redux/features/uiSlice";
-import { useAppDispatch } from "@/hooks/useRedux";
-import useViewSingleProductByModal from "@/hooks/useViewSingleProductByModal";
+import OrderItem from "@/components/pages/dashboard/orders/order-item";
 const statusStyles: Record<TOrderStatus, string> = {
   Pending: "bg-yellow-100 text-yellow-800 border-yellow-300",
   Processing: "bg-blue-100 text-blue-800 border-blue-300",
@@ -51,8 +45,6 @@ const statusStyles: Record<TOrderStatus, string> = {
 };
 
 export default function MyOrders() {
-  const { viewProductByModal } = useViewSingleProductByModal();
-  const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<TOrder[]>([]);
 
   const pendingOrders = orders?.filter((order) => order.status === "Pending");
@@ -255,90 +247,7 @@ export default function MyOrders() {
 
           <CardContent className="space-y-4 px-3 pt-3 pb-3">
             {order.items.map((item, index) => (
-              <div
-                key={index}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <Image
-                      src={item.image || "/placeholder.svg"}
-                      alt={item.name}
-                      width={64}
-                      height={64}
-                      className="w-16 h-16 object-cover rounded-md border"
-                    />
-                    <Badge
-                      className="absolute -top-2 -right-2 bg-main text-white text-xs px-2 py-1 rounded-full"
-                      variant="secondary"
-                    >
-                      Qty: {item.quantity}
-                    </Badge>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium text-sm">{item.name}</h3>
-                    <p className="text-lg font-bold text-main">
-                      {currency}
-                      {item.price}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Total: {currency}
-                      {(item.price * item.quantity).toFixed(2)}
-                    </p>
-
-                    {item?.attributes &&
-                      Object.keys(item?.attributes)?.map((attr) => {
-                        if (!item?.attributes) {
-                          return;
-                        }
-                        return (
-                          <p
-                            key={attr}
-                            className="text-xs text-muted-foreground"
-                          >
-                            {attr}: {item?.attributes[attr]}
-                          </p>
-                        );
-                      })}
-                  </div>
-                </div>
-
-                <div className="flex mt-3 sm:mt-0 items-center gap-2">
-                  <Button
-                    title="Buy Again"
-                    variant="outline"
-                    size="sm"
-                    className="bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
-                  >
-                    <RotateCcw className="h-4 w-4 mr-1" />
-                  </Button>
-                  <Button
-                    onClick={() => viewProductByModal(item?.product)}
-                    type="button"
-                    title="View Item"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Eye className="h-4 w-4 mr-1" />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      dispatch(
-                        setCommentModal({
-                          name: item?.name,
-                          pId: item?.product,
-                          image: item?.image,
-                        })
-                      );
-                    }}
-                    title="Review"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <MessageSquareText className="h-4 w-4 mr-1" />
-                  </Button>
-                </div>
-              </div>
+              <OrderItem key={index} item={item} />
             ))}
           </CardContent>
           <Separator />
