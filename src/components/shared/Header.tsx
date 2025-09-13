@@ -14,7 +14,7 @@ import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import Logo from "./Logo";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import MobileSearchSeet from "../sheets/MobileSearchSeet";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +40,7 @@ const Header = () => {
 
   // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
   const pathName = usePathname();
   const dispatch = useAppDispatch();
 
@@ -128,7 +129,15 @@ const Header = () => {
             </div>
             <div>
               <ul className="flex items-center gap-4">
-                <MobileSearchSeet />
+                <li className=" md:hidden rounded-full h-10 w-10 inline-flex items-center justify-center relative">
+                  <button
+                    type="button"
+                    onClick={() => setMobileSearch((prev) => !prev)}
+                    className="w-10 cursor-pointer h-10 relative flex items-center justify-center rounded-full "
+                  >
+                    <Search size={24} className="text-gray-600" />
+                  </button>
+                </li>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -195,21 +204,27 @@ const Header = () => {
             </div>
           </div>
           {/* Mobile search */}
-          <div className="container pb-3 px-2 md:px-0  lg:hidden mt-3">
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Search products..."
-                className="w-full pl-4 pr-12 py-[10px] h-auto rounded-full border-2 border-gray-200 focus:border-main-light focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200"
-              />
-              <Button
-                size="sm"
-                className="absolute right-1 top-2/4 -translate-y-2/4 bottom-1 px-7 h-auto py-5 rounded-full bg-gradient-to-r from-main to-main-light hover:from-main hover:to-main-light shadow-md"
-              >
-                <Search className="w-4 h-4" />
-              </Button>
+          {mobileSearch && (
+            <div className="container pb-3 px-2 md:px-0  lg:hidden mt-3">
+              <div className="relative">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  type="search"
+                  placeholder="Search products..."
+                  className="w-full pl-4 pr-12 py-[10px] h-auto rounded-full border-2 border-gray-200 focus:border-main-light focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200"
+                />
+                <Button
+                  onClick={handleSearch}
+                  type="button"
+                  size="sm"
+                  className="absolute right-1 top-2/4 -translate-y-2/4 bottom-1 px-7 h-auto py-5 rounded-full bg-gradient-to-r from-main to-main-light hover:from-main hover:to-main-light shadow-md"
+                >
+                  <Search className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="hidden bg-gradient-to-r from-gray-50 to-white md:block border-b border-gray-200">
           <div className="container py-2 gap-4 flex ">

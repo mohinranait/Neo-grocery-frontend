@@ -1,25 +1,124 @@
 "use client";
-import React, { FC } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { Button } from "../ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import Logo from "../shared/Logo";
+import { useAppSelector } from "@/hooks/useRedux";
 
-type Props = {
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+type TCatType = {
+  _id: string;
+  name: string;
+  catThumbnail: string | null | undefined;
+  parent: string | null | undefined;
 };
-const MobileMenuSheet: FC<Props> = ({ open, setOpen }) => {
+
+type TTreeNote = TCatType & {
+  children?: TTreeNote[];
+  createdAt?: string;
+};
+
+const buildTree = (items: TCatType[]): TTreeNote[] => {
+  const map = new Map();
+  items?.forEach((item) => {
+    map.set(item?._id, { ...item, children: [] });
+  });
+
+  const result: TTreeNote[] = [];
+
+  items?.forEach((item) => {
+    if (item.parent) {
+      const parent = map.get(item?.parent);
+      if (parent) {
+        parent.children.push(map.get(item?._id));
+      }
+    } else {
+      result.push(map.get(item?._id));
+    }
+  });
+  return result;
+};
+
+const MobileMenuSheet = () => {
+  // Redux State
+  const { categories } = useAppSelector((state) => state.category);
+
+  const [open, setOpen] = useState(false);
+  const [showCategories, setShowCategories] = useState<TTreeNote[]>([]);
+
+  useEffect(() => {
+    const format = categories?.map((item) => ({
+      _id: item?._id,
+      name: item?.name,
+      catThumbnail: item?.catThumbnail,
+      parent: item?.parent,
+    }));
+
+    const categoryTree = buildTree(format as TCatType[]);
+    setShowCategories(categoryTree);
+  }, [categories]);
+
+  // Recursive component to render nested categories
+  const RenderCategory = ({
+    category,
+    level = 0,
+  }: {
+    category: TTreeNote;
+    level?: number;
+  }) => {
+    const hasChildren = category.children && category.children.length > 0;
+
+    return (
+      <AccordionItem value={category._id} className="border-0 py-1">
+        {hasChildren ? (
+          <>
+            <AccordionTrigger className="py-1 hover:no-underline">
+              <Link
+                href={`/shop?cat=${category?._id}`}
+                onClick={() => setOpen(false)}
+                className="text-sm"
+              >
+                {category.name}
+              </Link>
+            </AccordionTrigger>
+            <AccordionContent className="pb-0">
+              <div className={`pl-${level + 3}`}>
+                <Accordion className="w-full mb-0" type="single" collapsible>
+                  {category?.children &&
+                    category?.children.map((child) => (
+                      <RenderCategory
+                        key={child._id}
+                        category={child}
+                        level={level + 3}
+                      />
+                    ))}
+                </Accordion>
+              </div>
+            </AccordionContent>
+          </>
+        ) : (
+          <div className="py-1">
+            <Link
+              onClick={() => setOpen(false)}
+              href={`/shop?cat=${category?._id}`}
+              className="text-sm block hover:no-underline"
+            >
+              {category.name}
+            </Link>
+          </div>
+        )}
+      </AccordionItem>
+    );
+  };
+
   return (
     <Sheet onOpenChange={setOpen} open={open} key={"left"}>
       <SheetTrigger>
@@ -28,10 +127,10 @@ const MobileMenuSheet: FC<Props> = ({ open, setOpen }) => {
           <p className="text-xs text-gray-500">Menu</p>
         </li>
       </SheetTrigger>
-      <SheetContent className="w-full  px-0 py-0 res4:w-[400px]" side={"left"}>
+      <SheetContent className="w-full px-0 py-0 res4:w-[400px]" side={"left"}>
         <div className="flex flex-col h-full">
           <div>
-            <div className="h-[50px]  px-3 flex gap-1 items-center bg-gray-200">
+            <div className="h-[50px] px-3 flex gap-1 items-center bg-gray-200">
               <Logo />
             </div>
           </div>
@@ -48,56 +147,9 @@ const MobileMenuSheet: FC<Props> = ({ open, setOpen }) => {
               <TabsContent value="categories">
                 <div>
                   <Accordion className="w-full" type="single" collapsible>
-                    <AccordionItem value="item-1" className="border-0">
-                      <AccordionTrigger className="py-1 hover:no-underline">
-                        <Link href={"/"} className="text-sm">
-                          Furnitures
-                        </Link>
-                      </AccordionTrigger>
-                      <AccordionContent className="pb-0">
-                        <div>
-                          <Accordion
-                            className="w-full mb-0 pl-3 pb-0"
-                            type="single"
-                            collapsible
-                          >
-                            <AccordionItem value="item-1" className="border-0">
-                              <AccordionTrigger className="py-1 hover:no-underline">
-                                <Link href={"/"} className="text-sm">
-                                  Chare
-                                </Link>
-                              </AccordionTrigger>
-                              <AccordionContent className="pb-0">
-                                <div className="pl-3">
-                                  <Link href={"/"} className="block py-1">
-                                    Plastic
-                                  </Link>
-                                  <Link href={"/"} className="block py-1">
-                                    Tree
-                                  </Link>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="item-2" className="border-0">
-                              <AccordionTrigger className="py-1 hover:no-underline">
-                                Table
-                              </AccordionTrigger>
-                              <AccordionContent className="pb-0">
-                                Yes. It adheres to the WAI-ARIA design pattern.
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2" className="border-0">
-                      <AccordionTrigger className="py-1 hover:no-underline">
-                        Sharts
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Yes. It adheres to the WAI-ARIA design pattern.
-                      </AccordionContent>
-                    </AccordionItem>
+                    {showCategories.map((category) => (
+                      <RenderCategory key={category._id} category={category} />
+                    ))}
                   </Accordion>
                 </div>
               </TabsContent>
@@ -118,18 +170,6 @@ const MobileMenuSheet: FC<Props> = ({ open, setOpen }) => {
                 </div>
               </TabsContent>
             </Tabs>
-          </div>
-          <div className="px-3 py-3 border-t border-border">
-            <div className="h-[86px]">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-800">Sub Total</p>
-                <p className="text-primary">100$</p>
-              </div>
-              <div className="flex gap-2 mt-3">
-                <Button className="w-full">Cart </Button>
-                <Button className="w-full">Checkout</Button>
-              </div>
-            </div>
           </div>
         </div>
       </SheetContent>
