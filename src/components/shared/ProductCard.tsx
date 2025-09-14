@@ -4,15 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { TProduct } from "@/types/product.type";
-import {
-  Eye,
-  Heart,
-  LoaderCircle,
-  Minus,
-  Plus,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
+import { Eye, Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { TCartItems } from "@/types/cart.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addToCart, setAllCarts } from "@/redux/features/shoppingCartSlice";
@@ -29,7 +21,7 @@ import { currency } from "@/helpers/utils";
 import { useRouter } from "next/navigation";
 import { setProductModal } from "@/redux/features/uiSlice";
 import { cn } from "@/lib/utils";
-import useFavoriteAction from "@/hooks/useFavoriteAction";
+import FavoriteIcon from "../utils/favorite-icon";
 
 type Props = {
   product: TProduct;
@@ -37,12 +29,6 @@ type Props = {
 };
 const ProductCard = ({ product, className }: Props) => {
   const { name, slug, featureImage, price } = product || {};
-  // Custom hooks
-  const {
-    isFavorite,
-    toggleFavorite,
-    loading: favoriteLoading,
-  } = useFavoriteAction();
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
@@ -163,24 +149,7 @@ const ProductCard = ({ product, className }: Props) => {
                 </div>
               </div>
             )}
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => toggleFavorite(product)}
-              type="button"
-              className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
-            >
-              {favoriteLoading ? (
-                <LoaderCircle className="animate-spin w-4 h-4" />
-              ) : (
-                <Heart
-                  className={cn(
-                    "w-4 h-4",
-                    isFavorite(product)?._id && "text-red-700"
-                  )}
-                />
-              )}
-            </Button>
+            <FavoriteIcon product={product} />
           </div>
 
           <div className="space-y-2 flex-grow">
@@ -193,19 +162,19 @@ const ProductCard = ({ product, className }: Props) => {
               </Link>
             </h3>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 ">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-3 h-3 ${
-                    i < Math.floor(5)
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                    i < Math.floor(product?.avgRating || 0)
+                      ? "fill-yellow-500 text-yellow-500"
+                      : "text-yellow-500"
                   }`}
                 />
               ))}
               <span className="text-xs text-gray-500 ml-1">
-                ({product.rating})
+                ({product?.totalComments})
               </span>
             </div>
 

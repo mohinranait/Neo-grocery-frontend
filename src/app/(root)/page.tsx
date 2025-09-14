@@ -4,6 +4,7 @@ import CategoriesSection from "@/components/pages/home/categories-section";
 import MasonaryProducts from "@/components/pages/home/masonary-products";
 import ProductSliderHome from "@/components/pages/home/product-slider";
 import ProductSection from "@/components/pages/home/ProductSection";
+import UtilsProductSection from "@/components/pages/home/utils-product-section";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -48,6 +49,8 @@ const HomePage = () => {
 
       {/* Featured Products - Masonry Layout */}
       <MasonaryProducts />
+
+      <UtilsProductSection />
 
       {/* Promotional Banner */}
       <section className="py-16 relative overflow-hidden">

@@ -32,7 +32,7 @@ const MasonaryProducts = () => {
   };
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2">
         <div className="flex flex-wrap justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 ">
@@ -157,13 +157,15 @@ const MasonaryProducts = () => {
                         <Star
                           key={i}
                           className={`w-3 h-3 ${
-                            i < Math.floor(3) ? "fill-current" : ""
+                            i < Math.floor(product?.avgRating || 0)
+                              ? "fill-current"
+                              : ""
                           }`}
                         />
                       ))}
                     </div>
                     <span className="text-xs text-gray-600 ml-1">
-                      ({product.rating})
+                      ({product.totalComments})
                     </span>
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">

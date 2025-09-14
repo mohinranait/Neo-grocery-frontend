@@ -98,4 +98,6 @@ export type TProduct = {
   shippingCharge: number;
   tax: number;
   createdAt: string;
+  totalComments?: number;
+  avgRating?: number
 }
