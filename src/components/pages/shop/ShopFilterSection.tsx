@@ -25,11 +25,7 @@ const ShopFilterSection = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const catParams = searchParams.get("cat");
-  const rangeParams = searchParams.get("priceRange");
-  const shippingParams = searchParams.get("shipping");
-  const brandParams = searchParams.get("brandIds");
   const search = searchParams.get("search") || "";
-  // const statusParams = searchParams.get("status");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
   const [openItems, setOpenItems] = useState([
@@ -40,12 +36,46 @@ const ShopFilterSection = () => {
     "item-4",
   ]);
 
+  const handleFilterObject = (
+    currentParams: URLSearchParams,
+    obj?: Record<string, string>
+  ) => {
+    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
+
+    // use currentParams
+    const prices = currentParams.get("priceRange")?.split(",") || [];
+
+    const queryObject: {
+      search: string;
+      categoryIds: string[] | undefined;
+      brandIds: string[];
+      shipping: "yes" | "no";
+      status: string[] | undefined;
+      ratings: string[] | undefined;
+      priceRange?: [number, number] | undefined;
+    } = {
+      ...obj,
+      search,
+      categoryIds: currentParams.get("cat")?.split(","),
+      brandIds: currentParams.get("brandIds")?.split(",") || [],
+      shipping: currentParams.get("shipping") as "yes" | "no",
+      status: currentParams.get("status")?.split(","),
+      ratings: currentParams.get("ratings")?.split(","),
+    };
+
+    if (prices?.length === 2) {
+      queryObject.priceRange = [Number(prices[0]), Number(prices[1])];
+    }
+
+    dispatch(setFilterProducts(queryObject));
+  };
+
   // Helper: Update URL query
   const updateMultiValueQuery = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     const existingValues = currentParams.get(key)?.split(",") || [];
 
-    let updatedValues = [];
+    let updatedValues: string[] | number[] = [];
     if (key === "priceRange") {
       updatedValues = value.split(",").map((item) => parseInt(item, 10));
     } else {
@@ -62,16 +92,15 @@ const ShopFilterSection = () => {
       currentParams.delete(key);
     }
 
-    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
-    dispatch(setFilterProducts({ [key]: updatedValues }));
+    // push updated params to router
+    handleFilterObject(currentParams);
   };
 
   // Helper: Single value like shipping
   const updateSingleValueQuery = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
-    router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
-    dispatch(setFilterProducts({ [key]: value }));
+    handleFilterObject(currentParams, { shipping: value });
   };
 
   // clear filter
@@ -84,7 +113,7 @@ const ShopFilterSection = () => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.delete(key);
     router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
-    dispatch(setFilterProducts({ [key]: "" }));
+    handleFilterObject(currentParams, { [key]: "" });
   };
 
   useEffect(() => {
@@ -92,19 +121,6 @@ const ShopFilterSection = () => {
       dispatch(setFilterProducts({ categoryIds: catParams?.split(",") }));
     }
   }, [catParams]);
-
-  useEffect(() => {
-    const prices = rangeParams?.split(",");
-    dispatch(
-      setFilterProducts({
-        search: search,
-        categoryIds: catParams?.split(","),
-        brandIds: brandParams?.split(",") || [],
-        priceRange: prices && [Number(prices[0]), Number(prices[1])],
-        shipping: shippingParams as "yes" | "no",
-      })
-    );
-  }, [catParams, rangeParams, shippingParams, brandParams, search, dispatch]);
 
   return (
     <Accordion

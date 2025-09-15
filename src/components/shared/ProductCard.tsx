@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { setProductModal } from "@/redux/features/uiSlice";
 import { cn } from "@/lib/utils";
 import FavoriteIcon from "../utils/favorite-icon";
+import { DEFAULT_IMAGE } from "@/helpers/secretVariable";
 
 type Props = {
   product: TProduct;
@@ -138,7 +139,7 @@ const ProductCard = ({ product, className }: Props) => {
                       className=" border rounded size-10 bg-white hover:bg-white"
                     >
                       <Image
-                        src={img}
+                        src={img || `/${DEFAULT_IMAGE}`}
                         width={40}
                         height={40}
                         alt="images"

@@ -10,7 +10,7 @@ type TFilter = {
   ratings?:string[],
   shipping?:'yes'|'no',
   sortBy?:string,
-  status?:string,
+  status?:string[],
   search?:string,
 }
 
@@ -45,7 +45,7 @@ const productFiltersMethod  = (products:TProduct[], filters:TFilter) => {
     }
 
     if (search && search.length > 0) {
-      isValid = isValid &&  product.name?.includes(search) ;
+      isValid = isValid &&  product.name?.toLowerCase()?.includes(search.toLowerCase()) ;
     }
 
     // Price range filter
