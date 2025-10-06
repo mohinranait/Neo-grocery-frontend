@@ -14,29 +14,25 @@ const BannerSection = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-gray-900">Premium</span>
+                <span className="text-gray-900">Apple</span>
                 <br />
                 <span className="bg-main bg-clip-text text-transparent">
-                  Fresh Products
+                  iPhone 17 air
                 </span>
-                <br />
-                <span className="text-gray-900">Delivered</span>
               </h1>
 
               <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                Experience the finest selection of organic and fresh products,
-                delivered straight to your doorstep with our premium quality
-                guarantee.
+                The thinnest iPhone ever. With the power of pro inside.
               </p>
             </div>
 
             <div className="flex items-center flex-wrap sm:flex-row gap-4">
               <div className="text-3xl w-full sm:w-auto font-bold text-gray-900">
-                Starting from <span className="text-main">৳100</span>
+                Starting from <span className="text-main">৳999</span>
               </div>
-              <div className="text-lg text-gray-500 line-through">৳150</div>
+              <div className="text-lg text-gray-500 line-through">৳1000</div>
               <Badge className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium">
-                33% OFF
+                10% OFF
               </Badge>
             </div>
 
@@ -65,7 +61,7 @@ const BannerSection = () => {
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-main" />
                 <span className="text-gray-600 font-medium">
-                  30-min delivery
+                  3-day delivery
                 </span>
               </div>
             </div>
@@ -77,7 +73,7 @@ const BannerSection = () => {
               <Image
                 width={500}
                 height={200}
-                src={"/hero-img.png"}
+                src={"/air.png"}
                 alt="Premium Fresh Products"
                 className="w-[400px] mx-auto h-auto rounded-2xl "
               />
@@ -89,7 +85,7 @@ const BannerSection = () => {
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="font-bold text-gray-900">100% Organic</div>
+                    <div className="font-bold text-gray-900">100% Original</div>
                     <div className="text-sm text-gray-500">Certified Fresh</div>
                   </div>
                 </div>

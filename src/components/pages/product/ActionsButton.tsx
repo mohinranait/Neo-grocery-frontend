@@ -110,7 +110,7 @@ const ActionsButton = ({ product }: Props) => {
     isInitialized,
   ]);
 
-  // ✅ Build a map of valid config options per attribute
+  // Build a map of valid config options per attribute
   const validConfigMap = useMemo(() => {
     if (!product?.variations || !getAttrConfigs) return {};
     const result: Record<string, string[]> = {};
@@ -167,7 +167,7 @@ const ActionsButton = ({ product }: Props) => {
       );
       toast.custom(
         <div className="py-2 px-3 rounded-md text-sm bg-white text-black shadow-md">
-          ⚠️ Please select:{" "}
+          Please select:{" "}
           {missingAttrs?.map((a, i) => (
             <span key={i} className="font-semibold">
               {a?.name}
@@ -323,10 +323,15 @@ const ActionsButton = ({ product }: Props) => {
               (ac) => ac?.attribute === attr?._id
             );
             const validIds = validConfigMap[attr._id] || [];
+
+            const selectedAttrValue = matchedConfigs?.filter(
+              (attr) => attributeIds.includes(attr._id) && attr
+            );
+
             return (
               <div key={index}>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
-                  {attr.name}
+                  {attr.name}: {selectedAttrValue[0]?.name}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                   {matchedConfigs?.map((config, iKey) => (

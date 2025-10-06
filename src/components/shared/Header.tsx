@@ -115,13 +115,13 @@ const Header = () => {
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   placeholder="Search for fresh products, organic foods..."
-                  className="w-full pl-4 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 py-[14px] h-auto  rounded-full border-2  border-gray-200   focus-visible:border-main   transition-all duration-200 text-base pr-20"
+                  className="w-full pl-4 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 py-[12px] h-auto  rounded-full border-2  border-gray-200   focus-visible:border-main   transition-all duration-200 text-base pr-20"
                 />
                 <Button
                   size="sm"
                   type="button"
                   onClick={handleSearch}
-                  className="absolute  py-5 h-auto right-2 top-2/4 -translate-y-2/4 bottom-1 px-8 rounded-full bg-main hover:bg-main-light shadow-md"
+                  className="absolute  py-5 h-auto right-1 top-2/4 -translate-y-2/4 bottom-1 px-8 rounded-full bg-main hover:bg-main-light shadow-md"
                 >
                   <Search className="w-4 h-4" />
                 </Button>
