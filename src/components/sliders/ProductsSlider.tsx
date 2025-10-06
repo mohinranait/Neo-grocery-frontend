@@ -1,46 +1,35 @@
 "use client";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
-import "swiper/css";
-import "swiper/css/pagination";
-import { Navigation } from "swiper/modules";
 import ProductCard from "../shared/ProductCard";
 import { useAppSelector } from "@/hooks/useRedux";
 
 const ProductsSlider = () => {
   const { products } = useAppSelector((state) => state.product);
   return (
-    <Swiper
-      slidesPerView={1}
-      spaceBetween={10}
-      modules={[Navigation]}
-      breakpoints={{
-        500: {
-          slidesPerView: 2,
-          spaceBetween: 12,
-        },
-        768: {
-          slidesPerView: 3,
-          spaceBetween: 12,
-        },
-        1024: {
-          slidesPerView: 4,
-          spaceBetween: 12,
-        },
-        1280: {
-          slidesPerView: 5,
-          spaceBetween: 12,
-        },
-      }}
-      className="mySwiper"
-    >
-      {products?.map((product, index) => (
-        <SwiperSlide key={index}>
-          <ProductCard product={product} />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <>
+      <Carousel className="w-full  ">
+        <CarouselContent className="py-4">
+          {products?.map((product, index) => (
+            <CarouselItem
+              key={index}
+              className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+            >
+              <ProductCard product={product} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="-left-4" />
+        <CarouselNext className="-right-4" />
+      </Carousel>
+    </>
   );
 };
 

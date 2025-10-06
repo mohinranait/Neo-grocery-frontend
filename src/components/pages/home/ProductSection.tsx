@@ -24,7 +24,7 @@ const ProductSection = () => {
                 <Button variant={"link"}>View All</Button>
               </div>
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  xl:grid-cols-5 gap-3">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4   gap-3">
               {products?.map((product, index) => (
                 <ProductCard key={index} product={product} />
               ))}

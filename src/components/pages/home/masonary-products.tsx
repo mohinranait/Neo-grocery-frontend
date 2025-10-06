@@ -122,7 +122,7 @@ const MasonaryProducts = () => {
           )}
 
           {/* Regular Products */}
-          {normalProducts?.slice(1, 6).map((product, index) => (
+          {normalProducts?.slice(1, 5).map((product, index) => (
             <Card
               key={index}
               className="group hover:shadow-lg transition-shadow duration-300"

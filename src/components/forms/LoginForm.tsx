@@ -73,7 +73,7 @@ const LoginForm = () => {
           dispatch(setAllCarts(allCarts));
         }
 
-        router.push(`${redirectTo}`);
+        router.push(`${redirectTo ? redirectTo : "/"}`);
       } else {
         toast.error("Somthing wrong");
       }
