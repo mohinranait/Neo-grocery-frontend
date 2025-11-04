@@ -33,7 +33,7 @@ const MiddleProductBar = ({
             <div className="space-y-2 w-full">
               <div className="flex justify-between items-center gap-3 flex-wrap">
                 <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
-                  Organic
+                  Original
                 </Badge>
                 <div className="flex gap-2 items-center">
                   <Button

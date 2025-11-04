@@ -19,7 +19,6 @@ import { usePathname } from "next/navigation";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
 import { currency } from "@/helpers/utils";
 import EmptyCartComponent from "../utils/EmptyCartComponent";
-import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
 const CartSheets = () => {
@@ -43,7 +42,7 @@ const CartSheets = () => {
       open={cartSidebarOpen}
       key={"right"}
     >
-      <SheetContent className="w-full sm:max-w-lg p-0 bg-white border-l-2 border-slate-200">
+      <SheetContent className="w-full sm:max-w-md p-0 bg-white border-l-2 border-slate-200">
         <SheetHeader className="p-4">
           <SheetTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
@@ -72,26 +71,19 @@ const CartSheets = () => {
                           height={80}
                           className="rounded-lg object-cover bg-white border border-slate-200"
                         />
-
-                        <Badge
-                          variant="secondary"
-                          className="absolute -top-2 -right-2 text-xs bg-emerald-100 text-emerald-700 border-emerald-200"
-                        >
-                          Fresh
-                        </Badge>
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-slate-800 mb-1 line-clamp-2">
+                        <h4 className="font-semibold text-slate-800 mb-1 text-sm line-clamp-2">
                           {cart?.pName}
                         </h4>
-                        <p className="text-lg font-bold text-main ">
+                        <p className="text-sm font-bold text-main ">
                           {currency}
                           {cart.price.toFixed(2)}
                         </p>
 
                         <div className="flex items-center justify-between">
-                          <CartCounter cart={cart} />
+                          <CartCounter cart={cart} className="bg-white" />
                           <Button
                             variant="ghost"
                             size="sm"
