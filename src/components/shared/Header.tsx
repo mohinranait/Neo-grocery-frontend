@@ -30,6 +30,7 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import useTotalCartPrice from "@/hooks/useTotalCartPrice";
 import { currency } from "@/helpers/utils";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   // Redux state
@@ -45,16 +46,25 @@ const Header = () => {
   // Local state
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathName = usePathname();
   const dispatch = useAppDispatch();
 
   const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 140);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // handle logout
   const handleLogout = async () => {
     try {
-      const res = await userLogout();
-      console.log({ res });
+      await userLogout();
       dispatch(logoutUser());
     } catch (error) {
       console.log({ error });
@@ -129,12 +139,33 @@ const Header = () => {
         </div>
       </div>
 
-      <header>
+      <header
+        className={cn(
+          "",
+          isScrolled &&
+            "fixed top-0 left-0 right-0 z-30  transition-all duration-300 shadow-sm"
+        )}
+      >
         {/* Middle row */}
         <div className="border-b bg-white border-gray-100 shadow-lg">
-          <div className="px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ">
+          <div
+            className={cn(
+              "px-2 md:px-0 container justify-between h-[60px]  md:h-[80px] flex items-center ",
+              isScrolled && "md:h-[60px]"
+            )}
+          >
             {/* Logo */}
             <div className="flex items-center gap-2">
+              {isScrolled && (
+                <div className="relative group ">
+                  <Button type="button" className="hidden xl:flex">
+                    <List size={20} className="text-white" />
+                  </Button>
+                  <div className="absolute w-[280px] top-full left-0 hidden group-hover:block  transition-all duration-200">
+                    <HeaderBrowsCategory />
+                  </div>
+                </div>
+              )}
               <Logo />
             </div>
 
