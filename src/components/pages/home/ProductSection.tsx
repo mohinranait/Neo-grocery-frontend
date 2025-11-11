@@ -1,37 +1,60 @@
 "use client";
-import ProductCard from "@/components/shared/ProductCard";
-import { Button } from "@/components/ui/button";
-import { useAppSelector } from "@/hooks/useRedux";
-import React from "react";
+import { getAllSections } from "@/actions/sectionApi";
+import { TSection } from "@/types/section.type";
+import React, { useEffect, useState } from "react";
+import SectionRow from "./SectionRow";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductSection = () => {
-  const { products } = useAppSelector((state) => state.product);
+  const [sections, setSections] = useState<TSection[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    setIsFetching(true);
+    (async () => {
+      const response = await getAllSections();
+      if (response?.success) {
+        setSections(response.payload?.sections || []);
+      }
+    })();
+    setIsFetching(false);
+  }, []);
+
+  if (isFetching) {
+    return (
+      <div className="space-x-4">
+        <Skeleton className="h-12 " />
+        <div className="grid grid-cols-2 lg:grid-cols-5  space-y-2">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32 " />
+          <Skeleton className="h-32 " />
+          <Skeleton className="h-32 " />
+          <Skeleton className="h-32 " />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <section className="py-10">
-        <div>
-          <div className="px-2 md:px-0 container">
-            <div className="flex justify-between items-center mb-2">
-              <div>
-                <p className="text-2xl font-bold text-gray-900 ">
-                  Popular products
-                </p>
-                <p className="text-gray-600 text-sm">
-                  Most popular product for last week
-                </p>
-              </div>
-              <div>
-                <Button variant={"link"}>View All</Button>
+      {sections?.map((section, idx) => {
+        return (
+          <section key={idx} className="py-10">
+            <div>
+              <div className="px-2 md:px-0 container">
+                <div className="flex justify-between items-center mb-2">
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900 ">
+                      {section?.name}
+                    </p>
+                  </div>
+                </div>
+                <SectionRow section={section} />
               </div>
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4   gap-3">
-              {products?.map((product, index) => (
-                <ProductCard key={index} product={product} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        );
+      })}
     </>
   );
 };

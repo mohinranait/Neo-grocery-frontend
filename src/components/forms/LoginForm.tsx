@@ -1,5 +1,5 @@
 "use client";
-import { Eye, EyeOff, ShoppingBagIcon } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Input } from "../ui/input";
@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { getAllFavoriteProducts } from "@/actions/favoriteApi";
 import { setFavorites } from "@/redux/features/favoriteSlice";
+import Logo from "../shared/Logo";
 
 type Inputs = {
   email: string;
@@ -88,14 +89,9 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-[350px] mx-auto">
         <div>
           <div className="flex mb-3 justify-center">
-            <Link href={"/"} className="inline-flex items-center">
-              <span className="w-9 h-9 rounded bg-main flex items-center justify-center">
-                <ShoppingBagIcon className="text-white" size={20} />
-              </span>
-              <span className="text-3xl font-bold text-primary">Shop</span>
-            </Link>
+            <Logo />
           </div>
-          <p className="text-center mb-2 text-primary font-bold text-4xl">
+          <p className="text-center  text-primary font-bold text-3xl">
             Wellcome Back
           </p>
           <p className="text-center  text-gray-500 text-sm">

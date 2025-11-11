@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { currency } from "@/helpers/utils";
 import { calculateProductPrice } from "@/helpers/product.helper";
 import { calculateDiscount } from "@/helpers/product.helper";
+import { useRouter } from "next/navigation";
 
 type Props = {
   product: TProduct;
@@ -20,6 +21,7 @@ type Props = {
 
 const ActionsButton = ({ product }: Props) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
   const { attributes: getAttributes } = useAppSelector(
@@ -151,7 +153,7 @@ const ActionsButton = ({ product }: Props) => {
   const increment = () => setQuantity((prev) => (prev < 20 ? prev + 1 : prev));
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (action: "cart" | "buy" = "cart") => {
     // For variable products, check if all attributes are selected
     if (
       product?.variant === "Variable Product" &&
@@ -235,6 +237,10 @@ const ActionsButton = ({ product }: Props) => {
     }
 
     dispatch(addToCart(cartData));
+    if (action === "buy") {
+      // Redirect to cart or checkout page
+      router.push("/checkout");
+    }
     toast.success("Product added to cart!");
   };
 
@@ -363,26 +369,29 @@ const ActionsButton = ({ product }: Props) => {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-3 mt-6">
+      <div className=" items-center gap-3 mt-6">
         <ProductCartCounter
           increment={increment}
           decrement={decrement}
           quantity={quantity || 1}
         />
-        <Button
-          type="button"
-          onClick={handleAddToCart}
-          className="flex items-center gap-2"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          Add to cart
-        </Button>
-        <Button
-          variant="outline"
-          className="bg-main text-white hover:bg-main hover:text-white"
-        >
-          Buy Now
-        </Button>
+        <div className="flex gap-2 mt-2 items-center">
+          <Button
+            type="button"
+            onClick={() => handleAddToCart("cart")}
+            className="flex items-center  gap-2"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Add to cart
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handleAddToCart("buy")}
+            className="bg-main text-white  hover:bg-main hover:text-white"
+          >
+            Buy Now
+          </Button>
+        </div>
       </div>
     </>
   );

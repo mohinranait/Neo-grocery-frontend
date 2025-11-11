@@ -9,14 +9,16 @@ import {
 } from "@/components/ui/carousel";
 
 import ProductCard from "../shared/ProductCard";
-import { useAppSelector } from "@/hooks/useRedux";
+import { TProduct } from "@/types/product.type";
 
-const ProductsSlider = () => {
-  const { products } = useAppSelector((state) => state.product);
+type Props = {
+  products: TProduct[];
+};
+const ProductsSlider = ({ products }: Props) => {
   return (
     <>
       <Carousel className="w-full  ">
-        <CarouselContent className="py-4">
+        <CarouselContent className="py-4 pt-0">
           {products?.map((product, index) => (
             <CarouselItem
               key={index}

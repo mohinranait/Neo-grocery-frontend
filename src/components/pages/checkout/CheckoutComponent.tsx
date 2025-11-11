@@ -55,7 +55,7 @@ const CheckoutComponent = () => {
     lastName: "",
     phone: "",
     address: "",
-    postalCode: "",
+    subCity: "",
     city: "",
     type: "Home",
   });
@@ -108,7 +108,7 @@ const CheckoutComponent = () => {
       lastName: address?.lastName,
       phone: address?.phone,
       address: address?.address,
-      postalCode: address?.postalCode,
+      subCity: address?.subCity,
       city: address?.city,
       type: address?.type as "Home" | "Office" | "Others",
     };
@@ -166,8 +166,8 @@ const CheckoutComponent = () => {
       lastName: "",
       phone: "",
       address: "",
-      postalCode: "",
       city: "",
+      subCity: "",
       type: "Home",
     });
   };
@@ -200,7 +200,7 @@ const CheckoutComponent = () => {
       lastName: address?.lastName,
       phone: address?.phone,
       address: address?.address,
-      postalCode: address?.postalCode,
+      subCity: address?.subCity,
       city: address?.city,
       type: address?.type as "Home" | "Office" | "Others",
     };
@@ -312,14 +312,6 @@ const CheckoutComponent = () => {
 
             <div className="space-y-4">
               <div>
-                <p className=" text-base mb-1 font-normal">Shipping method</p>
-
-                <div className="flex border-main border rounded-md items-center justify-between px-4 py-3 text-sm bg-white">
-                  <span>Standard Shipping</span>
-                  <span>$0</span>
-                </div>
-              </div>
-              <div>
                 <p className=" text-lg  font-semibold">Payment</p>
                 <p className=" text-slate-600 text-base mb-1 font-normal">
                   All transactions are secure and encrypted.
@@ -336,7 +328,7 @@ const CheckoutComponent = () => {
         <div>
           <div className="border bg-white border-slate-200 rounded-md">
             <div className="flex py-3 pt-4 px-4 justify-between items-center">
-              <p>Product </p>
+              <p>Product{carts?.length > 1 && "s"} </p>
               <p>Subtotal</p>
             </div>
             <ul className="px-4 divide-y  divide-slate-200">
@@ -425,7 +417,8 @@ const CheckoutComponent = () => {
                   disabled={carts?.length === 0 || isLoading}
                 >
                   {isLoading && <SpinnerLoading />}
-                  Order Now
+                  Confirm Order - {currency}
+                  {(totalCartPrice + totalShipping + totalTax).toFixed(2)}
                 </Button>
 
                 <Link href={"/"}>

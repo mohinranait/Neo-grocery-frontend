@@ -5,7 +5,7 @@ export type TAddress = {
     phone: string,
     address: string,
     city: string,
-    postalCode: string,
+    subCity: string,
     type : "Home" |'Office'|'Others'
 }
 

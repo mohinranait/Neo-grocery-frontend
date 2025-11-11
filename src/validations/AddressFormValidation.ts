@@ -4,8 +4,6 @@ import { TAddress } from "@/types/address.type";
   export const addressFormValidation = (address:TAddress) => {
     const newErrors: Record<string, string> = {};
 
-    // If user not login
-
     // Check if firstName is not empty
     if (!address.firstName) {
       newErrors.firstName = "First name is required";
@@ -21,14 +19,13 @@ import { TAddress } from "@/types/address.type";
       newErrors.address = "Address is required";
     }
 
-    // Validate postal code (example: 5 digits)
-    if (!address.postalCode) {
-      newErrors.postalCode = "Postal code is required";
-    }
-
     // Check if city is not empty
     if (!address.city) {
       newErrors.city = "City is required.";
+    }
+    // Check if city is not empty
+    if (!address.subCity) {
+      newErrors.subCity = "Sub City is required.";
     }
 
     // Validate phone number (basic validation for length)

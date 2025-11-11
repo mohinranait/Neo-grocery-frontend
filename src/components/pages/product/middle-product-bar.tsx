@@ -1,12 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TProduct } from "@/types/product.type";
-import { Check, CircleX, Heart, Share2, Star } from "lucide-react";
+import { Check, CircleX, Heart, Phone, Share2, Star } from "lucide-react";
 import React from "react";
 import ActionsButton from "./ActionsButton";
 import Link from "next/link";
 import { TCategoryType } from "@/types/category.type";
 import { TBrandType } from "@/types/brand.type";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Image from "next/image";
 
 type Props = {
   product: TProduct;
@@ -148,6 +157,48 @@ const MiddleProductBar = ({
           )}
         </div>
       )}
+      <div className="flex gap-2">
+        <Button
+          className="w-full rounded bg-green-700 hover:bg-green-600"
+          type="button"
+        >
+          <Image
+            src={"/WhatsApp.png"}
+            width={20}
+            height={20}
+            alt="WhatsApp logo"
+          />
+          WhatsApp
+        </Button>
+        <Button
+          className="w-full rounded text-white bg-green-800 hover:bg-green-700"
+          type="button"
+        >
+          <Phone className="w-4 h-4 mr-2" />
+          Call Now
+        </Button>
+      </div>
+      <div className="border">
+        <p className="text-center py-1 text-base">Delivery Charge</p>
+        <Table className="border-t">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="h-8 font-medium border-r px-2 py-0">
+                Inside Dhaka
+              </TableHead>
+              <TableHead className="h-8 font-medium  px-2 py-0">
+                Outside Dhaka
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="border-r px-2 py-1">TK 80</TableCell>
+              <TableCell className=" px-2 py-1">TK 130</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

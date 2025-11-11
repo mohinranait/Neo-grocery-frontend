@@ -115,7 +115,7 @@ const ProductCard = ({ product, className }: Props) => {
               height={400}
               src={featureImg || featureImage?.image}
               alt={product.name}
-              className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-48 object-cover rounded-lg transition-transform duration-300"
             />
             {newProduct(product) && (
               <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">

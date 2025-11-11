@@ -25,7 +25,6 @@ import { TBrandType } from "@/types/brand.type";
 import { TCategoryType } from "@/types/category.type";
 
 import StarRating from "@/components/utils/StarRating";
-import ProductGrid from "@/components/pages/product/product-grid";
 import { getCommentsByProductId } from "@/actions/commentApi";
 import { TProductComment as BaseProductComment } from "@/types/comment.type";
 import LeftProductBar from "@/components/pages/product/left-product-bar";
@@ -165,9 +164,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
               <TabsTrigger value="details" className="w-full py-2">
                 Details
               </TabsTrigger>
-              <TabsTrigger value="attributes" className="w-full py-2">
-                Attribue
-              </TabsTrigger>
+
               <TabsTrigger value="reviews" className="w-full py-2">
                 Reviews
               </TabsTrigger>
@@ -185,9 +182,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                 )}
               </div>
             </TabsContent>
-            <TabsContent value="attributes">
-              Change your password here.
-            </TabsContent>
+
             <TabsContent value="reviews">
               <div className="col-span-2  py-4">
                 <div className="bg-white text-sm font-semibold text-gray-700 px-5 py-3 border-b border-gray-100 ">
@@ -274,11 +269,6 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
           </Tabs>
         </div>
         <div></div>
-      </div>
-
-      <div className="container">
-        <p className="text-xl text-black font-semibold mb-2">Relted Products</p>
-        <ProductGrid />
       </div>
     </section>
   );

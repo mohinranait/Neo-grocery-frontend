@@ -69,7 +69,11 @@ const OrderSuccessPage = async ({
                       key={index}
                       className="flex gap-7 justify-between py-3 items-center"
                     >
-                      <div className="flex items-center  gap-2 md:gap-3 relative">
+                      <div className="flex items-center relative gap-2 md:gap-3 ">
+                        <span className="w-5 h-5 text-white absolute -top-1 -left-1 rounded-full bg-slate-400 flex items-center justify-center text-sm">
+                          {cart?.quantity}
+                        </span>
+
                         <Image
                           src={cart?.image}
                           width={60}

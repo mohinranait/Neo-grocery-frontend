@@ -17,7 +17,7 @@ const ProductCartCounter = ({ increment, decrement, quantity }: Props) => {
             quantity === 1
               ? " text-slate-400 hover:bg-slate-200 hover:text-slate-400"
               : ""
-          } w-10 h-10 rounded-full flex items-center justify-center border border-main bg-white hover:bg-main   text-gray-900 hover:text-white cursor-pointer`}
+          } w-10 h-10 rounded-full flex items-center justify-center border border-main bg-main   text-white cursor-pointer`}
         >
           <Minus className="" size={16} />
         </button>
@@ -31,7 +31,7 @@ const ProductCartCounter = ({ increment, decrement, quantity }: Props) => {
             quantity === 20
               ? " text-slate-400 hover:bg-slate-200 hover:text-slate-400"
               : ""
-          } w-10 h-10 rounded-full flex items-center justify-center border border-main bg-white hover:bg-main   text-gray-900 hover:text-white cursor-pointer`}
+          } w-10 h-10 rounded-full flex items-center justify-center border border-main bg-main   text-white cursor-pointer`}
         >
           <Plus className="" size={16} />
         </button>

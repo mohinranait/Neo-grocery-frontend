@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 
 const Header = () => {
   // Redux state
-  const { totalQuantity, totalShipping, totalTax } = useAppSelector(
+  const { carts, totalShipping, totalTax } = useAppSelector(
     (state) => state.cart
   );
   const totalCartPrice = useTotalCartPrice();
@@ -228,7 +228,7 @@ const Header = () => {
                       </span>
                     </div>
                     <span className="absolute -top-2 left-1.5 text-white text-xs h-5 w-5 flex items-center justify-center bg-red-500 rounded-full ml-1">
-                      {totalQuantity}
+                      {carts?.length > 9 ? "9+" : carts?.length}
                     </span>
                   </button>
                 </li>

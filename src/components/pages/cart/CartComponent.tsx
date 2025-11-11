@@ -28,11 +28,16 @@ const CartComponent = () => {
           <div className="py-4 px-4 rounded bg-white border border-slate-200">
             <p className="text-gray-800 mb-1">
               Free shipping delivery{" "}
-              <span className="text-main">{currency}1000 </span>{" "}
+              <span className="text-main">{currency}10,000 </span>{" "}
             </p>
             <div className="w-full bg-gray-200 rounded-3xl relative h-2">
-              <span className="absolute -top-6 right-0 ">60%</span>
-              <div className="w-[60%] bg-main h-2 rounded-3xl"></div>
+              <span className="absolute -top-6 right-0 ">
+                {((totalCartPrice / 10000) * 100).toFixed(0)}%
+              </span>
+              <div
+                className={`w-[60%] bg-main h-2 rounded-3xl`}
+                style={{ width: (totalCartPrice / 10000) * 100 }}
+              ></div>
             </div>
           </div>
           {carts?.length === 0 && <EmptyCartComponent />}
@@ -129,7 +134,8 @@ const CartComponent = () => {
               )}
               <div className="">
                 <p className="text-gray-700 font-semibold">
-                  Free Delivery for <span className="text-main ">1000%</span>{" "}
+                  Free Delivery for orders over{" "}
+                  <span className="text-main "> {currency}10000</span>{" "}
                 </p>
               </div>
             </div>

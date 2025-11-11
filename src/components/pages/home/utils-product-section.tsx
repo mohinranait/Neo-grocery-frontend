@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/hooks/useRedux";
 import React from "react";
 import UtilsCard from "./utils-card";
@@ -18,7 +17,6 @@ const UtilsProductSection = () => {
           <div>
             <p className="text-lg font-semibold text-gray-800">Top Rating</p>
           </div>
-          <Button variant={"link"}>View all</Button>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {ratingProducts?.slice(0, 9)?.map((product, index) => (

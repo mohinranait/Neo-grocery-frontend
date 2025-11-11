@@ -1,5 +1,5 @@
 // Define currency
-export const currency:string = '$'
+export const currency:string = '৳'
 
 
 // Generate random code 

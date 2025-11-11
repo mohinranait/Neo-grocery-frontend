@@ -24,7 +24,7 @@ import { Separator } from "../ui/separator";
 const CartSheets = () => {
   const pathName = usePathname();
   // Redux state
-  const { carts, totalQuantity, totalShipping, totalTax } = useAppSelector(
+  const { carts, totalShipping, totalTax } = useAppSelector(
     (state) => state.cart
   );
   const { cartSidebarOpen } = useAppSelector((state) => state.ui);
@@ -46,7 +46,7 @@ const CartSheets = () => {
         <SheetHeader className="p-4">
           <SheetTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Shopping Cart ({totalQuantity} items)
+            Shopping Cart ({carts?.length} items)
           </SheetTitle>
         </SheetHeader>
 
