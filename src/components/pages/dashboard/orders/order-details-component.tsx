@@ -647,7 +647,7 @@ export default function OrderDetailsComponent({ order }: Props) {
                     </p>
                     <p className="text-sm text-gray-600">
                       Address: {address?.address}, {address?.city},
-                      {address?.postalCode}
+                      {address?.subCity}
                     </p>
                     <p className="text-sm text-gray-600">
                       Receive from:{" "}

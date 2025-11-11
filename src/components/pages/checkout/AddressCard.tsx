@@ -60,7 +60,7 @@ const AddressCard = ({
       lastName: address?.lastName,
       phone: address?.phone,
       address: address?.address,
-      postalCode: address?.postalCode,
+      subCity: address?.subCity,
       city: address?.city,
       type: address?.type,
     }));
@@ -125,9 +125,8 @@ const AddressCard = ({
             <div className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-gray-600 leading-relaxed">
-                {address.address}, {address.city}, {address.postalCode}
+                {address.address}, {address.subCity}, {address.city},
                 <br />
-                United States
               </div>
             </div>
 
@@ -154,7 +153,7 @@ const AddressCard = ({
                 type="button"
                 variant="outline"
                 size="sm"
-                className=" gap-2"
+                className="gap-2"
               >
                 <Trash className="w-3 h-3" />
               </Button>

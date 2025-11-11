@@ -32,7 +32,7 @@ const AddressLists = () => {
     lastName: "",
     phone: "",
     address: "",
-    postalCode: "",
+    subCity: "",
     city: "",
     type: "Home",
   });
@@ -49,7 +49,7 @@ const AddressLists = () => {
       lastName: address?.lastName,
       phone: address?.phone,
       address: address?.address,
-      postalCode: address?.postalCode,
+      subCity: address?.subCity,
       city: address?.city,
       type: address?.type as "Home" | "Office" | "Others",
     };
@@ -98,7 +98,7 @@ const AddressLists = () => {
       lastName: "",
       phone: "",
       address: "",
-      postalCode: "",
+      subCity: "",
       city: "",
       type: "Home",
     });
