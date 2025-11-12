@@ -14,7 +14,7 @@ const SectionRow = ({ section }: Props) => {
       {section?.type === "grid" ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5   gap-3">
           {products?.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product} isRating={false} />
           ))}
         </div>
       ) : (

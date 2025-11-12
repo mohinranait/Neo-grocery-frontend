@@ -1,6 +1,7 @@
 import { TRegisterType } from "@/components/forms/RegisterForm";
 import { TVerifyEmailType } from "@/components/forms/VerifyForm";
 import { instance } from "@/hooks/useAxios";
+import { TUserUpdateType } from "@/types/user.type";
 
 /**
  * Create new user
@@ -15,6 +16,23 @@ export const userRegister = async (formData:TRegisterType) => {
 */
 export const userLogin = async (formData:{email:string;password:string}) => {
     const {data} = await instance.post(`/user/login`, { ...formData  });
+    return data;
+}
+/**
+ * User information update method
+*/
+
+export const userUpdate = async (formData:TUserUpdateType, userId:string) => {
+    const {data} = await instance.patch(`/user/${userId}`, { ...formData  });
+    return data;
+}
+
+
+/**
+ * Change passwrod By UserID
+*/
+export const changePassword = async (formData:{password:string;userId:string;oldPassword:string}) => {
+    const {data} = await instance.patch(`/change-password?accessBy=user`,{...formData});
     return data;
 }
 

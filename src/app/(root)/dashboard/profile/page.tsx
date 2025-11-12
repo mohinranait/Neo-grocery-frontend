@@ -1,6 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import {
   Card,
   CardContent,
@@ -8,10 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,25 +29,66 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Camera, Pen, Save, Shield } from "lucide-react";
-import { useAppSelector } from "@/hooks/useRedux";
+import {
+  CalendarCheck,
+  Camera,
+  LoaderCircle,
+  Pen,
+  Save,
+  Shield,
+  X,
+} from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { userUpdate } from "@/actions/authApi";
+import { setAuthUser } from "@/redux/features/authSlice";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
+import ChangePassword from "@/components/pages/dashboard/profile/ChangePassword";
 
 export default function UpdateProfile() {
+  const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const { user } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
-    name: "Md. Mahir Shikder",
-    email: "mahir@example.com",
-    phone: "+8801728068200",
-    dateOfBirth: "15 Jan, 2020",
+    name: {
+      firstName: "",
+      lastName: "",
+    },
+    email: "",
+    phone: "",
+    dateOfBirth: new Date(Date.now()),
     gender: "Male",
-    address: "Uttara, Dhaka - 1205",
-    bio: "Web Developer ,my hobbi is sportser",
   });
 
-  const handleSave = () => {
-    // Save logic here
-    setIsEditing(false);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      name: {
+        firstName: user?.name?.firstName || "",
+        lastName: user?.name?.lastName || "",
+      },
+      email: user?.email || "",
+      phone: user?.phone || "",
+      gender: user?.gender || "",
+      dateOfBirth: user?.dateOfBirth || new Date(Date.now()),
+    }));
+  }, [user]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const res = await userUpdate(formData, user?._id as string);
+      if (res?.success) {
+        toast.success("Profile updated successfully");
+        dispatch(setAuthUser(res?.payload));
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -52,22 +100,6 @@ export default function UpdateProfile() {
             Manage your personal information and settings
           </p>
         </div>
-        <Button
-          onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
-          className="flex items-center gap-2"
-        >
-          {isEditing ? (
-            <>
-              <Save className="h-4 w-4" />
-              Save
-            </>
-          ) : (
-            <>
-              <Pen className="h-4 w-4" />
-              Edit
-            </>
-          )}
-        </Button>
       </div>
 
       <Tabs defaultValue="personal" className="space-y-4">
@@ -104,7 +136,9 @@ export default function UpdateProfile() {
                     </Button>
                   </div>
                   <div className="text-center">
-                    <h3 className="font-medium">{formData.name}</h3>
+                    <h3 className="font-medium">
+                      {user?.name?.firstName} {user?.name?.lastName}
+                    </h3>
                     <p className="text-sm text-muted-foreground">Customer</p>
                     <Badge variant="outline" className="mt-1">
                       Verifyed
@@ -116,21 +150,53 @@ export default function UpdateProfile() {
 
             {/* Personal Information Form */}
             <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Personal information</CardTitle>
-                <CardDescription>
-                  Update your personal information.
-                </CardDescription>
+              <CardHeader className="flex items-center justify-between flex-row">
+                <div>
+                  <CardTitle>Personal information</CardTitle>
+                  <CardDescription>
+                    Update your personal information.
+                  </CardDescription>
+                </div>
+                <div className="flex gap-3 items-center">
+                  {!isEditing && (
+                    <Button
+                      onClick={() =>
+                        isEditing ? handleSave() : setIsEditing(true)
+                      }
+                      className="flex items-center gap-2"
+                    >
+                      <Pen className="h-4 w-4" />
+                      Edit
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="name">First Name</Label>
                     <Input
                       id="name"
-                      value={formData.name}
+                      value={formData.name?.firstName}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        setFormData({
+                          ...formData,
+                          name: { ...formData.name, firstName: e.target.value },
+                        })
+                      }
+                      disabled={!isEditing}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Last Name</Label>
+                    <Input
+                      id="name"
+                      value={formData.name?.lastName}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          name: { ...formData.name, lastName: e.target.value },
+                        })
                       }
                       disabled={!isEditing}
                     />
@@ -140,10 +206,8 @@ export default function UpdateProfile() {
                     <Input
                       id="email"
                       type="email"
+                      readOnly={true}
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
                       disabled={!isEditing}
                     />
                   </div>
@@ -160,17 +224,38 @@ export default function UpdateProfile() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="dob">Date of Birth</Label>
-                    <Input
-                      id="dob"
-                      value={formData.dateOfBirth}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          dateOfBirth: e.target.value,
-                        })
-                      }
-                      disabled={!isEditing}
-                    />
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          id="date"
+                          disabled={!isEditing}
+                          className="w-full justify-between font-normal"
+                        >
+                          {formData?.dateOfBirth
+                            ? format(formData?.dateOfBirth, "MMM dd, yyyy")
+                            : "Select date"}
+                          <CalendarCheck />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={formData?.dateOfBirth}
+                          captionLayout="dropdown"
+                          onSelect={(date) => {
+                            setFormData({
+                              ...formData,
+                              dateOfBirth: date as unknown as Date,
+                            });
+                            setOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="gender">Gender</Label>
@@ -187,37 +272,39 @@ export default function UpdateProfile() {
                       <SelectContent>
                         <SelectItem value="Male">Male</SelectItem>
                         <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Others">Others</SelectItem>
+                        <SelectItem value="Other">Others</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) =>
-                      setFormData({ ...formData, address: e.target.value })
-                    }
-                    disabled={!isEditing}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
-                  <Textarea
-                    id="bio"
-                    value={formData.bio}
-                    onChange={(e) =>
-                      setFormData({ ...formData, bio: e.target.value })
-                    }
-                    disabled={!isEditing}
-                    rows={3}
-                  />
-                </div>
+                {isEditing && (
+                  <div className="flex items-center gap-3">
+                    <Button
+                      disabled={isLoading}
+                      onClick={() =>
+                        isEditing ? handleSave() : setIsEditing(true)
+                      }
+                      className="flex items-center gap-2"
+                    >
+                      {isLoading ? (
+                        <LoaderCircle className="animate-spin" />
+                      ) : (
+                        <Save className="h-4 w-4" />
+                      )}
+                      Save
+                    </Button>
+                    <Button
+                      disabled={isLoading}
+                      variant={"destructive"}
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="flex items-center gap-2"
+                    >
+                      <X className="h-4 w-4" />
+                      Cancel
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -237,19 +324,7 @@ export default function UpdateProfile() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="current-password">Present Password</Label>
-                  <Input id="current-password" type="password" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="new-password">New Password</Label>
-                  <Input id="new-password" type="password" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input id="confirm-password" type="password" />
-                </div>
-                <Button className="w-full">Update Password</Button>
+                <ChangePassword />
               </CardContent>
             </Card>
 

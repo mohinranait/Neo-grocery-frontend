@@ -14,6 +14,18 @@ export type TUserType = {
     profile?: string; 
     role: "Admin" | "User" | "Manager";
     status: "Active" | "Pending" | "Banned";
-    age?: number;
+    dateOfBirth?: Date;
     gender: "Male" | "Female" | "Other";
+}
+
+
+// Update user information type for typeScript
+export type TUserUpdateType = {
+    name: {
+        firstName: string;
+        lastName: string;
+    };
+    phone: string;
+    dateOfBirth: Date;
+    gender: string;
 }

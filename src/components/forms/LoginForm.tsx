@@ -17,6 +17,7 @@ import { setAllCarts } from "@/redux/features/shoppingCartSlice";
 import { getAllFavoriteProducts } from "@/actions/favoriteApi";
 import { setFavorites } from "@/redux/features/favoriteSlice";
 import Logo from "../shared/Logo";
+import { AxiosError } from "axios";
 
 type Inputs = {
   email: string;
@@ -79,8 +80,8 @@ const LoginForm = () => {
         toast.error("Somthing wrong");
       }
     } catch (error) {
-      toast.error("Somthing wrong");
-      console.log(error);
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
   };
 

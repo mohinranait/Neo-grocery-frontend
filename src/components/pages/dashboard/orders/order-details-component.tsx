@@ -19,6 +19,7 @@ import {
   Box,
   X,
   Repeat2,
+  ArrowLeft,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ import { TOrder } from "@/types/order.type";
 import OrderItem from "./order-item";
 import { format } from "date-fns";
 import { currency } from "@/helpers/utils";
+import { useRouter } from "next/navigation";
 
 interface OrderItem {
   id: string;
@@ -100,11 +102,10 @@ type Props = {
   order: TOrder;
 };
 export default function OrderDetailsComponent({ order }: Props) {
+  const router = useRouter();
   const getStatusIndex = (status: string) => {
     return statusSteps.findIndex((step) => step.key === status);
   };
-
-  console.log({ order });
 
   // Sub total
   const subTotal = order?.items?.reduce(
@@ -472,9 +473,19 @@ export default function OrderDetailsComponent({ order }: Props) {
         <div className="">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
+              <Button
+                onClick={() => router.back()}
+                type="button"
+                size={"icon"}
+                variant={"outline"}
+              >
+                <ArrowLeft />
+              </Button>
               <div>
                 <h1 className="text-xl font-semibold">Order Details</h1>
-                <p className="text-sm text-gray-500">Order #{order?.uid}</p>
+                <p className="text-sm text-gray-500 uppercase">
+                  Order #{order?.uid}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -510,7 +521,7 @@ export default function OrderDetailsComponent({ order }: Props) {
                 <div>
                   <p className="text-sm text-gray-600">Order Date</p>
                   <p className="font-medium">
-                    {format(new Date(order.createdAt), "dd MMM yyyy, hh:mm a")}
+                    {format(new Date(order?.createdAt), "dd MMM yyyy, hh:mm a")}
                   </p>
                 </div>
               </div>
@@ -518,14 +529,14 @@ export default function OrderDetailsComponent({ order }: Props) {
                 <Hash className="h-5 w-5 text-gray-400" />
                 <div>
                   <p className="text-sm text-gray-600">Invoice Number</p>
-                  <p className="font-medium">INV-2024-001234</p>
+                  <p className="font-medium uppercase">INV-{order?.uid}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Package className="h-5 w-5 text-gray-400" />
                 <div>
                   <p className="text-sm text-gray-600">Tracking Number</p>
-                  <p className="font-medium">TRK-{order?.uid}</p>
+                  <p className="font-medium uppercase">TRK-{order?.uid}</p>
                 </div>
               </div>
             </div>
@@ -621,7 +632,7 @@ export default function OrderDetailsComponent({ order }: Props) {
                 <Separator />
                 <div className="flex justify-between font-semibold">
                   <span>Total:</span>
-                  <span className="text-green-600">
+                  <span className="text-main">
                     {formatCurrency(order?.totalAmount)}
                   </span>
                 </div>

@@ -161,7 +161,7 @@ export default function Dashboard() {
                       {currency}
                       {order.totalAmount}
                     </span>
-                    <Link href={`/dashboard/orders/${order?._id}`}>
+                    <Link href={`/dashboard/orders/${order?.uid}`}>
                       <Button variant="ghost" size="sm">
                         <Eye className="h-4 w-4" />
                       </Button>

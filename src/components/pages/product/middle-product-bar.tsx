@@ -58,7 +58,7 @@ const MiddleProductBar = ({
                   </Button>
                 </div>
               </div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
                 {product?.name}
               </h1>
             </div>
@@ -88,7 +88,7 @@ const MiddleProductBar = ({
 
           {/* Description */}
           {product?.productShortDesc && (
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
               {product?.productShortDesc}
             </p>
           )}
@@ -146,7 +146,7 @@ const MiddleProductBar = ({
               {categories?.map((cat: TCategoryType, index: number) => (
                 <Link
                   key={index}
-                  href={`/brand/${cat?.slug}`}
+                  href={`/shop?cat=${cat?._id}`}
                   className="text-gray-500 hover:underline hover:text-gray-700 text-sm"
                 >
                   {cat?.name},

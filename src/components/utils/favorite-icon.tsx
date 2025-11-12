@@ -31,7 +31,10 @@ const FavoriteIcon = ({ product, className }: Props) => {
         <LoaderCircle className="animate-spin w-4 h-4" />
       ) : (
         <Heart
-          className={cn("w-4 h-4", isFavorite(product)?._id && "text-red-700")}
+          className={cn(
+            "w-4 h-4",
+            isFavorite(product)?._id && "text-red-700 fill-red-700 "
+          )}
         />
       )}
     </Button>

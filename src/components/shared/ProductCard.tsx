@@ -27,8 +27,9 @@ import { DEFAULT_IMAGE } from "@/helpers/secretVariable";
 type Props = {
   product: TProduct;
   className?: string;
+  isRating?: boolean;
 };
-const ProductCard = ({ product, className }: Props) => {
+const ProductCard = ({ product, className, isRating = true }: Props) => {
   const { name, slug, featureImage, price } = product || {};
   // Redux State
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
@@ -163,21 +164,23 @@ const ProductCard = ({ product, className }: Props) => {
               </Link>
             </h3>
 
-            <div className="flex items-center gap-1 ">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-3 h-3 ${
-                    i < Math.floor(product?.avgRating || 0)
-                      ? "fill-yellow-500 text-yellow-500"
-                      : "text-yellow-500"
-                  }`}
-                />
-              ))}
-              <span className="text-xs text-gray-500 ml-1">
-                ({product?.totalComments})
-              </span>
-            </div>
+            {isRating && (
+              <div className="flex items-center gap-1 ">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-3 h-3 ${
+                      i < Math.floor(product?.avgRating || 0)
+                        ? "fill-yellow-500 text-yellow-500"
+                        : "text-yellow-500"
+                    }`}
+                  />
+                ))}
+                <span className="text-xs text-gray-500 ml-1">
+                  ({product?.totalComments})
+                </span>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               {product?.variant === "Variable Product" ? (

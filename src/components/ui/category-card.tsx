@@ -16,7 +16,7 @@ const CategoryCard = ({ category, index }: Props) => {
       key={index}
       className={`group relative overflow-hidden rounded-2xl ${categoryColors[index].bgColor} border border-gray-100 hover:border-main-light transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer`}
     >
-      <div className="p-4 lg:p-6 text-center">
+      <div className="p-4  text-center">
         {/* Icon Container */}
         <div
           className={`w-16 h-16 lg:w-20 lg:h-20 mx-auto mb-3 lg:mb-4 rounded-2xl bg-gradient-to-br ${categoryColors[index].color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 `}
@@ -32,13 +32,13 @@ const CategoryCard = ({ category, index }: Props) => {
 
         {/* Category Info */}
         <h3
-          className={`font-bold text-gray-900 text-sm  mb-1  group-hover:text-main transition-colors`}
+          className={`font-bold text-gray-900 text-sm    group-hover:text-main transition-colors`}
         >
           {category?.name}
         </h3>
-        <p className="text-xs  text-gray-500 font-medium">
+        {/* <p className="text-xs  text-gray-500 font-medium">
           {category?.productCount || 0} Items
-        </p>
+        </p> */}
 
         {/* Hover Effect Badge */}
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

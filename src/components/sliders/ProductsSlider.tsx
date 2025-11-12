@@ -24,7 +24,7 @@ const ProductsSlider = ({ products }: Props) => {
               key={index}
               className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} isRating={false} />
             </CarouselItem>
           ))}
         </CarouselContent>

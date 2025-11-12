@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import {
   BadgeDollarSign,
+  Banknote,
   ShieldCheck,
   Truck,
   VerifiedIcon,
@@ -29,6 +30,8 @@ import { getCommentsByProductId } from "@/actions/commentApi";
 import { TProductComment as BaseProductComment } from "@/types/comment.type";
 import LeftProductBar from "@/components/pages/product/left-product-bar";
 import MiddleProductBar from "@/components/pages/product/middle-product-bar";
+import { Metadata } from "next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type TProductComment = BaseProductComment & {
   userId: {
@@ -38,6 +41,27 @@ type TProductComment = BaseProductComment & {
     };
   };
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { payload } = await getSingleProduct(slug);
+  const product: TProduct = payload;
+  const previousImages = product?.featureImage?.image || null;
+
+  return {
+    title: product?.seo_title || product?.name + " - Collection BD",
+    description: product?.seo_desc || "",
+    keywords: product?.seo_keyword || [],
+    openGraph: {
+      url: `${process.env.NEXT_PUBLIC_CLIENT_URL}/product/${product?.slug}`,
+      images: [previousImages || ""],
+    },
+  };
+}
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProduct(params?.slug);
@@ -99,7 +123,9 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{product?.name}</BreadcrumbPage>
+              <BreadcrumbPage>
+                {product?.productName || product?.name}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -128,7 +154,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                     </div>
                   </div>
                   <p className="text-xs text-gray-500">
-                    Free Shipping apply to all orders over $100
+                    সমস্ত বাংলাদেশে ০৩ দিনের মধ্যে ডেলিভারি।
                   </p>
                 </li>
                 <li className="items-center flex  gap-2">
@@ -138,7 +164,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                     </div>
                   </div>
                   <p className="text-xs text-gray-500">
-                    Free Shipping apply to all orders over $100
+                    আমাদের সকল প্রোডাক্ট ১০০% অরিজিনাল এবং গ্যারান্টেড।
                   </p>
                 </li>
                 <li className="items-center flex  gap-2">
@@ -148,7 +174,15 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
                     </div>
                   </div>
                   <p className="text-xs text-gray-500">
-                    1 Day Returns if you change your mind
+                    আমাদের প্রোডাক্টে সেরা মূল্য এবং মান নিশ্চিত এবং সেরা অফার।
+                  </p>
+                </li>
+                <li className="items-center flex  gap-2">
+                  <div className="w-7 text-gray-500">
+                    <Banknote />
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    আমাদের সাথে নিরাপদ এবং সহজ পেমেন্ট অপশন।
                   </p>
                 </li>
               </ul>
@@ -158,7 +192,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
       </div>
 
       <div className="container grid grid-cols-4 gap-4">
-        <div className="col-span-3">
+        <div className="col-span-4 lg:col-span-3">
           <Tabs defaultValue="details" className="">
             <TabsList className="w-full h-auto ">
               <TabsTrigger value="details" className="w-full py-2">
@@ -171,8 +205,8 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             </TabsList>
             <TabsContent value="details">
               <div className="bg-white col-span-2 px-5 py-4">
-                <p className="font-semibold text-sm mb-2 text-gray-700">
-                  Product details of {product?.name}
+                <p className="font-semibold text-lg mb-2 text-gray-900">
+                  Product details of {product?.productName}
                 </p>
                 {product?.details && (
                   <div
@@ -186,7 +220,7 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
             <TabsContent value="reviews">
               <div className="col-span-2  py-4">
                 <div className="bg-white text-sm font-semibold text-gray-700 px-5 py-3 border-b border-gray-100 ">
-                  Ratings & Reviews of {product?.name}
+                  Ratings & Reviews of {product?.productName}
                 </div>
                 <div className="md:grid grid-cols-3 pb-5 gap-5 bg-white py-4 px-5">
                   <div className=" space-y-2 mb-6 lg:mb-0">
@@ -269,6 +303,53 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
           </Tabs>
         </div>
         <div></div>
+      </div>
+      <div className="container">
+        <Card>
+          <CardHeader>
+            <CardTitle>Delivery and Return Policy</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div>
+              <p className=" font-semibold"> ডেলিভারি পদ্ধতি</p>
+              <ul className="list-disc list-inside text-sm space-y-2 mt-1 mb-4 text-gray-800">
+                <li>
+                  <span>ঢাকার মধ্যেঃ </span> হোম ডেলিভারি।পণ্য হাতে পাবার পর দাম
+                  পরিশোধ করুন।
+                </li>
+                <li>
+                  <span>ঢাকার বাইরেঃ </span> দেশের সকল জেলা-উপজেলা এবং ইউনিয়ন
+                  পর্যায়ে পাচ্ছেন হোম ডেলিভারি সুবিধা। পণ্য হাতে পাবার পর দাম
+                  পরিশোধ করুন।
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className=" font-semibold">রিটার্ন পলিসি</p>
+              <ul className=" space-y-2 mt-1 mb-4 text-sm text-gray-800">
+                <li>
+                  প্রোডাক্টটি অবশ্যই ডেলিভারি ম্যানের সামনে দেখে-বুঝে নিবেন।
+                  প্রোডাক্ট পছন্দ না হলে কিংবা কোন সমস্যা থাকলে আমাদের
+                  হেল্পলাইনে কল করে আপনার সমস্যার কথা জানাবেন। অন্যথায়
+                  প্রোডাক্ট আনবক্সিং করার সময় অবশ্যই ভিডিও করে সেটা আমাদের
+                  পাঠাবেন। সমস্যা থাকলে আমরা সেটা এক্সচেঞ্জ করে দিবো তবে আপনাকে
+                  পুনরায় ডেলিভারি চার্জ দিয়ে প্রোডাক্টটি রিসিভ করতে হবে।
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className=" font-semibold">ডেলিভারী চার্জ</p>
+              <ul className="list-disc list-inside space-y-2 mt-1 mb-4 text-sm text-gray-800">
+                <li>
+                  <span>ঢাকার মধ্যেঃ </span> 80/- টাকা
+                </li>
+                <li>
+                  <span>ঢাকার বাইরেঃ </span> 130/- টাকা
+                </li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
