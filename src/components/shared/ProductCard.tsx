@@ -101,7 +101,7 @@ const ProductCard = ({ product, className }: Props) => {
     <>
       <Card
         className={cn(
-          "group h-full hover:shadow-lg transition-all duration-300 border-0 shadow-md",
+          "group h-full  transition-all duration-300 border-0 shadow",
           className
         )}
       >

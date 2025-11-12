@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TProduct } from "@/types/product.type";
-import { Check, CircleX, Heart, Phone, Share2, Star } from "lucide-react";
+import { Check, CircleX, Phone, Share2, Star } from "lucide-react";
 import React from "react";
 import ActionsButton from "./ActionsButton";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
+import FavoriteIcon from "@/components/utils/favorite-icon";
 
 type Props = {
   product: TProduct;
@@ -45,15 +46,13 @@ const MiddleProductBar = ({
                   Original
                 </Badge>
                 <div className="flex gap-2 items-center">
+                  <FavoriteIcon
+                    product={product}
+                    className="static bg-transparent hover:bg-transparent text-gray-600"
+                  />
                   <Button
                     variant="link"
-                    className="text-gray-600 h-auto py-1 px-1"
-                  >
-                    <Heart className="w-4 h-4 mr-1" />
-                  </Button>
-                  <Button
-                    variant="link"
-                    className="text-gray-600 h-auto py-1 px-1"
+                    className="text-gray-600 hover:text-gray-800 h-auto py-1 px-1"
                   >
                     <Share2 className="w-4 h-4" />
                   </Button>

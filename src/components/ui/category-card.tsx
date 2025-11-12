@@ -32,11 +32,11 @@ const CategoryCard = ({ category, index }: Props) => {
 
         {/* Category Info */}
         <h3
-          className={`font-bold text-gray-900 text-sm lg:text-base mb-1 lg:mb-2 group-hover:text-main transition-colors`}
+          className={`font-bold text-gray-900 text-sm  mb-1  group-hover:text-main transition-colors`}
         >
           {category?.name}
         </h3>
-        <p className="text-xs lg:text-sm text-gray-500 font-medium">
+        <p className="text-xs  text-gray-500 font-medium">
           {category?.productCount || 0} Items
         </p>
 

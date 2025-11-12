@@ -2,12 +2,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import FavoriteIcon from "@/components/utils/favorite-icon";
 import { calculateProductPrice, newProduct } from "@/helpers/product.helper";
 import { currency } from "@/helpers/utils";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setProductModal } from "@/redux/features/uiSlice";
 import { TProduct } from "@/types/product.type";
-import { ArrowRight, Heart, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -53,7 +54,7 @@ const MasonaryProducts = () => {
           {/* Large Featured Product */}
           {feature && (
             <div className="md:col-span-2 md:row-span-2 grid grid-rows-2 gap-6">
-              <Card className=" group hover:shadow-xl transition-shadow duration-300">
+              <Card className=" group transition-shadow duration-300">
                 <CardContent className="p-0 md:grid grid-cols-2 h-full">
                   <div className="relative md:h-full overflow-hidden rounded-lg rounded-r-none">
                     <Image
@@ -71,13 +72,10 @@ const MasonaryProducts = () => {
                       </Badge>
                     )}
 
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="absolute top-4 right-4 bg-white/80 hover:bg-white"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
+                    <FavoriteIcon
+                      product={feature}
+                      className="!top-3 !right-3"
+                    />
                   </div>
                   <div className="p-6">
                     <div className="flex items-center mb-2">
@@ -127,7 +125,7 @@ const MasonaryProducts = () => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className=" group hover:shadow-xl transition-shadow duration-300">
+              <Card className=" group  transition-shadow duration-300">
                 <CardContent className="p-0 md:grid grid-cols-2 h-full">
                   <div className="relative md:h-full overflow-hidden rounded-lg rounded-r-none">
                     <Image
@@ -145,13 +143,10 @@ const MasonaryProducts = () => {
                       </Badge>
                     )}
 
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="absolute top-4 right-4 bg-white/80 hover:bg-white"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
+                    <FavoriteIcon
+                      product={featured}
+                      className="!top-3 !right-3"
+                    />
                   </div>
                   <div className="p-6">
                     <div className="flex items-center mb-2">
@@ -206,10 +201,7 @@ const MasonaryProducts = () => {
 
           {/* Regular Products */}
           {normalProducts?.slice(1, 5).map((product, index) => (
-            <Card
-              key={index}
-              className="group hover:shadow-lg transition-shadow duration-300"
-            >
+            <Card key={index} className="group  transition-shadow duration-300">
               <CardContent className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Image
@@ -225,13 +217,8 @@ const MasonaryProducts = () => {
                       New
                     </Badge>
                   )}
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-                  >
-                    <Heart className="w-4 h-4" />
-                  </Button>
+
+                  <FavoriteIcon product={product} />
                 </div>
                 <div className="p-4">
                   <div className="flex items-center mb-2">

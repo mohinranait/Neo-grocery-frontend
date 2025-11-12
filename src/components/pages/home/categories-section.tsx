@@ -13,8 +13,8 @@ const CategoriesSection = () => {
     <section className="py-12 lg:py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-8 lg:mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
+        <div className="text-center mb-8 ">
+          <h2 className="text-3xl  font-bold text-gray-900 mb-1">
             Shop by{" "}
             <span className="bg-gradient-to-r from-main to-main-light bg-clip-text text-transparent">
               Categories
