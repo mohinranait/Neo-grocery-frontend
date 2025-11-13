@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/hooks/useRedux";
@@ -40,6 +40,13 @@ const CheckoutForm = ({ errors, address, setAddress }: CheckoutFormProps) => {
       city: selectedZila?.bn || "",
     }));
   };
+
+  useEffect(() => {
+    if (!address?.city) return;
+    const findCity = zila.find((d) => d.bn === address?.city);
+    const filterUpozila = upozila.filter((u) => u.districtId === findCity?.id);
+    setSelectUpozila(filterUpozila);
+  }, [address?.city]);
 
   return (
     <div>
@@ -138,7 +145,10 @@ const CheckoutForm = ({ errors, address, setAddress }: CheckoutFormProps) => {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="district">জেলা</label>
-              <Select onValueChange={(e) => handleCity(e)}>
+              <Select
+                defaultValue={zila?.find((d) => d.bn === address?.city)?.id}
+                onValueChange={(e) => handleCity(e)}
+              >
                 <SelectTrigger className="">
                   <SelectValue placeholder="জেলা সিলেক্ট করুন" />
                 </SelectTrigger>
@@ -160,6 +170,7 @@ const CheckoutForm = ({ errors, address, setAddress }: CheckoutFormProps) => {
             <div>
               <label htmlFor="sub-district">উপজেলা</label>
               <Select
+                defaultValue={address?.subCity || ""}
                 onValueChange={(e) => {
                   setAddress((prev) => ({ ...prev, subCity: e }));
                 }}

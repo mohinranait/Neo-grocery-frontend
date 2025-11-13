@@ -248,7 +248,7 @@ const ProductCard = ({ product, className, isRating = true }: Props) => {
                     <Button
                       onClick={() => handleAddToCart("card")}
                       type="button"
-                      className=" h-[32px] bg-main hover:bg-main-light px-[8px] "
+                      className=" h-[32px] bg-main hover:bg-main px-[8px] "
                     >
                       <ShoppingCart />
                     </Button>
@@ -256,7 +256,7 @@ const ProductCard = ({ product, className, isRating = true }: Props) => {
                     <Link href={`/product/${slug}`}>
                       <Button
                         type="button"
-                        className=" bg-main hover:bg-main-light h-[32px] px-[8px] "
+                        className=" bg-main hover:bg-main h-[32px] px-[8px] "
                       >
                         <Eye />
                       </Button>

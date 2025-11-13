@@ -32,6 +32,13 @@ import useTotalCartPrice from "@/hooks/useTotalCartPrice";
 import { currency } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
 
+const links = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact-us" },
+];
+
 const Header = () => {
   // Redux state
   const { carts, totalShipping, totalTax } = useAppSelector(
@@ -91,7 +98,7 @@ const Header = () => {
     <div className="bg-white">
       {/* Top Bar */}
       <div className="bg-main text-white py-2 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm gap-2 sm:gap-0">
+        <div className="max-w-7xl mx-auto flex  justify-between items-center text-xs sm:text-sm gap-2 sm:gap-0">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
             <div className="flex items-center gap-2">
               <Truck className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -184,7 +191,7 @@ const Header = () => {
                   size="sm"
                   type="button"
                   onClick={handleSearch}
-                  className="absolute  py-6 h-auto right-0 top-2/4 -translate-y-2/4 bottom-1 px-6 rounded !rounded-l-none bg-main hover:bg-main-light shadow-md"
+                  className="absolute  py-6 h-auto right-0 top-2/4 -translate-y-2/4 bottom-1 px-6 rounded !rounded-l-none bg-main hover:bg-main shadow-md"
                 >
                   <Search className="w-4 h-4" />
                 </Button>
@@ -291,24 +298,20 @@ const Header = () => {
           </div>
           <div className="flex-grow pl-2 flex justify-between items-center">
             <div className="flex items-center gap-6">
-              <Link
-                href="/"
-                className="text-gray-700 hover:text-main font-medium transition-colors"
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="text-gray-700 hover:text-main font-medium transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                href="/contact-us"
-                className="text-gray-700 hover:text-main font-medium transition-colors"
-              >
-                Contact
-              </Link>
+              {links?.map((link, index) => {
+                return (
+                  <Link
+                    key={index}
+                    href={link?.href}
+                    className={cn(
+                      "text-gray-700 hover:text-main font-medium transition-colors",
+                      pathName === link.href && "text-main"
+                    )}
+                  >
+                    {link?.name}
+                  </Link>
+                );
+              })}
             </div>
             <div className="flex items-center gap-4">
               <Link href={"/offers"}>

@@ -79,10 +79,10 @@ export default function ContactUs() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <Card className="shadow-xl border-0">
+            <Card className=" border-0">
               <CardHeader className="pb-8">
                 <CardTitle className="text-2xl font-bold flex items-center">
-                  <Send className="w-6 h-6 mr-3 text-emerald-600" />
+                  <Send className="w-6 h-6 mr-3 text-main" />
                   Send us a Message
                 </CardTitle>
                 <CardDescription className="text-base">
@@ -171,7 +171,7 @@ export default function ContactUs() {
 
                   <Button
                     type="submit"
-                    className="w-full h-12 text-base font-medium bg-emerald-600 hover:bg-emerald-700"
+                    className="w-full h-12 text-base font-medium bg-main hover:bg-main"
                   >
                     <Send className="w-5 h-5 mr-2" />
                     Send Message
@@ -182,10 +182,10 @@ export default function ContactUs() {
 
             {/* Map Section */}
             <div className="mt-8">
-              <Card className="shadow-xl border-0 overflow-hidden">
+              <Card className=" border-0 overflow-hidden">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold flex items-center">
-                    <MapPin className="w-6 h-6 mr-3 text-emerald-600" />
+                    <MapPin className="w-6 h-6 mr-3 text-main" />
                     Find Us Here
                   </CardTitle>
                   <CardDescription>
@@ -212,17 +212,17 @@ export default function ContactUs() {
           {/* Contact Information */}
           <div className="space-y-8">
             {/* Contact Details */}
-            <Card className="shadow-xl border-0">
+            <Card className=" border-0">
               <CardHeader>
                 <CardTitle className="text-xl font-bold flex items-center">
-                  <Headphones className="w-5 h-5 mr-3 text-emerald-600" />
+                  <Headphones className="w-5 h-5 mr-3 text-main" />
                   Contact Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-start space-x-4">
-                  <div className="bg-emerald-100 p-3 rounded-lg">
-                    <MapPin className="w-5 h-5 text-emerald-600" />
+                  <div className="bg-main-light p-3 rounded-lg">
+                    <MapPin className="w-5 h-5 text-main" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Address</h4>
@@ -237,8 +237,8 @@ export default function ContactUs() {
                 <Separator />
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-emerald-100 p-3 rounded-lg">
-                    <Phone className="w-5 h-5 text-emerald-600" />
+                  <div className="bg-main-light p-3 rounded-lg">
+                    <Phone className="w-5 h-5 text-main" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Phone</h4>
@@ -253,8 +253,8 @@ export default function ContactUs() {
                 <Separator />
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-emerald-100 p-3 rounded-lg">
-                    <Mail className="w-5 h-5 text-emerald-600" />
+                  <div className="bg-main-light p-3 rounded-lg">
+                    <Mail className="w-5 h-5 text-main" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Email</h4>
@@ -269,8 +269,8 @@ export default function ContactUs() {
                 <Separator />
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-emerald-100 p-3 rounded-lg">
-                    <Clock className="w-5 h-5 text-emerald-600" />
+                  <div className="bg-main-light p-3 rounded-lg">
+                    <Clock className="w-5 h-5 text-main" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">
@@ -287,10 +287,10 @@ export default function ContactUs() {
             </Card>
 
             {/* Quick Support */}
-            <Card className="shadow-xl border-0 bg-gradient-to-br from-emerald-50 to-teal-50">
+            <Card className=" border-0 ">
               <CardHeader>
                 <CardTitle className="text-xl font-bold flex items-center">
-                  <ShoppingBag className="w-5 h-5 mr-3 text-emerald-600" />
+                  <ShoppingBag className="w-5 h-5 mr-3 text-main" />
                   Quick Support
                 </CardTitle>
               </CardHeader>
@@ -298,21 +298,21 @@ export default function ContactUs() {
                 <div className="space-y-3">
                   <Button
                     variant="outline"
-                    className="w-full justify-start h-12 bg-white hover:bg-emerald-50"
+                    className="w-full justify-start h-12 bg-white hover:bg-main-light"
                   >
                     <MessageSquare className="w-4 h-4 mr-3" />
                     Live Chat Support
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-start h-12 bg-white hover:bg-emerald-50"
+                    className="w-full justify-start h-12 bg-white hover:bg-main-light"
                   >
                     <Phone className="w-4 h-4 mr-3" />
                     Call Us Now
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-start h-12 bg-white hover:bg-emerald-50"
+                    className="w-full justify-start h-12 bg-white hover:bg-main-light"
                   >
                     <Mail className="w-4 h-4 mr-3" />
                     Email Support
@@ -322,7 +322,7 @@ export default function ContactUs() {
             </Card>
 
             {/* Customer Reviews */}
-            <Card className="shadow-xl border-0">
+            <Card className=" border-0">
               <CardHeader>
                 <CardTitle className="text-xl font-bold flex items-center">
                   <Star className="w-5 h-5 mr-3 text-yellow-500" />

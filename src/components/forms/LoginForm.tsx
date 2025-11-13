@@ -89,15 +89,15 @@ const LoginForm = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-[350px] mx-auto">
         <div>
-          <div className="flex mb-3 justify-center">
+          <div className="flex mb-10 justify-center">
             <Logo />
           </div>
-          <p className="text-center  text-primary font-bold text-3xl">
+          {/* <p className="text-center  text-primary font-bold text-3xl">
             Wellcome Back
           </p>
           <p className="text-center  text-gray-500 text-sm">
             Please login your user account
-          </p>
+          </p> */}
         </div>
         <div className="mt-4 mb-6  space-y-5">
           <div className="">

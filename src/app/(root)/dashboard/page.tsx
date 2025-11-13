@@ -124,7 +124,7 @@ export default function Dashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Recent Orders */}
-        <Card className="col-span-4">
+        <Card className="lg:col-span-4">
           <CardHeader>
             <CardTitle>Recent orders</CardTitle>
             <CardDescription>List of your recent orders</CardDescription>
@@ -134,7 +134,7 @@ export default function Dashboard() {
               {orders?.slice(0, 3)?.map((order, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex md:items-center flex-col md:flex-row justify-between p-4 border rounded-lg"
                 >
                   <div className="space-y-1">
                     <p className="text-sm font-medium uppercase leading-none">
@@ -182,7 +182,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="col-span-3">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>দ্রুত অ্যাকশন</CardTitle>
             <CardDescription>সাধারণ কাজগুলো দ্রুত করুন</CardDescription>

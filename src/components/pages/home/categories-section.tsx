@@ -38,7 +38,7 @@ const CategoriesSection = () => {
           <Link href={`/categories`}>
             <Button
               variant="outline"
-              className="border-2 border-main text-main hover:bg-emerald-50 px-8 py-3 rounded-full text-lg font-medium hover:shadow-lg transition-all duration-300"
+              className="border-2 border-main text-main hover:bg-main-light px-8 py-3 rounded-full text-lg font-medium hover:shadow-lg transition-all duration-300"
             >
               View All Categories
             </Button>

@@ -7,8 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
@@ -18,6 +16,7 @@ import { setCartSidebarOpen } from "@/redux/features/uiSlice";
 
 const MobileBottomBar = () => {
   // Redux state
+  const { user } = useAppSelector((state) => state.auth);
   const { carts } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
@@ -65,13 +64,28 @@ const MobileBottomBar = () => {
               <p className="text-xs text-gray-500">Account</p>
             </li>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" key={"right"}>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Dashboard</DropdownMenuItem>
-            <DropdownMenuItem>Favorites</DropdownMenuItem>
-          </DropdownMenuContent>
+          {user?._id ? (
+            <DropdownMenuContent align="end" key={"right"}>
+              <Link href={"/dashboard"}>
+                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              </Link>
+              <Link href={"/dashboard/profile"}>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </Link>
+              <Link href={"/dashboard/favorites"}>
+                <DropdownMenuItem>Favorites</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          ) : (
+            <DropdownMenuContent align="end" key={"right"}>
+              <Link href={"/login"}>
+                <DropdownMenuItem>Login</DropdownMenuItem>
+              </Link>
+              <Link href={"/login"}>
+                <DropdownMenuItem>Register</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          )}
         </DropdownMenu>
       </ul>
     </div>

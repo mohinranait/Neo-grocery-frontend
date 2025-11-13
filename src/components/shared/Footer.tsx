@@ -1,9 +1,18 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import Logo from "./Logo";
+import { useAppSelector } from "@/hooks/useRedux";
+const links = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact-us" },
+];
 
 const Footer = () => {
+  const { categories } = useAppSelector((state) => state.category);
   return (
     <>
       {/* Responsive Footer */}
@@ -21,48 +30,32 @@ const Footer = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Quick Links</h4>
               <div className="space-y-2">
-                <Link
-                  href="/"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/about"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  About Us
-                </Link>
-                <Link
-                  href="/contact"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  Contact
-                </Link>
+                {links?.map((link) => (
+                  <Link
+                    key={link?.href}
+                    href={link?.href}
+                    className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                  >
+                    {link?.name}
+                  </Link>
+                ))}
               </div>
             </div>
 
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Categories</h4>
               <div className="space-y-2">
-                <Link
-                  href="#"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  Fresh Fruits
-                </Link>
-                <Link
-                  href="#"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  Vegetables
-                </Link>
-                <Link
-                  href="#"
-                  className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
-                >
-                  Organic Products
-                </Link>
+                {categories?.slice(0, 4).map((category) => {
+                  return (
+                    <Link
+                      key={category?._id}
+                      href={`/shop?cat=${category?._id}`}
+                      className="block text-gray-400 hover:text-white transition-colors text-sm sm:text-base"
+                    >
+                      {category?.name}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -155,7 +148,7 @@ const Footer = () => {
 
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
-              © 2024 FreshMart. All rights reserved.
+              © 2025 FreshMart. All rights reserved.
             </p>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm">
               <Link
