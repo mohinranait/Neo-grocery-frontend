@@ -61,7 +61,7 @@ const HeaderBrowsCategory = () => {
   }, [categories]);
 
   return (
-    <ul className="relative z-[999] bg-white max-h-[400px] ">
+    <ul className="relative z-[999] divide-y bg-white max-h-[400px] ">
       {showCategories?.map((category: TTreeNode, index) => (
         <li key={index} className="group/category">
           <Link
@@ -85,7 +85,7 @@ const HeaderBrowsCategory = () => {
             )}
           </Link>
           {category?.children && category?.children?.length > 0 && (
-            <ul className="w-[250px]  h-full border border-border border-l-0 border-t-0 group-hover/category:block hidden absolute top-0 z-10 bg-white left-[279px]">
+            <ul className="w-[250px] divide-y h-full border border-border border-l-0 border-t-0 group-hover/category:block hidden absolute top-0 z-10 bg-white left-[279px]">
               {category?.children?.map((subCat: TTreeNode, index) => (
                 <li key={index} className="group/subcategory">
                   <Link
@@ -101,7 +101,7 @@ const HeaderBrowsCategory = () => {
                   </Link>
 
                   {subCat?.children && subCat?.children?.length > 0 && (
-                    <ul className="w-[250px] z-[999] h-full border border-border border-l-0 border-t-0 group-hover/subcategory:block hidden absolute top-0  bg-white left-[250px]">
+                    <ul className="w-[250px] divide-y z-[999] h-full border border-border border-l-0 border-t-0 group-hover/subcategory:block hidden absolute top-0  bg-white left-[250px]">
                       {subCat?.children?.map((subSubCat: TTreeNode, index) => (
                         <li key={index}>
                           <Link

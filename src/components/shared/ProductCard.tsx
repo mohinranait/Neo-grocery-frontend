@@ -157,8 +157,9 @@ const ProductCard = ({ product, className, isRating = true }: Props) => {
           <div className="space-y-2 flex-grow">
             <h3 className="font-semibold text-sm line-clamp-2">
               <Link
+                title={name}
                 href={`/product/${slug}`}
-                className=" hover:text-main line-clamp-1 text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
+                className=" hover:text-main !line-clamp-2 text-sm text-gray-700 transition-all  inline-block leading-[17px] font-medium"
               >
                 {name}
               </Link>

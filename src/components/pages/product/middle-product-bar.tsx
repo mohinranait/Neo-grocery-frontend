@@ -42,7 +42,7 @@ const MiddleProductBar = ({
           <div className="flex items-start justify-between">
             <div className="space-y-2 w-full">
               <div className="flex justify-between items-center gap-3 flex-wrap">
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
+                <Badge className="bg-main-light text-main hover:bg-main-light">
                   Original
                 </Badge>
                 <div className="flex gap-2 items-center">
@@ -177,7 +177,7 @@ const MiddleProductBar = ({
           Call Now
         </Button>
       </div>
-      <div className="border">
+      <div className="border bg-white">
         <p className="text-center py-1 text-base">Delivery Charge</p>
         <Table className="border-t">
           <TableHeader>

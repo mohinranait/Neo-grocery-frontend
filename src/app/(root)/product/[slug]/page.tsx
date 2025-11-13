@@ -193,17 +193,23 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
 
       <div className="container grid grid-cols-4 gap-4">
         <div className="col-span-4 lg:col-span-3">
-          <Tabs defaultValue="details" className="">
-            <TabsList className="w-full h-auto ">
-              <TabsTrigger value="details" className="w-full py-2">
-                Details
+          <Tabs defaultValue="details" className="gap-0 border">
+            <TabsList className="w-full bg-white h-auto ">
+              <TabsTrigger
+                value="details"
+                className="w-full py-2 bg-main-light text-main data-[state=active]:bg-main data-[state=active]:text-white"
+              >
+                Product Details
               </TabsTrigger>
 
-              <TabsTrigger value="reviews" className="w-full py-2">
-                Reviews
+              <TabsTrigger
+                value="reviews"
+                className="w-full py-2 bg-main-light text-main data-[state=active]:bg-main data-[state=active]:text-white"
+              >
+                Reviews ({reviews?.length || 0})
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="details">
+            <TabsContent value="details" className="mt-0">
               <div className="bg-white col-span-2 px-5 py-4">
                 <p className="font-semibold text-lg mb-2 text-gray-900">
                   Product details of {product?.productName}
@@ -217,12 +223,12 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
               </div>
             </TabsContent>
 
-            <TabsContent value="reviews">
-              <div className="col-span-2  py-4">
-                <div className="bg-white text-sm font-semibold text-gray-700 px-5 py-3 border-b border-gray-100 ">
+            <TabsContent value="reviews" className="mt-0">
+              <div className="col-span-2 bg-white py-4">
+                <p className=" text-sm font-semibold text-gray-700 px-5  ">
                   Ratings & Reviews of {product?.productName}
-                </div>
-                <div className="md:grid grid-cols-3 pb-5 gap-5 bg-white py-4 px-5">
+                </p>
+                <div className="md:grid grid-cols-3 pb-5 gap-5  py-4 px-5">
                   <div className=" space-y-2 mb-6 lg:mb-0">
                     <div className="flex items-center gap-2">
                       <span className="text-3xl font-bold">
