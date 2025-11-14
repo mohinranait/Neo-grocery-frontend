@@ -3,11 +3,14 @@ import {
   ChevronDown,
   Globe2,
   Heart,
+  LayoutDashboard,
   List,
+  LogOut,
   Search,
   ShoppingCart,
   Truck,
   UserRound,
+  WalletCards,
 } from "lucide-react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
@@ -306,13 +309,24 @@ const Header = () => {
                     <>
                       <Link href={"/dashboard"}>
                         <DropdownMenuItem className="cursor-pointer">
-                          Dashboard
+                          <LayoutDashboard /> Dashboard
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link href={"/dashboard/profile"}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          <UserRound /> Profile
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link href={"/dashboard/orders"}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          <WalletCards /> All Orders
                         </DropdownMenuItem>
                       </Link>
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => handleLogout()}
                       >
+                        <LogOut />
                         Logout
                       </DropdownMenuItem>
                     </>
@@ -321,8 +335,12 @@ const Header = () => {
               ) : (
                 <div className="flex text-white items-center gap-0.5  ">
                   <UserRound className="size-4" />
-                  <Link href={"/login"}>Login</Link> /{" "}
-                  <Link href={"/register"}>Register</Link>
+                  <Link href={`/login?redirectTo=${pathName}`}>
+                    Login
+                  </Link> /{" "}
+                  <Link href={`/register?redirectTo=${pathName}`}>
+                    Register
+                  </Link>
                 </div>
               )}
             </div>

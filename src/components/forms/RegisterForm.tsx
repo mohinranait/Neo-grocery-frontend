@@ -1,5 +1,5 @@
 "use client";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Input } from "../ui/input";
@@ -9,7 +9,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { userRegister } from "@/actions/authApi";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Logo from "../shared/Logo";
 
@@ -47,6 +47,8 @@ const registerSchema = z.object({
 
 const RegisterForm = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirectTo");
   const {
     handleSubmit,
     register,
@@ -55,14 +57,18 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // handle register
   const registerForm: SubmitHandler<TRegisterType> = async (data) => {
+    setIsLoading(true);
     try {
       const res = await userRegister(data);
       if (res?.success) {
-        toast.success("Register success");
-        router.push(`/verify/${res?.payload}`);
+        // toast.success("Register success");
+        router.push(
+          `/verify/${res?.payload?.token}?redirectTo=${redirectTo}&email=${res?.payload?.email}`
+        );
       } else {
         toast.success(res.message);
       }
@@ -77,6 +83,7 @@ const RegisterForm = () => {
       }
       toast.error(errorMessage);
     }
+    setIsLoading(false);
   };
   return (
     <React.Fragment>
@@ -158,13 +165,18 @@ const RegisterForm = () => {
           </div>
         </div>
         <div>
-          <Button className="w-full">Register</Button>
+          <Button className="w-full" disabled={isLoading}>
+            {isLoading && <LoaderCircle className="animate-spin" />} Register
+          </Button>
         </div>
       </form>
       <div className="mt-4">
         <p className="text-sm text-gray-500 text-center">
           Already have an account?{" "}
-          <Link href={"/login"} className="underline hover:text-main">
+          <Link
+            href={`/login?redirectTo=${redirectTo}`}
+            className="underline hover:text-main"
+          >
             Login
           </Link>{" "}
         </p>

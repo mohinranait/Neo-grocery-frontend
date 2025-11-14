@@ -87,11 +87,22 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+			spinReverse: {
+				from: { transform: 'rotate(360deg)' },
+				to: { transform: 'rotate(0deg)' },
+			},
+			spinReverse1: {
+				from: { transform: 'rotate(-360deg)' },
+				to: { transform: 'rotate(0deg)' },
+			}
   		},
+
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+			spinReverse: 'spinReverse 1s linear infinite',
+			spinReverse1: 'spinReverse1 1s linear infinite',
   		}
   	}
   },

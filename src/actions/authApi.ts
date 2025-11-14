@@ -29,12 +29,14 @@ export const userUpdate = async (formData:TUserUpdateType, userId:string) => {
 
 
 /**
- * Change passwrod By UserID
+ * Change passwrod By UserID for authenticated user
 */
 export const changePassword = async (formData:{password:string;userId:string;oldPassword:string}) => {
     const {data} = await instance.patch(`/change-password?accessBy=user`,{...formData});
     return data;
 }
+
+
 
 /**
  * User logout method
@@ -49,5 +51,30 @@ export const userLogout = async () => {
 */
 export const verifyEmailAccount = async (formData:TVerifyEmailType) => {
     const {data} = await instance.post(`/user`,{...formData});
+    return data;
+}
+
+/**
+ * @api {post} user -> Forgot password
+*/
+export const forgotPassword = async (email: string) => {
+    const {data} = await instance.post(`/forgot-password`,{email});
+    return data;
+}
+
+/**
+ * @api {post} user -> Verify forgot email
+*/
+export const forgotEmailVerify = async (formData:{code:string; token: string}) => {
+    const {data} = await instance.post(`/forgot-email-verify`,{...formData});
+    return data;
+}
+
+
+/**
+ * Change passwrod from forgot page
+*/
+export const changeForgotPassword = async (formData:{password:string;token:string}) => {
+    const {data} = await instance.post(`/change-password`,{...formData});
     return data;
 }

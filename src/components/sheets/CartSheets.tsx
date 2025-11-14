@@ -149,7 +149,7 @@ const CartSheets = () => {
               <div className=" grid grid-cols-2 gap-4 pb-5">
                 <Link href={"/cart"}>
                   <Button
-                    className="w-full bg-main hover:bg-main-light-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="w-full bg-main  text-white hover:bg-main transition-all duration-200 "
                     size="lg"
                   >
                     Cart
@@ -158,7 +158,7 @@ const CartSheets = () => {
                 <Link href={"/checkout"}>
                   <Button
                     variant="outline"
-                    className="w-full border-2 border-slate-200 hover:border-slate-300 font-medium py-3 rounded-xl transition-all duration-200"
+                    className="w-full border-2 border-slate-200 hover:border-slate-300 font-medium  transition-all duration-200"
                     size="lg"
                   >
                     Checkout

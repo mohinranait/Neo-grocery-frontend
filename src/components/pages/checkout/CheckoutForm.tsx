@@ -66,7 +66,7 @@ const CheckoutForm = ({ errors, address, setAddress }: CheckoutFormProps) => {
         {!isAuthenticated && (
           <Link
             className="text-sm text-main underline font-normal"
-            href={"/login"}
+            href={"/login?redirectTo=checkout"}
           >
             Log In
           </Link>

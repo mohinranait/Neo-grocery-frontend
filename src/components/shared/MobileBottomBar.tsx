@@ -1,5 +1,14 @@
 "use client";
-import { Home, ShoppingCart, Store, UserRound } from "lucide-react";
+import {
+  Heart,
+  Home,
+  LayoutDashboard,
+  LogOut,
+  ShoppingCart,
+  Store,
+  UserRound,
+  WalletCards,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import MobileMenuSheet from "../sheets/MobileMenuSheet";
@@ -13,6 +22,8 @@ import { usePathname } from "next/navigation";
 import ShopFilterSheet from "../sheets/ShopFilterSheet";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setCartSidebarOpen } from "@/redux/features/uiSlice";
+import { userLogout } from "@/actions/authApi";
+import { logoutUser } from "@/redux/features/authSlice";
 
 const MobileBottomBar = () => {
   // Redux state
@@ -21,6 +32,16 @@ const MobileBottomBar = () => {
   const dispatch = useAppDispatch();
 
   const pathName = usePathname();
+
+  // handle logout
+  const handleLogout = async () => {
+    try {
+      await userLogout();
+      dispatch(logoutUser());
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   return (
     <div className=" md:hidden bottom-0 sticky  left-0 right-0 z-50">
@@ -67,14 +88,33 @@ const MobileBottomBar = () => {
           {user?._id ? (
             <DropdownMenuContent align="end" key={"right"}>
               <Link href={"/dashboard"}>
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LayoutDashboard /> Dashboard
+                </DropdownMenuItem>
               </Link>
               <Link href={"/dashboard/profile"}>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <UserRound /> Profile
+                </DropdownMenuItem>
+              </Link>
+              <Link href={"/dashboard/orders"}>
+                <DropdownMenuItem>
+                  {" "}
+                  <WalletCards /> All Orders
+                </DropdownMenuItem>
               </Link>
               <Link href={"/dashboard/favorites"}>
-                <DropdownMenuItem>Favorites</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Heart /> Favorites
+                </DropdownMenuItem>
               </Link>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleLogout()}
+              >
+                <LogOut />
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           ) : (
             <DropdownMenuContent align="end" key={"right"}>

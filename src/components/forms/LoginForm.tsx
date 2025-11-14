@@ -1,5 +1,5 @@
 "use client";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Input } from "../ui/input";
@@ -53,7 +53,10 @@ const LoginForm = () => {
   const redirectTo = params.get("redirectTo");
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true);
     try {
       const res = await userLogin(data);
       if (res?.success) {
@@ -83,6 +86,7 @@ const LoginForm = () => {
       const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || "Something went wrong");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -146,13 +150,20 @@ const LoginForm = () => {
           </div>
         </div>
         <div>
-          <Button className="w-full">Login</Button>
+          <Button className="w-full" disabled={isLoading}>
+            {" "}
+            {isLoading && <LoaderCircle className="animate-spin" />}
+            Login
+          </Button>
         </div>
       </form>
       <div className="mt-4">
         <p className="text-sm text-gray-500 text-center">
           Create a new account{" "}
-          <Link href={"/register"} className="underline hover:text-main">
+          <Link
+            href={`/register?redirectTo=${redirectTo}`}
+            className="underline hover:text-main"
+          >
             Register
           </Link>{" "}
         </p>
