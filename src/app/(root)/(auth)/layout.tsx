@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React, { FC } from "react";
 
@@ -6,24 +7,37 @@ type TAuthLayout = {
 };
 const AuthLayout: FC<TAuthLayout> = ({ children }) => {
   return (
-    <section className="min-h-screen flex items-center justify-center">
-      <div className="max-w-[900px] bg-white  items-center mx-auto mt-3 grid grid-cols-1 lg:grid-cols-2 ">
-        <div className=" order-2 ">
-          <div className=" max-w-[350px] lg:max-w-max mx-auto lg:order-1 p-10 pb-0 bg-main  rounded-l ">
-            <p className="text-4xl font-bold text-white">
+    <section className="py-8  items-center justify-center">
+      <Card className="max-w-[800px] py-10 mx-2 md:py-0  items-center md:mx-auto mt-3 grid grid-cols-1 md:grid-cols-2 ">
+        <div className="hidden md:block  ">
+          <div className=" w-full mx-auto lg:order-1 pb-0 bg-main-light  rounded-l-md ">
+            {/* <p className="text-4xl font-bold text-main">
               Simplify management your dashboard
             </p>
-            <p className="text-gray-100 text-sm">
+            <p className="text-main text-sm">
               Simplify your ecommarce management with our user friendly admin
               dashboard
             </p>
             <div>
-              <Image src={"/auth.png"} width={400} height={300} alt="Avater" />
-            </div>
+              <Image
+                src={"/auth.png"}
+                width={400}
+                height={300}
+                alt="Avater"
+                className=""
+              />
+            </div> */}
+            <Image
+              src={"/login.jpg"}
+              width={400}
+              height={500}
+              alt="Login"
+              className="w-full h-[470px] object-cover rounded-l-lg"
+            />
           </div>
         </div>
-        <div className=" order-1 lg:order-2 px-10">{children}</div>
-      </div>
+        <div className="w-full px-10">{children}</div>
+      </Card>
     </section>
   );
 };
