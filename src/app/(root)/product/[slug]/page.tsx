@@ -32,6 +32,7 @@ import LeftProductBar from "@/components/pages/product/left-product-bar";
 import MiddleProductBar from "@/components/pages/product/middle-product-bar";
 import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { notFound } from "next/navigation";
 
 type TProductComment = BaseProductComment & {
   userId: {
@@ -65,7 +66,17 @@ export async function generateMetadata({
 
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProduct(params?.slug);
+
   const product: TProduct = payload;
+  console.log({ payload });
+  console.log({ product });
+  if (
+    !product ||
+    (Array.isArray(product) && product.length === 0) ||
+    typeof product !== "object"
+  ) {
+    notFound();
+  }
   const productBrandIds = product?.brand;
   const productCategoryIds = product?.category;
   const getAllReviews = await getCommentsByProductId(

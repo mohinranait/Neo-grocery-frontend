@@ -66,6 +66,14 @@ const MobileMenuSheet = () => {
     setShowCategories(categoryTree);
   }, [categories]);
 
+  const links = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+    { name: "Offers", href: "/offers" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact-us" },
+  ];
+
   // Recursive component to render nested categories
   const RenderCategory = ({
     category,
@@ -155,18 +163,15 @@ const MobileMenuSheet = () => {
               </TabsContent>
               <TabsContent value="menu">
                 <div className="">
-                  <Link href={"/"} className="block text-sm py-1">
-                    Shopping Cart
-                  </Link>
-                  <Link href={"/"} className="block text-sm py-1">
-                    Offers
-                  </Link>
-                  <Link href={"/"} className="block text-sm py-1">
-                    About
-                  </Link>
-                  <Link href={"/"} className="block text-sm py-1">
-                    Contact
-                  </Link>
+                  {links?.map((link) => (
+                    <Link
+                      key={link?.name}
+                      href={link?.href}
+                      className="block text-sm py-1"
+                    >
+                      {link?.name}
+                    </Link>
+                  ))}
                 </div>
               </TabsContent>
             </Tabs>

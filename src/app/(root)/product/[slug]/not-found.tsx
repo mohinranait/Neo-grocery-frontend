@@ -1,5 +1,8 @@
+import React from "react";
 import NotFoundComponent from "@/components/shared/NotFoundComponent";
 
-export default function NotFound() {
+const NotFound = () => {
   return <NotFoundComponent />;
-}
+};
+
+export default NotFound;
