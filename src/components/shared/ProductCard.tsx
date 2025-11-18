@@ -123,13 +123,21 @@ const ProductCard = ({ product, className, isRating = true }: Props) => {
                 New
               </Badge>
             )}
-            {product.variant === "Single Product" &&
-              isOfferStillActive(product.offerDate) &&
-              price.discountValue > 0 && (
-                <Badge className="absolute top-2 right-2 bg-red-500 hover:bg-red-600">
-                  -{calculateDiscount(product).percentage}%
-                </Badge>
-              )}
+            {
+              <div className="absolute top-2 flex flex-col gap-1 right-2 ">
+                {product.variant === "Single Product" &&
+                  isOfferStillActive(product.offerDate) &&
+                  price.discountValue > 0 && (
+                    <Badge className=" bg-red-500 hover:bg-red-600">
+                      -{calculateDiscount(product).percentage}%
+                    </Badge>
+                  )}
+                {product.isFeature === "Active" && (
+                  <Badge className="">Feature</Badge>
+                )}
+              </div>
+            }
+
             {images?.length > 1 && (
               <div className="absolute group-hover:scale-100 group-hover:left-1 transition-all scale-0 w-[50px] z-10 bottom-1 left-[18px] ">
                 <div className="flex flex-col gap-1  p-1 h-[130px] w-[44px]">

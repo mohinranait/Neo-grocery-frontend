@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Neo grocery frontend",
-  description: "Neo grocery super shop frontend",
+  title: "Brand Collection BD | Frontend",
+  description: "Brand Collection BD",
 };
 
 export default async function RootLayout({

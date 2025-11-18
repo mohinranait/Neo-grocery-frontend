@@ -290,7 +290,7 @@ const ShopFilterSection = () => {
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3 px-3 max-h-[150px] overflow-y-auto">
-            {["inStock", "onSale", "homeDelivery"].map((status) => {
+            {/* {["inStock", "isFeature", "homeDelivery"].map((status) => {
               const checked = (searchParams.get("status") || "")
                 .split(",")
                 .includes(status);
@@ -309,13 +309,52 @@ const ShopFilterSection = () => {
                   >
                     {status === "inStock"
                       ? "In Stock"
-                      : status === "onSale"
-                      ? "On Sale"
+                      : status === "isFeature"
+                      ? "Features"
                       : "Home Delivery"}
                   </label>
                 </div>
               );
-            })}
+            })} */}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={"stock"}
+                checked={searchParams.get("stock") ? true : false}
+                onCheckedChange={() => updateMultiValueQuery("stock", "yes")}
+              />
+              <label
+                htmlFor={"stock"}
+                className="text-sm text-gray-500 hover:text-gray-900 font-medium cursor-pointer"
+              >
+                In Stock
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={"feature"}
+                checked={searchParams.get("feature") ? true : false}
+                onCheckedChange={() => updateMultiValueQuery("feature", "yes")}
+              />
+              <label
+                htmlFor={"feature"}
+                className="text-sm text-gray-500 hover:text-gray-900 font-medium cursor-pointer"
+              >
+                Features
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={"delivery"}
+                checked={searchParams.get("delivery") ? true : false}
+                onCheckedChange={() => updateMultiValueQuery("delivery", "yes")}
+              />
+              <label
+                htmlFor={"delivery"}
+                className="text-sm text-gray-500 hover:text-gray-900 font-medium cursor-pointer"
+              >
+                Home Delivery
+              </label>
+            </div>
           </div>
         </AccordionContent>
       </AccordionItem>

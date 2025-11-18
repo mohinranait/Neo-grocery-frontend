@@ -22,7 +22,8 @@ const ShopPage = async ({
   const brands = searchParams.brandIds || "";
   const shipping = searchParams.shipping || "";
   const ratings = searchParams.ratings || "";
-  const status = searchParams.status || "";
+  const stock = searchParams.stock || "";
+  const feature = searchParams.feature || "";
   const priceRange = searchParams.priceRange || "";
   const sort = searchParams.sort || "";
   const page = searchParams.page || 1;
@@ -34,7 +35,8 @@ const ShopPage = async ({
     search: search || "",
     brands: brands || "",
     shipping: shipping || "",
-    status: status || "",
+    stock: stock || "",
+    feature: feature || "",
     ratings: ratings || "",
     sort: sort || "",
     page: String(page) || "1",
@@ -59,7 +61,7 @@ const ShopPage = async ({
       </div>
       <div className="container px-2 md:px-0  flex gap-3">
         <div className="hidden md:block">
-          <div className="w-[280px]   h-full">
+          <div className="w-[280px] h-full">
             <ShopFilterSection />
           </div>
         </div>
