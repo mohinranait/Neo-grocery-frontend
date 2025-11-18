@@ -26,7 +26,32 @@ export const getAllProducts = async () => {
       console.error("Error fetching products:", error);
       return { success: false, payload: [] };
     }
-  };
+};
+
+
+/**
+ * @api {get} Get all products method on the Shop page
+*/
+export const getAllProductsForShopPage = async ({query}:{query: URLSearchParams}) => {
+    try {
+      const response = await fetch(`${SERVER_URL}/user-products?${query && query.toString() }`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return { success: false, payload: [] };
+    }
+};
 
 /**
  * @api {get}  Get Single product by Slug method

@@ -1,5 +1,3 @@
-"use client";
-import ProductCard from "@/components/shared/ProductCard";
 import React from "react";
 import {
   Breadcrumb,
@@ -11,15 +9,37 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import ShopFilterSection from "@/components/pages/shop/ShopFilterSection";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { Button } from "@/components/ui/button";
-import { addSortingProducts } from "@/redux/features/productSlice";
+import ShopProducts from "@/components/pages/shop/ShopProducts";
+import { getAllProductsForShopPage } from "@/actions/productApi";
 
-const ShopPage = () => {
-  const dispatch = useAppDispatch();
-  const [isLoadMore, setIsLoadMore] = React.useState(1);
-  const totalShow = 12;
-  const { filterProducts } = useAppSelector((state) => state.product);
+const ShopPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) => {
+  const search = searchParams.search || "";
+  const category = searchParams.cat || "";
+  const brands = searchParams.brandIds || "";
+  const shipping = searchParams.shipping || "";
+  const ratings = searchParams.ratings || "";
+  const status = searchParams.status || "";
+  const priceRange = searchParams.priceRange || "";
+  const sort = searchParams.sort || "";
+
+  const query = new URLSearchParams({
+    category: category || "",
+    priceRange: priceRange || "",
+    search: search || "",
+    brands: brands || "",
+    shipping: shipping || "",
+    status: status || "",
+    ratings: ratings || "",
+    sort: sort || "",
+    page: "1",
+    limit: "4",
+  });
+  const res = await getAllProductsForShopPage({ query });
+
   return (
     <section className="mb-10">
       <div className="container px-2 md:px-0">
@@ -29,7 +49,6 @@ const ShopPage = () => {
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-
             <BreadcrumbItem>
               <BreadcrumbPage>Products</BreadcrumbPage>
             </BreadcrumbItem>
@@ -42,54 +61,7 @@ const ShopPage = () => {
             <ShopFilterSection />
           </div>
         </div>
-        <div className=" flex-grow space-y-4">
-          <div className="py-3 bg-white px-3 flex items-center justify-between rounded shadow">
-            <p className="text-gray-600 text-sm">
-              Showing all {filterProducts?.length} results
-            </p>
-            <div className="flex">
-              <select
-                onChange={(e) => {
-                  dispatch(
-                    addSortingProducts({
-                      filter: e.target.value as "phl" | "plh" | "az" | "za",
-                    })
-                  );
-                }}
-                className="text-sm text-gray-600"
-                id=""
-              >
-                <option value="">Filter</option>
-                <option value="plh">Price Low to High</option>
-                <option value="phl">Price High to Low</option>
-                <option value="az">A-Z</option>
-                <option value="za">Z-A</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3">
-            {filterProducts?.length === 0 && (
-              <div className="text-center text-gray-600 text-sm col-span-5 py-4">
-                Product not found for your request
-              </div>
-            )}
-            {[...filterProducts]
-              ?.slice(0, isLoadMore * totalShow)
-              ?.map((product, index) => (
-                <ProductCard product={product} key={index} />
-              ))}
-          </div>
-          {filterProducts?.length > isLoadMore * totalShow && (
-            <div className="flex items-center justify-center py-4">
-              <Button
-                onClick={() => setIsLoadMore((prev) => prev + 1)}
-                className="btn btn-primary"
-              >
-                Load More
-              </Button>
-            </div>
-          )}
-        </div>
+        <ShopProducts products={res?.payload?.products} />
       </div>
     </section>
   );

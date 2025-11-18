@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
@@ -12,19 +12,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Star } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { setFilterProducts } from "@/redux/features/productSlice";
+import { useAppSelector } from "@/hooks/useRedux";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { currency } from "@/helpers/utils";
 
 const ShopFilterSection = () => {
   const { brands } = useAppSelector((state) => state.brand);
-  const dispatch = useAppDispatch();
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const catParams = searchParams.get("cat");
   const search = searchParams.get("search") || "";
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
@@ -66,8 +64,6 @@ const ShopFilterSection = () => {
     if (prices?.length === 2) {
       queryObject.priceRange = [Number(prices[0]), Number(prices[1])];
     }
-
-    dispatch(setFilterProducts(queryObject));
   };
 
   // Helper: Update URL query
@@ -115,12 +111,6 @@ const ShopFilterSection = () => {
     router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
     handleFilterObject(currentParams, { [key]: "" });
   };
-
-  useEffect(() => {
-    if (catParams) {
-      dispatch(setFilterProducts({ categoryIds: catParams?.split(",") }));
-    }
-  }, [catParams]);
 
   return (
     <Accordion
@@ -336,34 +326,45 @@ const ShopFilterSection = () => {
         className="rounded px-3 py-0 border bg-white border-border"
       >
         <AccordionTrigger className="hover:no-underline">
-          Rating
+          <div className="flex items-center justify-between w-full">
+            Rating
+            {searchParams.get("ratings") && (
+              <button
+                className="text-xs text-gray-500 hover:text-gray-900 mr-2"
+                type="button"
+                onClick={(e) => {
+                  handleClearFilter(e, "ratings");
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3 max-h-[150px] overflow-y-auto">
-            {[5, 4, 3, 2, 1].map((rating) => {
-              const checked = (searchParams.get("ratings") || "")
-                .split(",")
-                .includes(rating.toString());
-              return (
-                <div key={rating} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`rating_${rating}`}
-                    checked={checked}
-                    onCheckedChange={() =>
-                      updateMultiValueQuery("ratings", rating.toString())
-                    }
-                  />
-                  <label
-                    htmlFor={`rating_${rating}`}
-                    className="flex items-center gap-1 text-sm font-medium cursor-pointer"
-                  >
-                    {Array.from({ length: rating }, (_, i) => (
-                      <Star size={16} key={i} />
-                    ))}
-                  </label>
-                </div>
-              );
-            })}
+            <RadioGroup
+              onValueChange={(e) => updateSingleValueQuery("ratings", e)}
+              defaultValue={`${searchParams.get("ratings")}`}
+            >
+              {[5, 4, 3, 2, 1].map((rating) => {
+                return (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={`${rating}`} id={`${rating}`} />
+                      <label
+                        htmlFor={`${rating}`}
+                        className="cursor-pointer flex text-gray-500 hover:text-gray-900 w-full"
+                      >
+                        {Array.from({ length: rating }, (_, i) => (
+                          <Star size={16} key={i} />
+                        ))}
+                      </label>
+                    </div>
+                  </>
+                );
+              })}
+            </RadioGroup>
           </div>
         </AccordionContent>
       </AccordionItem>

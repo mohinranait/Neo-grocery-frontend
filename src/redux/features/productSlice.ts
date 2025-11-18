@@ -107,7 +107,6 @@ export const productSlice = createSlice({
       state.variant = action?.payload
     },
     setFilterProducts: (state, action: PayloadAction<TFilter>) => {
-      console.log({payload: action.payload});
       
       const filteredProducts = productFiltersMethod(state.products, action?.payload);
       state.filterProducts = filteredProducts;

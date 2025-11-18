@@ -101,7 +101,7 @@ const Header = () => {
   return (
     <div className="bg-white">
       {/* Top Bar */}
-      <div className="bg-main text-white py-2 px-4">
+      <div className="bg-white border-b text-main py-2 px-4">
         <div className="container mx-auto flex   items-center text-xs sm:text-sm gap-2 sm:gap-0">
           <div className="flex flex-col sm:pr-10 sm:flex-row items-center gap-2 sm:gap-6">
             <div className="hidden sm:flex  items-center gap-2">
@@ -116,7 +116,7 @@ const Header = () => {
             </div>
           </div>
           <Marquee pauseOnHover={true} className="">
-            <ul className="flex gap-6 whitespace-nowrap list-disc list-inside">
+            <ul className="flex gap-6 whitespace-nowrap text-main list-disc list-inside">
               <li>ফ্রি ডেলিভারি — ৩,৫০০ টাকা অর্ডারে।</li>
               <li>নতুন কালেকশন এসেছে — পুরুষ/নারী/বাচ্চাদের ফ্যাশন দেখুন।</li>
               <li>কাস্টমার কেয়ার: ০১৭৩৩৩৪৩৩৩৩ (সকাল ৯টা–রাত ৯টা)।</li>
@@ -164,7 +164,7 @@ const Header = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
-                  placeholder="Search for fresh products, organic foods..."
+                  placeholder="Search products..."
                   className="w-full pl-4 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 py-[12px] h-auto  rounded border-2  border-gray-200   focus-visible:border-main   transition-all duration-200 text-base pr-20"
                 />
                 <Button
