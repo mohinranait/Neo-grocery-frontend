@@ -25,6 +25,8 @@ const ShopPage = async ({
   const status = searchParams.status || "";
   const priceRange = searchParams.priceRange || "";
   const sort = searchParams.sort || "";
+  const page = searchParams.page || 1;
+  const limit = searchParams.limit || 20;
 
   const query = new URLSearchParams({
     category: category || "",
@@ -35,8 +37,8 @@ const ShopPage = async ({
     status: status || "",
     ratings: ratings || "",
     sort: sort || "",
-    page: "1",
-    limit: "4",
+    page: String(page) || "1",
+    limit: String(limit) || "20",
   });
   const res = await getAllProductsForShopPage({ query });
 
@@ -61,7 +63,12 @@ const ShopPage = async ({
             <ShopFilterSection />
           </div>
         </div>
-        <ShopProducts products={res?.payload?.products} />
+        <ShopProducts
+          products={res?.payload?.products}
+          total={res?.payload?.total}
+          page={Number(page)}
+          limit={Number(limit)}
+        />
       </div>
     </section>
   );
