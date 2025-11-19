@@ -68,8 +68,6 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
   const { payload } = await getSingleProduct(params?.slug);
 
   const product: TProduct = payload;
-  console.log({ payload });
-  console.log({ product });
   if (
     !product ||
     (Array.isArray(product) && product.length === 0) ||

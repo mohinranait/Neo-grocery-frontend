@@ -16,6 +16,7 @@ import { useAppSelector } from "@/hooks/useRedux";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { currency } from "@/helpers/utils";
+import { TBrandType } from "@/types/brand.type";
 
 const ShopFilterSection = () => {
   const { brands } = useAppSelector((state) => state.brand);
@@ -24,6 +25,7 @@ const ShopFilterSection = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
+  const categoryId = searchParams.get("cat");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
   const [openItems, setOpenItems] = useState([
@@ -111,6 +113,20 @@ const ShopFilterSection = () => {
     router.push(`${pathname}?${currentParams.toString()}`, { scroll: false });
     handleFilterObject(currentParams, { [key]: "" });
   };
+
+  let getBrands: TBrandType[] = [];
+  if (categoryId) {
+    const filterBrands = brands?.filter((brand) =>
+      brand?.categoryIds?.includes(categoryId)
+    );
+    if (filterBrands?.length === 0) {
+      getBrands = brands;
+    } else {
+      getBrands = filterBrands;
+    }
+  } else {
+    getBrands = brands;
+  }
 
   return (
     <Accordion
@@ -241,7 +257,7 @@ const ShopFilterSection = () => {
         </AccordionTrigger>
         <AccordionContent>
           <div className="space-y-3 max-h-[200px] overflow-y-auto">
-            {brands?.map((brand, i) => {
+            {getBrands?.map((brand, i) => {
               const brandParam = searchParams.get("brandIds") || "";
               const checked = brandParam.split(",").includes(brand._id);
               return (
@@ -289,7 +305,7 @@ const ShopFilterSection = () => {
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          <div className="space-y-3 px-3 max-h-[150px] overflow-y-auto">
+          <div className="space-y-3  max-h-[150px] overflow-y-auto">
             {/* {["inStock", "isFeature", "homeDelivery"].map((status) => {
               const checked = (searchParams.get("status") || "")
                 .split(",")

@@ -1,8 +1,12 @@
+import { cn } from "@/lib/utils";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const Logo = () => {
+type Props = {
+  bdClass?: string;
+};
+const Logo = ({ bdClass }: Props) => {
   return (
     <>
       <Link href={"/"} className="inline-flex items-center">
@@ -15,7 +19,7 @@ const Logo = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-main">
-              Collection<span className="text-gray-950">BD</span>{" "}
+              Collection<span className={cn("text-gray-950", bdClass)}>BD</span>{" "}
             </h1>
             <p className="text-xs text-gray-500">brandcollectionbd.com</p>
           </div>

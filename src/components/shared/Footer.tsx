@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 sm:mb-12">
             <div className="space-y-4 sm:col-span-2 lg:col-span-1">
-              <Logo />
+              <Logo bdClass="text-white" />
               <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
                 Your trusted partner for fresh, organic produce delivered
                 straight from local farms to your doorstep.

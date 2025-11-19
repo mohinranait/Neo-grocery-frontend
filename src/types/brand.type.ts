@@ -4,6 +4,7 @@ export type TBrandType = {
     slug: string;
     brandBanner?: string;
     brandThumbnail?: string;
+    categoryIds: string[];
     status: "Active" | "Inactive";
     createdAt?: Date;
     updatedAt?: Date;
