@@ -1,4 +1,3 @@
-// import BannerSection from "@/components/pages/home/BannerSection";
 import BannerSection from "@/components/pages/home/BannerSection";
 import CategoriesSection from "@/components/pages/home/categories-section";
 import MasonaryProducts from "@/components/pages/home/masonary-products";

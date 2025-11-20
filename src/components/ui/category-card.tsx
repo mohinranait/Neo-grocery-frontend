@@ -14,7 +14,7 @@ const CategoryCard = ({ category, index }: Props) => {
   return (
     <div
       key={index}
-      className={`group relative overflow-hidden rounded-2xl ${categoryColors[index].bgColor} border border-gray-100 hover:border-main-light transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer`}
+      className={`group relative overflow-hidden rounded-2xl ${categoryColors[index].bgColor} border border-gray-100 hover:border-main-light transition-all duration-300   cursor-pointer`}
     >
       <div className="p-4  text-center">
         {/* Icon Container */}
@@ -32,7 +32,7 @@ const CategoryCard = ({ category, index }: Props) => {
 
         {/* Category Info */}
         <h3
-          className={`font-bold text-gray-900 text-sm    group-hover:text-main transition-colors`}
+          className={`font-bold text-gray-700 text-sm    group-hover:text-main transition-colors`}
         >
           {category?.name}
         </h3>
@@ -44,7 +44,7 @@ const CategoryCard = ({ category, index }: Props) => {
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Link href={`/shop?cat=${category?._id}`}>
             <Badge className="bg-main text-white text-xs px-2 py-1">
-              Shop Now
+              Visit Now
             </Badge>
           </Link>
         </div>

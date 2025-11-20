@@ -15,10 +15,7 @@ const CategoriesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-8 ">
           <h2 className="text-3xl  font-bold text-gray-900 mb-1">
-            Shop by{" "}
-            <span className="bg-gradient-to-r from-main to-main-light bg-clip-text text-transparent">
-              Categories
-            </span>
+            Shop by <span className="text-main">Categories</span>
           </h2>
           <p className=" text-gray-600 max-w-2xl mx-auto">
             Discover our wide range of fresh and organic products across
@@ -34,11 +31,11 @@ const CategoriesSection = () => {
         </div>
 
         {/* View All Categories Button */}
-        <div className="text-center mt-6 lg:mt-12">
+        <div className="text-center mt-6 lg:mt-8">
           <Link href={`/categories`}>
             <Button
               variant="outline"
-              className="border-2 border-main text-main hover:bg-main-light px-8 py-3 rounded-full text-lg font-medium hover:shadow-lg transition-all duration-300"
+              className="   px-8 py-3 rounded-full text-base text-gray-700 font-medium transition-all duration-300"
             >
               View All Categories
             </Button>
