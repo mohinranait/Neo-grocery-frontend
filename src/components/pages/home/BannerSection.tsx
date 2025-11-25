@@ -16,7 +16,7 @@ const BannerSection = () => {
       <div className="container mx-auto  py-4">
         <Carousel className="w-full gap-0 ">
           <CarouselContent>
-            {["slider/1.avif", "slider/3.avif"].map((img, index) => (
+            {["slider/1.jpg", "slider/3.avif"].map((img, index) => (
               <CarouselItem key={index}>
                 <div className="">
                   <Image
