@@ -44,6 +44,7 @@ export default async function RootLayout({
           products={products}
           attributes={attributes}
         >
+          {/* Facebook Pixel ID */}
           <FacebookPixel />
           {children}
           <Toaster />
